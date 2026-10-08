@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { TRACKS, url } from '../lib/tracks';
+const all = await getCollection('notes');
+---
+<Base title="DeepNotes">
+  <main class="wrap">
+    <section class="hero">
+      <h1>Senior-level notes, in one place.</h1>
+      <p>Deep, source-backed notes on C, data structures, Linux and L2/L3 networking — distilled from the standards
+      (ISO C, POSIX, IEEE 802, IETF RFCs, kernel docs) so you don't have to read them cold.</p>
+    </section>
+    <div class="cards">
+      {Object.entries(TRACKS).map(([id, t]) => (
+        <a class="card" href={url(`/${id}/`)}>
+          <h3>{t.name}</h3><p>{t.blurb}</p>
+          <div class="count">{all.filter((n) => n.data.track === id).length} notes</div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Base>

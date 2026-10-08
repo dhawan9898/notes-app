@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { render } from 'astro:content';
+import { TRACKS, notesForTrack, groupByModule, noteHref, noteSlug, url, type TrackId } from '../../lib/tracks';
+
+export async function getStaticPaths() {
+  const out = [];
+  for (const track of Object.keys(TRACKS) as TrackId[]) {
+    const notes = await notesForTrack(track);
+    notes.forEach((note, i) =>
+      out.push({ params: { track, slug: noteSlug(note) }, props: { note, notes, prev: notes[i - 1], next: notes[i + 1] } }));
+  }
+  return out;
+}
+const { note, notes, prev, next } = Astro.props;
+const { Content, headings } = await render(note);
+const mods = groupByModule(notes);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+<Base title={`${note.data.title} · ${TRACKS[note.data.track].name}`} description={note.data.summary}>
+  <div class="wrap layout">
+    <aside class="side" data-pagefind-ignore>
+      <a href={url(`/${note.data.track}/`)} style="border:none;font-weight:700">{TRACKS[note.data.track].name}</a>
+      {mods.map((m) => (<>
+        <h4>{m.title}</h4>
+        {m.notes.map((n) => <a href={noteHref(n)} class={n.id === note.id ? 'cur' : ''}>{n.data.title}</a>)}
+      </>))}
+    </aside>
+    <article data-pagefind-body>
+      <h1>{note.data.title}</h1>
+      <div class="meta">{note.data.module} · {note.data.level}</div>
+      <Content />
+      {note.data.sources.length > 0 && (
+        <section class="sources"><h2>Sources &amp; further reading</h2>
+          <ul>{note.data.sources.map((s) => <li>{s.url ? <a href={s.url} rel="noopener">{s.label}</a> : s.label}</li>)}</ul>
+        </section>
+      )}
+      <nav class="pager" data-pagefind-ignore>
+        {prev ? <a href={noteHref(prev)}><small>← Previous</small>{prev.data.title}</a> : <span></span>}
+        {next ? <a class="next" href={noteHref(next)}><small>Next →</small>{next.data.title}</a> : <span></span>}
+      </nav>
+    </article>
+    <aside class="toc" data-pagefind-ignore>
+      <p>On this page</p>
+      {toc.map((h) => <a href={`#${h.slug}`} class={h.depth === 3 ? 'l3' : ''}>{h.text}</a>)}
+    </aside>
+  </div>
+</Base>

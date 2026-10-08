@@ -1,0 +1,50 @@
+---
+import '../styles/global.css';
+import Search from 'astro-pagefind/components/Search';
+import { url } from '../lib/tracks';
+const { title, description = 'In-depth engineering notes: C, DSA, Linux and Networking.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <script is:inline>
+      const t = localStorage.getItem('theme');
+      if (t) document.documentElement.dataset.theme = t;
+    </script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="in">
+        <a class="brand" href={url('/')}>Deep<span>Notes</span></a>
+        <div class="spacer"></div>
+        <Search />
+        <button class="icon" id="theme" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+    <slot />
+    <script>
+      document.getElementById('theme')!.addEventListener('click', () => {
+        const el = document.documentElement;
+        const dark = el.dataset.theme ? el.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        el.dataset.theme = dark ? 'light' : 'dark';
+        localStorage.setItem('theme', el.dataset.theme);
+      });
+      const blocks = document.querySelectorAll<HTMLElement>('pre[data-language="mermaid"]');
+      if (blocks.length) {
+        import('mermaid').then(({ default: mermaid }) => {
+          const dark = document.documentElement.dataset.theme === 'dark' ||
+            (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+          mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default' });
+          blocks.forEach(async (b, i) => {
+            const { svg } = await mermaid.render('m' + i, b.textContent || '');
+            const d = document.createElement('div'); d.innerHTML = svg; b.replaceWith(d);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TRACKS, notesForTrack, groupByModule, noteHref, url, type TrackId } from '../../lib/tracks';
+export function getStaticPaths() { return Object.keys(TRACKS).map((track) => ({ params: { track } })); }
+const track = Astro.params.track as TrackId;
+const mods = groupByModule(await notesForTrack(track));
+---
+<Base title={`${TRACKS[track].name} · DeepNotes`}>
+  <main class="wrap">
+    <section class="hero"><a href={url('/')}>← All tracks</a><h1>{TRACKS[track].name}</h1><p>{TRACKS[track].blurb}</p></section>
+    {mods.length === 0 && <p style="margin-top:2rem;color:var(--muted)">Notes coming soon.</p>}
+    {mods.map((m, mi) => (
+      <section class="module">
+        <h2>{mi + 1}. {m.title}</h2>
+        {m.notes.map((n, i) => (
+          <a class="lesson" href={noteHref(n)}>
+            <span class="n">{mi + 1}.{i + 1}</span>
+            <span><strong>{n.data.title}</strong><br /><span class="s">{n.data.summary}</span></span>
+            <span class="badge">{n.data.level}</span>
+          </a>
+        ))}
+      </section>
+    ))}
+  </main>
+</Base>
