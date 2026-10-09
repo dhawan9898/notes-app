@@ -1,10 +1,34 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export const TRACKS = {
-  c: { name: 'C Programming', blurb: 'From the abstract machine to ABI, UB and systems-level C.' },
-  dsa: { name: 'Data Structures & Algorithms', blurb: 'Complexity, structures and techniques, implemented in C.' },
-  linux: { name: 'Linux', blurb: 'Userland, processes, kernel interfaces, tracing and containers.' },
-  networking: { name: 'Networking (L2 & L3)', blurb: 'Ethernet to BGP, grounded in IEEE 802 and the RFCs.' },
+  c: {
+    name: 'C Programming',
+    blurb: 'From the abstract machine to ABI, UB, linking and systems-level C.',
+    icon: '⚙️',
+    standards: 'ISO C17/C23 · SysV ABI',
+    tags: ['ELF Internals', 'Undefined Behavior', 'Linkers & Dynamic Libs', 'POSIX I/O'],
+  },
+  dsa: {
+    name: 'Data Structures & Algorithms',
+    blurb: 'Complexity, cache performance and data structures, implemented in pure C.',
+    icon: '⚡',
+    standards: 'Source-compiled & verified',
+    tags: ['Open Addressing', 'Intrusive Structures', 'Memory Locality', 'Arena Allocation'],
+  },
+  linux: {
+    name: 'Linux Systems & Kernel',
+    blurb: 'Userland, processes, memory paging, kernel interfaces, tracing and containers.',
+    icon: '🐧',
+    standards: 'POSIX.1-2017 · Linux 6.x · cgroups v2',
+    tags: ['Virtual Memory & Page Cache', 'epoll & io_uring', 'eBPF & perf', 'Namespaces & cgroups'],
+  },
+  networking: {
+    name: 'Networking (L2 & L3)',
+    blurb: 'Ethernet framing to BGP convergence, grounded in IEEE 802 and IETF RFCs.',
+    icon: '🌐',
+    standards: 'IEEE 802.1/3 · IETF RFCs',
+    tags: ['STP / RSTP / LACP', 'OSPF & BGP Peering', 'IPv6 & Neighbor Discovery', 'VXLAN & EVPN'],
+  },
 } as const;
 export type TrackId = keyof typeof TRACKS;
 export const url = (p: string) => (import.meta.env.BASE_URL.replace(/\/$/, '') + p);

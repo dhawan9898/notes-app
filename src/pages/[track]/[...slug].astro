@@ -8,41 +8,206 @@ export async function getStaticPaths() {
   for (const track of Object.keys(TRACKS) as TrackId[]) {
     const notes = await notesForTrack(track);
     notes.forEach((note, i) =>
-      out.push({ params: { track, slug: noteSlug(note) }, props: { note, notes, prev: notes[i - 1], next: notes[i + 1] } }));
+      out.push({
+        params: { track, slug: noteSlug(note) },
+        props: { note, notes, prev: notes[i - 1], next: notes[i + 1] },
+      })
+    );
   }
   return out;
 }
+
 const { note, notes, prev, next } = Astro.props;
 const { Content, headings } = await render(note);
 const mods = groupByModule(notes);
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+// Calculate reading time
+const rawBody = note.body || '';
+const wordCount = rawBody.split(/\s+/).filter(Boolean).length;
+const readingTime = Math.max(1, Math.ceil(wordCount / 220));
+const trackInfo = TRACKS[note.data.track];
 ---
-<Base title={`${note.data.title} · ${TRACKS[note.data.track].name}`} description={note.data.summary}>
+<Base 
+  title={`${note.data.title} · ${trackInfo.name} · DeepNotes`} 
+  description={note.data.summary}
+>
+  <div class="mobile-nav-bar" data-pagefind-ignore>
+    <button class="mobile-nav-btn" id="mobileNavBtn" aria-label="Toggle navigation outline" aria-expanded="false">
+      <span class="icon-burger">☰</span>
+      <span class="track-curr">{trackInfo.icon} {note.data.module}</span>
+      <span class="btn-indicator">Outline ▾</span>
+    </button>
+  </div>
+
   <div class="wrap layout">
-    <aside class="side" data-pagefind-ignore>
-      <a href={url(`/${note.data.track}/`)} style="border:none;font-weight:700">{TRACKS[note.data.track].name}</a>
-      {mods.map((m) => (<>
-        <h4>{m.title}</h4>
-        {m.notes.map((n) => <a href={noteHref(n)} class={n.id === note.id ? 'cur' : ''}>{n.data.title}</a>)}
-      </>))}
+    <aside class="side" id="sideNav" data-pagefind-ignore>
+      <div class="side-top">
+        <a class="side-track-link" href={url(`/${note.data.track}/`)}>
+          <span class="side-icon">{trackInfo.icon}</span>
+          <span class="side-track-name">{trackInfo.name}</span>
+        </a>
+        <div class="side-track-meta">{notes.length} notes across {mods.length} modules</div>
+      </div>
+      <div class="side-scroll">
+        {mods.map((m, mi) => (
+          <div class="side-module">
+            <h4 class="side-module-title">
+              <span class="mod-num">{mi + 1}.</span> {m.title}
+            </h4>
+            <div class="side-module-notes">
+              {m.notes.map((n) => (
+                <a 
+                  href={noteHref(n)} 
+                  class:list={['side-note-link', { cur: n.id === note.id }]}
+                  title={n.data.title}
+                >
+                  <span class="side-note-title">{n.data.title}</span>
+                  {n.id === note.id && <span class="active-dot"></span>}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </aside>
-    <article data-pagefind-body>
-      <h1>{note.data.title}</h1>
-      <div class="meta">{note.data.module} · {note.data.level}</div>
-      <Content />
+
+    <article data-pagefind-body class="article-content">
+      <nav class="breadcrumbs" aria-label="Breadcrumbs" data-pagefind-ignore>
+        <a href={url('/')}>Home</a>
+        <span class="sep">/</span>
+        <a href={url(`/${note.data.track}/`)}>{trackInfo.name}</a>
+        <span class="sep">/</span>
+        <span class="current-mod">{note.data.module}</span>
+      </nav>
+
+      <header class="article-header">
+        <h1>{note.data.title}</h1>
+        <div class="meta-row">
+          <span class="meta-pill module-pill">{note.data.module}</span>
+          <span class={`badge badge-${note.data.level}`}>{note.data.level}</span>
+          <span class="meta-pill reading-pill">⏱ {readingTime} min read</span>
+          {note.data.sources.length > 0 && (
+            <a href="#sources-section" class="meta-pill sources-pill">
+              🔗 {note.data.sources.length} {note.data.sources.length === 1 ? 'source' : 'sources'}
+            </a>
+          )}
+        </div>
+        <p class="article-summary-lead">{note.data.summary}</p>
+      </header>
+
+      <div class="markdown-body">
+        <Content />
+      </div>
+
       {note.data.sources.length > 0 && (
-        <section class="sources"><h2>Sources &amp; further reading</h2>
-          <ul>{note.data.sources.map((s) => <li>{s.url ? <a href={s.url} rel="noopener">{s.label}</a> : s.label}</li>)}</ul>
+        <section class="sources" id="sources-section">
+          <div class="sources-header">
+            <h3>Primary Sources &amp; Standards</h3>
+            <span class="sources-sub">Standards specifications and authoritative references cited in this note</span>
+          </div>
+          <ul class="sources-list">
+            {note.data.sources.map((s) => (
+              <li class="source-item">
+                {s.url ? (
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" class="source-link">
+                    <span class="source-icon">↗</span>
+                    <span class="source-text">{s.label}</span>
+                  </a>
+                ) : (
+                  <span class="source-plain">
+                    <span class="source-icon">§</span>
+                    <span class="source-text">{s.label}</span>
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
         </section>
       )}
-      <nav class="pager" data-pagefind-ignore>
-        {prev ? <a href={noteHref(prev)}><small>← Previous</small>{prev.data.title}</a> : <span></span>}
-        {next ? <a class="next" href={noteHref(next)}><small>Next →</small>{next.data.title}</a> : <span></span>}
+
+      <nav class="pager" data-pagefind-ignore aria-label="Note navigation">
+        {prev ? (
+          <a class="pager-card prev" href={noteHref(prev)}>
+            <small class="pager-dir">← Previous Note</small>
+            <span class="pager-title">{prev.data.title}</span>
+            <span class="pager-mod">{prev.data.module}</span>
+          </a>
+        ) : (
+          <div class="pager-empty"></div>
+        )}
+        {next ? (
+          <a class="pager-card next" href={noteHref(next)}>
+            <small class="pager-dir">Next Note →</small>
+            <span class="pager-title">{next.data.title}</span>
+            <span class="pager-mod">{next.data.module}</span>
+          </a>
+        ) : (
+          <div class="pager-empty"></div>
+        )}
       </nav>
     </article>
+
     <aside class="toc" data-pagefind-ignore>
-      <p>On this page</p>
-      {toc.map((h) => <a href={`#${h.slug}`} class={h.depth === 3 ? 'l3' : ''}>{h.text}</a>)}
+      <div class="toc-sticky">
+        <p class="toc-heading">On this page</p>
+        <nav class="toc-nav" aria-label="Table of contents">
+          {toc.length > 0 ? (
+            toc.map((h) => (
+              <a 
+                href={`#${h.slug}`} 
+                class:list={['toc-link', { l3: h.depth === 3 }]}
+                data-slug={h.slug}
+              >
+                {h.text}
+              </a>
+            ))
+          ) : (
+            <span class="toc-empty">Overview</span>
+          )}
+          {note.data.sources.length > 0 && (
+            <a href="#sources-section" class="toc-link sources-toc-link">Sources &amp; References</a>
+          )}
+        </nav>
+        <div class="toc-footer">
+          <a href="#" class="back-to-top">↑ Back to top</a>
+        </div>
+      </div>
     </aside>
   </div>
+
+  <script>
+    // Mobile Navigation Drawer Toggle
+    const toggleBtn = document.getElementById('mobileNavBtn');
+    const sideNav = document.getElementById('sideNav');
+    if (toggleBtn && sideNav) {
+      toggleBtn.addEventListener('click', () => {
+        const isOpen = sideNav.classList.toggle('open');
+        toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
+    // ScrollSpy for Table of Contents
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link[data-slug]');
+    if (tocLinks.length > 0) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            tocLinks.forEach((link) => {
+              if (link.getAttribute('data-slug') === id) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+
+      document.querySelectorAll('article h2[id], article h3[id]').forEach((h) => {
+        observer.observe(h);
+      });
+    }
+  </script>
 </Base>
