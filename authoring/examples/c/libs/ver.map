@@ -1,0 +1,4 @@
+MATHX_1.0 {
+  global: mathx_square; mathx_cube; mathx_version;
+  local: *;
+};

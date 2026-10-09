@@ -1,0 +1,27 @@
+# build artifacts produced when running the examples
+*.o
+*.so
+*.so.*
+*.a
+*.d
+*.gcda
+*.gcno
+*.gcov
+*.pyc
+__pycache__/
+crash.bin
+core*
+*.pid
+# compiled binaries have no extension: ignore every extensionless regular file except Makefile
+*
+!*/
+!*.c
+!*.h
+!*.cpp
+!*.py
+!*.sh
+!*.map
+!*.txt
+!Makefile
+!CMakeLists.txt
+!.gitignore

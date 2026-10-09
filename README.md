@@ -39,3 +39,20 @@ Conventions:
 2. Tables for field layouts and rules; `mermaid` code fences for flows; real, compiled code and real CLI output.
 3. Call out pitfalls and failure modes, and show how to observe the behavior (Linux commands, Wireshark filters).
 4. End with **Key takeaways**. Cite exact clauses/sections in `sources`.
+
+## Tracks and status
+
+| Track | Notes | Topic map |
+|---|---|---|
+| Networking (L2, L3 and related) | 40 | `docs/networking-outline.md` |
+| Linux | 31 | `docs/linux-outline.md` |
+| C programming | 22 | `docs/c-outline.md` |
+| Data structures & algorithms (in C) | 1 so far | `docs/dsa-outline.md` |
+
+## Authoring tools
+
+The C and DSA notes are assembled from tested sources; see [`authoring/README.md`](authoring/README.md).
+
+## Quality checks
+
+`npm run build` first runs `scripts/check-notes.mjs --fix`, which validates every note's front matter and quotes source labels (a colon inside an unquoted YAML label breaks parsing).
