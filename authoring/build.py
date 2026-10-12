@@ -4,7 +4,7 @@
 Directives (each on its own line in authoring/templates/<track>/<module>/<note>.md):
   {{include c/dir/file.c}}              -> fenced code block (language from extension)
   {{include path/to/file.c 10-30}}        -> only lines 10-30
-  {{run c/dir :: command}}       -> "$ command" + its stdout/stderr (run in that dir, 60 s timeout)
+  {{run c/dir :: command}}       -> "$ command" + its stdout/stderr (run in that dir, 300 s timeout)
 Output goes to src/content/notes/<track>/<module>/<note>.md
 """
 import re, subprocess, sys, pathlib
@@ -25,7 +25,7 @@ def include(arg):
 
 def run(arg):
     where, cmd = [x.strip() for x in arg.split("::", 1)]
-    r = subprocess.run(cmd, shell=True, cwd=ROOT / "authoring" / "examples" / where, capture_output=True, text=True, timeout=60, executable="/bin/bash")
+    r = subprocess.run(cmd, shell=True, cwd=ROOT / "authoring" / "examples" / where, capture_output=True, text=True, timeout=300, executable="/bin/bash")
     out = (r.stdout + r.stderr).rstrip("\n")
     return "```text\n$ " + cmd + "\n" + out + "\n```"
 
