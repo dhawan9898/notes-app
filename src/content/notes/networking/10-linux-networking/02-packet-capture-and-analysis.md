@@ -10,17 +10,17 @@ prerequisites:
   - "TCP and UDP: The Transport Layer"
   - "Linux Network Labs: Namespaces, veth, Bridges, VLANs, tc and nftables"
 sources:
-  - label: pcap-savefile(5) — libpcap capture file format
+  - label: "pcap-savefile(5) — libpcap capture file format"
     url: https://www.tcpdump.org/manpages/pcap-savefile.5.html
-  - label: pcap-filter(7) — packet filter syntax (BPF)
+  - label: "pcap-filter(7) — packet filter syntax (BPF)"
     url: https://www.tcpdump.org/manpages/pcap-filter.7.html
-  - label: Wireshark User's Guide — display filters and the capture file formats
+  - label: "Wireshark User's Guide — display filters and the capture file formats"
     url: https://www.wireshark.org/docs/wsug_html_chunked/
-  - label: tcpdump(8) and tshark(1) — manual pages
+  - label: "tcpdump(8) and tshark(1) — manual pages"
     url: https://www.tcpdump.org/manpages/tcpdump.1.html
-  - label: Linux kernel documentation — Packet mmap (PACKET_RX_RING, TPACKET)
+  - label: "Linux kernel documentation — Packet mmap (PACKET_RX_RING, TPACKET)"
     url: https://www.kernel.org/doc/html/latest/networking/packet_mmap.html
-  - label: Sanders — Practical Packet Analysis, 3rd ed.
+  - label: "Sanders — Practical Packet Analysis, 3rd ed."
 ---
 
 When a network problem resists explanation from counters and logs, the packets themselves are the ground truth: what was actually sent, in what order, at what time, and what the other side answered. **Packet capture** records packets; **analysis** turns a trace into a diagnosis. The skill is mostly choosing *where* to capture, filtering sensibly, and reading a trace methodically.
