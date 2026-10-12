@@ -21,12 +21,12 @@ Status: [x] written, [ ] planned.
 - [x] Probabilistic structures: Bloom filter, count-min sketch, HyperLogLog
 
 ## 5. Trees
-- [ ] Binary trees and BSTs
-- [ ] Self-balancing trees: AVL, red-black, skip lists
-- [ ] Heaps and priority queues
-- [ ] Tries and radix trees
-- [ ] B-trees, B+ trees and LSM trees
-- [ ] Range-query structures: Fenwick and segment trees
+- [x] Binary trees and BSTs
+- [x] Self-balancing trees: AVL, red-black, skip lists
+- [x] Heaps and priority queues
+- [x] Tries and radix trees
+- [x] B-trees, B+ trees and LSM trees
+- [x] Range-query structures: Fenwick and segment trees
 
 ## 6. Graphs
 - [ ] Representations and traversals
