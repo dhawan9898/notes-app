@@ -3,22 +3,22 @@
 Status: [x] written, [ ] planned.
 
 ## 1. Foundations
-- [ ] Complexity analysis and amortized analysis
-- [ ] Recursion, divide and conquer, loop invariants
+- [x] Complexity analysis and amortized analysis
+- [x] Recursion, divide and conquer, loop invariants
 
 ## 2. Linear Structures
-- [ ] Dynamic arrays
-- [ ] Linked lists, including intrusive lists
-- [ ] Stacks, queues, deques and ring buffers
+- [x] Dynamic arrays
+- [x] Linked lists, including intrusive lists
+- [x] Stacks, queues, deques and ring buffers
 
 ## 3. Searching and Sorting
-- [ ] Binary search and its variants
-- [ ] Comparison sorts
-- [ ] Non-comparison sorts and selection
+- [x] Binary search and its variants
+- [x] Comparison sorts
+- [x] Non-comparison sorts and selection
 
 ## 4. Hashing
 - [x] Hash tables with open addressing
-- [ ] Probabilistic structures: Bloom filter, count-min sketch, HyperLogLog
+- [x] Probabilistic structures: Bloom filter, count-min sketch, HyperLogLog
 
 ## 5. Trees
 - [ ] Binary trees and BSTs

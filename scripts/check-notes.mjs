@@ -11,13 +11,15 @@ for (const f of walk('src/content/notes').filter((f) => f.endsWith('.md') || f.e
     console.error(`${f}: Missing or malformed front matter delimiters (---)`);
     continue;
   }
+  let front = m[1];
   if (fix) {
     const fm = m[1].replace(/^(\s+- label: )(?!")(.*)$/gm, (_, p, v) => `${p}"${v.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`);
     text = text.replace(m[1], () => fm);
     fs.writeFileSync(f, text);
+    front = fm;                                  // validate the repaired text, not the original
   }
   try {
-    yaml.load(m[1]);
+    yaml.load(front);
   } catch (e) {
     bad++;
     const line = e.mark ? e.mark.line + 1 : '?';
