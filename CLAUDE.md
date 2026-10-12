@@ -173,6 +173,10 @@ All 28 DSA notes are written (see `docs/dsa-outline.md`, every box checked). Eac
 
 Possible DSA follow-ups (not required): suffix arrays/automata implementation, persistent and functional structures, geometry (convex hull, sweep line), randomized algorithms (reservoir sampling, skip-list analysis), external sorting in code, a capstone "projects" module.
 
+### 8.1b Coverage review
+
+A full coverage review (intern view and expert view) is in `docs/coverage-review.md`; its prioritised backlog (P0 beginner on-ramp, P1 expert gaps, P2 thin notes, P3 verification) supersedes the older backlog in 8.3 where they overlap.
+
 ### 8.2 Next: hardening and verification (high value, do in this order)
 
 1. **Visual verification pass** (needs a browser; the owner or a session with Playwright/Chromium): run `npm run build && npm run preview`, open every track page and a sample from every module; check Mermaid rendering (fix syntax errors in the offending diagrams), table overflow on mobile width (320–390 px), code block horizontal scroll, dark mode contrast, TOC, search results, prev/next links, base-path correctness under `/notes-app`. Consider adding a Playwright smoke test script (`scripts/smoke.mjs`) that loads each page and fails on console errors or mermaid error nodes.
