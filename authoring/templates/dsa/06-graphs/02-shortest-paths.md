@@ -6,6 +6,9 @@ moduleOrder: 6
 order: 2
 level: advanced
 summary: "Relaxation and why each algorithm works, Dijkstra with an indexed heap vs lazy deletion (measured), Bellman-Ford and negative cycles, Floyd-Warshall (including the infinity bug), 0-1 BFS, A* on grids, and the OSPF SPF calculation with ECMP — cross-checked against each other on thousands of random graphs."
+prerequisites:
+  - Graph Representations and Traversals
+  - Heaps and Priority Queues
 sources:
   - label: Dijkstra — A Note on Two Problems in Connexion with Graphs (Numerische Mathematik 1, 1959)
   - label: Bellman — On a Routing Problem (Quarterly of Applied Mathematics 16(1), 1958)

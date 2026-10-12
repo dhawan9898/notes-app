@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 1
 level: intermediate
 summary: How to reason about how algorithms scale — asymptotic notation, recurrences and the Master theorem, best/worst/average cases, amortized analysis, and the hidden O(n) traps in C — confirmed with operation counts rather than stopwatch noise.
+prerequisites:
+  - Thinking in Data Structures
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms (CLRS), 4th ed., Ch. 3 (Characterizing Running Times), Ch. 4 (Divide-and-Conquer), Ch. 16 (Amortized Analysis)"
   - label: "Knuth — The Art of Computer Programming, Vol. 1, §1.2.11 (Asymptotic representations)"

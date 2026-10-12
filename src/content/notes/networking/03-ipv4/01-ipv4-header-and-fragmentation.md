@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 1
 level: intermediate
 summary: Every field of the IPv4 header and what routers do with it, the header checksum, how fragmentation works byte by byte, and why modern networks avoid it.
+prerequisites:
+  - What Is a Network?
+  - Binary, Hexadecimal and Bits
 sources:
   - label: "RFC 791 — Internet Protocol"
     url: https://www.rfc-editor.org/rfc/rfc791

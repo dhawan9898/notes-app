@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 2
 level: intermediate
 summary: How "everything is a file" is implemented — the directory layout, the VFS objects (superblock, inode, dentry, file), hard and symbolic links, open file descriptions, and the failure modes that follow from them.
+prerequisites:
+  - Linux Command Line Basics
 sources:
   - label: "Filesystem Hierarchy Standard 3.0"
     url: https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html

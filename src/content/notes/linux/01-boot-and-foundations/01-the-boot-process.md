@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 1
 level: intermediate
 summary: Follow a Linux machine from power-on to a login prompt, what each stage does, the kernel command-line options that matter, and how to recover a system that will not boot.
+prerequisites:
+  - Linux Command Line Basics
 sources:
   - label: "UEFI Specification 2.10 — Boot Manager, GPT, Secure Boot"
     url: https://uefi.org/specifications

@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 1
 level: intermediate
 summary: "Traversals (recursive, explicit-stack, Morris, level order), BST insert/find/delete with the link-pointer idiom, successor, LCA, serialization, the broken-validator trap, and why shape (height) is everything — measured."
+prerequisites:
+  - Recursion, Divide and Conquer, and Loop Invariants
+  - Linked Lists
 sources:
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 12 (Binary Search Trees) and Ch. 10.3 (Representing rooted trees)
   - label: Knuth — The Art of Computer Programming, Vol. 1, §2.3.1 (Traversing Binary Trees) and Vol. 3, §6.2.2 (Binary Tree Searching)

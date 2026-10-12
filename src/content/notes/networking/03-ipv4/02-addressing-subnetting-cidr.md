@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 2
 level: intermediate
 summary: Prefix arithmetic you can do in your head, special-purpose address blocks, VLSM design with a worked plan, and route summarization rules.
+prerequisites:
+  - What Is a Network?
+  - Binary, Hexadecimal and Bits
 sources:
   - label: "RFC 4632 — Classless Inter-domain Routing (CIDR)"
     url: https://www.rfc-editor.org/rfc/rfc4632

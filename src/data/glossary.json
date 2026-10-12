@@ -1,0 +1,920 @@
+[
+ {
+  "term": "Algorithm",
+  "def": "A finite, step-by-step procedure that solves a problem.",
+  "track": "DSA",
+  "see": "Complexity Analysis and Amortized Analysis"
+ },
+ {
+  "term": "Amortized cost",
+  "def": "The average cost per operation over a worst-case sequence of operations, even if single operations are sometimes expensive (a dynamic array append is O(1) amortized).",
+  "track": "DSA",
+  "see": "Complexity Analysis and Amortized Analysis"
+ },
+ {
+  "term": "Array",
+  "def": "A block of equal-sized elements stored one after another in memory, reached by index.",
+  "track": "DSA",
+  "see": "Dynamic Arrays"
+ },
+ {
+  "term": "AVL tree",
+  "def": "A self-balancing binary search tree whose subtree heights never differ by more than 1.",
+  "track": "DSA",
+  "see": "Self-Balancing Trees: AVL, Red-Black, Treaps and Skip Lists"
+ },
+ {
+  "term": "B-tree",
+  "def": "A wide, balanced search tree whose nodes hold many keys, designed so each node fills one disk page or cache block.",
+  "track": "DSA",
+  "see": "B-Trees, B+ Trees and LSM Trees"
+ },
+ {
+  "term": "Backtracking",
+  "def": "Search that builds a solution step by step and undoes a step when it leads nowhere.",
+  "track": "DSA",
+  "see": "Backtracking, Branch and Bound, and Bitmask DP"
+ },
+ {
+  "term": "Big-O notation",
+  "def": "A way to describe how running time or memory grows with input size, ignoring constant factors; O(n) means roughly proportional to n.",
+  "track": "DSA",
+  "see": "Complexity Analysis and Amortized Analysis"
+ },
+ {
+  "term": "Binary search",
+  "def": "Finding a value in a sorted array by repeatedly halving the range; O(log n).",
+  "track": "DSA",
+  "see": "Binary Search and Its Variants"
+ },
+ {
+  "term": "Bloom filter",
+  "def": "A compact structure that answers 'possibly in the set' or 'definitely not'; it never gives false negatives.",
+  "track": "DSA",
+  "see": "Probabilistic Structures: Bloom, Count-Min, HyperLogLog and Consistent Hashing"
+ },
+ {
+  "term": "BFS (breadth-first search)",
+  "def": "Graph traversal that visits vertices in layers of increasing distance from the start, using a queue.",
+  "track": "DSA",
+  "see": "Graph Representations and Traversals"
+ },
+ {
+  "term": "Cache (data structure)",
+  "def": "A small fast store of recent or popular results; a replacement policy (LRU, LFU, CLOCK) decides what to evict when full.",
+  "track": "DSA",
+  "see": "Caches: LRU, LFU, CLOCK and Belady's OPT"
+ },
+ {
+  "term": "Cache line",
+  "def": "The unit (typically 64 bytes) in which memory moves between RAM and the CPU cache; why contiguous data is fast.",
+  "track": "General",
+  "see": "Performance-Oriented C: Caches, Branches, Data Layout and Vectorization"
+ },
+ {
+  "term": "CAS (compare-and-swap)",
+  "def": "An atomic CPU instruction that writes a new value only if the location still holds an expected value; the building block of lock-free code.",
+  "track": "DSA",
+  "see": "Concurrent and Lock-Free Structures"
+ },
+ {
+  "term": "Complexity (time/space)",
+  "def": "How the running time or memory use of an algorithm grows with input size.",
+  "track": "DSA",
+  "see": "Complexity Analysis and Amortized Analysis"
+ },
+ {
+  "term": "DFS (depth-first search)",
+  "def": "Graph traversal that follows a path as deep as possible before backing up, using a stack or recursion.",
+  "track": "DSA",
+  "see": "Graph Representations and Traversals"
+ },
+ {
+  "term": "Dijkstra's algorithm",
+  "def": "Shortest paths from one vertex in a graph with non-negative edge weights.",
+  "track": "DSA",
+  "see": "Shortest Paths: Dijkstra, Bellman-Ford, Floyd-Warshall and A*"
+ },
+ {
+  "term": "Dynamic programming",
+  "def": "Solving a problem by combining answers to overlapping subproblems, each computed once.",
+  "track": "DSA",
+  "see": "Dynamic Programming"
+ },
+ {
+  "term": "Edit distance",
+  "def": "The minimum number of single-character insertions, deletions and substitutions turning one string into another (Levenshtein distance).",
+  "track": "DSA",
+  "see": "String Matching and Edit Distance"
+ },
+ {
+  "term": "Graph",
+  "def": "A set of vertices (nodes) connected by edges; models networks, dependencies, maps.",
+  "track": "DSA",
+  "see": "Graph Representations and Traversals"
+ },
+ {
+  "term": "Greedy algorithm",
+  "def": "Builds a solution by always taking the locally best choice; correct only for problems where that is provably safe.",
+  "track": "DSA",
+  "see": "Greedy Algorithms"
+ },
+ {
+  "term": "Hash function",
+  "def": "A function that turns a key into a fixed-size number, ideally spreading keys evenly.",
+  "track": "DSA",
+  "see": "Hash Tables with Open Addressing"
+ },
+ {
+  "term": "Hash table",
+  "def": "A structure mapping keys to values in expected O(1) time by using a hash of the key as an array index.",
+  "track": "DSA",
+  "see": "Hash Tables with Open Addressing"
+ },
+ {
+  "term": "Heap (priority queue)",
+  "def": "A tree stored in an array where each parent is no larger than its children, giving fast access to the minimum.",
+  "track": "DSA",
+  "see": "Heaps and Priority Queues"
+ },
+ {
+  "term": "Heap (memory)",
+  "def": "The region of memory used for dynamic allocation (malloc/free). Not the same as the heap data structure.",
+  "track": "C",
+  "see": "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
+ },
+ {
+  "term": "Invariant",
+  "def": "A condition that holds before and after every step of a loop or operation; used to prove code correct.",
+  "track": "DSA",
+  "see": "Recursion, Divide and Conquer, and Loop Invariants"
+ },
+ {
+  "term": "Linked list",
+  "def": "A chain of nodes each pointing to the next; cheap insertion, slow indexing.",
+  "track": "DSA",
+  "see": "Linked Lists"
+ },
+ {
+  "term": "Lock-free",
+  "def": "A concurrency guarantee that some thread always makes progress even if others are paused.",
+  "track": "DSA",
+  "see": "Concurrent and Lock-Free Structures"
+ },
+ {
+  "term": "LRU (least recently used)",
+  "def": "A cache policy that evicts the entry unused for the longest time.",
+  "track": "DSA",
+  "see": "Caches: LRU, LFU, CLOCK and Belady's OPT"
+ },
+ {
+  "term": "LSM tree",
+  "def": "A write-optimised store that buffers writes in memory and merges sorted files in the background (LevelDB, RocksDB, Cassandra).",
+  "track": "DSA",
+  "see": "B-Trees, B+ Trees and LSM Trees"
+ },
+ {
+  "term": "Memoization",
+  "def": "Caching the result of a function call so repeated calls with the same input are free.",
+  "track": "DSA",
+  "see": "Dynamic Programming"
+ },
+ {
+  "term": "MST (minimum spanning tree)",
+  "def": "The cheapest set of edges that connects all vertices of a graph.",
+  "track": "DSA",
+  "see": "Union-Find, Spanning Trees, Connectivity and Max-Flow"
+ },
+ {
+  "term": "Queue",
+  "def": "A first-in, first-out collection.",
+  "track": "DSA",
+  "see": "Stacks, Queues, Deques and Ring Buffers"
+ },
+ {
+  "term": "Recursion",
+  "def": "A function that solves a problem by calling itself on a smaller instance.",
+  "track": "DSA",
+  "see": "Recursion, Divide and Conquer, and Loop Invariants"
+ },
+ {
+  "term": "Red-black tree",
+  "def": "A self-balancing binary search tree using node colours; the basis of many library maps.",
+  "track": "DSA",
+  "see": "Self-Balancing Trees: AVL, Red-Black, Treaps and Skip Lists"
+ },
+ {
+  "term": "Ring buffer",
+  "def": "A fixed-size queue stored in an array that wraps around.",
+  "track": "DSA",
+  "see": "Stacks, Queues, Deques and Ring Buffers"
+ },
+ {
+  "term": "Stack",
+  "def": "A last-in, first-out collection.",
+  "track": "DSA",
+  "see": "Stacks, Queues, Deques and Ring Buffers"
+ },
+ {
+  "term": "Topological sort",
+  "def": "An ordering of a directed acyclic graph's vertices so every edge goes forward; used for dependency resolution.",
+  "track": "DSA",
+  "see": "Graph Representations and Traversals"
+ },
+ {
+  "term": "Trie (prefix tree)",
+  "def": "A tree indexed by the characters or bits of a key, used for prefix lookups and IP routing.",
+  "track": "DSA",
+  "see": "Tries, Radix Trees and Longest-Prefix Match"
+ },
+ {
+  "term": "Union-find",
+  "def": "A structure that tracks which elements belong to the same group, with near-constant-time merge and lookup.",
+  "track": "DSA",
+  "see": "Union-Find, Spanning Trees, Connectivity and Max-Flow"
+ },
+ {
+  "term": "ABI (application binary interface)",
+  "def": "The binary-level contract between compiled code: calling convention, type sizes and layout, symbol naming.",
+  "track": "C",
+  "see": "Stack Frames and the x86-64 System V Calling Convention"
+ },
+ {
+  "term": "Address",
+  "def": "A number identifying a location in memory.",
+  "track": "C",
+  "see": "Pointers, Arrays and Decay"
+ },
+ {
+  "term": "Alignment",
+  "def": "The rule that data of a given size must sit at an address that is a multiple of some number (often its size).",
+  "track": "C",
+  "see": "Structs, Alignment, Padding, Unions, Bit-fields and Endianness"
+ },
+ {
+  "term": "Buffer overflow",
+  "def": "Writing past the end of an array or buffer, corrupting neighbouring memory; a leading source of security bugs.",
+  "track": "C",
+  "see": "Strings and Buffer Safety"
+ },
+ {
+  "term": "Compiler",
+  "def": "A program that translates source code into machine code (or an intermediate form).",
+  "track": "C",
+  "see": "The Compilation Pipeline and the ELF Object Model"
+ },
+ {
+  "term": "Dangling pointer",
+  "def": "A pointer to memory that has been freed or has gone out of scope.",
+  "track": "C",
+  "see": "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
+ },
+ {
+  "term": "ELF",
+  "def": "Executable and Linkable Format: the standard file format for programs, object files and shared libraries on Linux.",
+  "track": "C",
+  "see": "The Compilation Pipeline and the ELF Object Model"
+ },
+ {
+  "term": "Endianness",
+  "def": "The order in which the bytes of a multi-byte number are stored (little-endian: least significant byte first).",
+  "track": "C",
+  "see": "Structs, Alignment, Padding, Unions, Bit-fields and Endianness"
+ },
+ {
+  "term": "Header file",
+  "def": "A .h file declaring functions and types so other source files can use them.",
+  "track": "C",
+  "see": "The Preprocessor and Macros"
+ },
+ {
+  "term": "Linker",
+  "def": "The tool that combines object files and libraries into one executable or shared library, resolving symbols.",
+  "track": "C",
+  "see": "Static and Shared Libraries, Symbols, Dynamic Loading"
+ },
+ {
+  "term": "Macro",
+  "def": "A text substitution performed by the preprocessor before compilation.",
+  "track": "C",
+  "see": "The Preprocessor and Macros"
+ },
+ {
+  "term": "Memory leak",
+  "def": "Allocated memory that is never freed and can no longer be reached.",
+  "track": "C",
+  "see": "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
+ },
+ {
+  "term": "Null pointer",
+  "def": "A pointer that refers to nothing; dereferencing it is undefined behavior.",
+  "track": "C",
+  "see": "Pointers, Arrays and Decay"
+ },
+ {
+  "term": "Object file",
+  "def": "The compiler's output for one source file: machine code plus symbols, not yet runnable.",
+  "track": "C",
+  "see": "The Compilation Pipeline and the ELF Object Model"
+ },
+ {
+  "term": "Pointer",
+  "def": "A variable that holds the address of another object.",
+  "track": "C",
+  "see": "Pointers for Beginners"
+ },
+ {
+  "term": "Preprocessor",
+  "def": "The first compilation stage; expands #include and #define before the compiler proper runs.",
+  "track": "C",
+  "see": "The Preprocessor and Macros"
+ },
+ {
+  "term": "Sanitizer",
+  "def": "A compiler-inserted runtime checker (AddressSanitizer, UBSan, ThreadSanitizer) that detects memory and concurrency bugs.",
+  "track": "C",
+  "see": "Debugging with gdb and the Sanitizers"
+ },
+ {
+  "term": "Segmentation fault",
+  "def": "The crash the operating system delivers when a program touches memory it may not access.",
+  "track": "C",
+  "see": "Debugging with gdb and the Sanitizers"
+ },
+ {
+  "term": "Stack (call stack)",
+  "def": "The memory region holding each function call's local variables and return address.",
+  "track": "C",
+  "see": "Stack Frames and the x86-64 System V Calling Convention"
+ },
+ {
+  "term": "Static library / shared library",
+  "def": "Code bundled with a program at link time (.a) versus loaded when the program runs (.so).",
+  "track": "C",
+  "see": "Static and Shared Libraries, Symbols, Dynamic Loading"
+ },
+ {
+  "term": "Symbol",
+  "def": "A named function or variable in an object file, resolved by the linker.",
+  "track": "C",
+  "see": "Static and Shared Libraries, Symbols, Dynamic Loading"
+ },
+ {
+  "term": "Undefined behavior (UB)",
+  "def": "Code the C standard places no requirements on; the compiler may assume it never happens, so results can be anything.",
+  "track": "C",
+  "see": "C Standards, the Abstract Machine and Undefined Behavior"
+ },
+ {
+  "term": "Use after free",
+  "def": "Accessing memory after it has been freed; undefined behavior and a common exploit.",
+  "track": "C",
+  "see": "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
+ },
+ {
+  "term": "volatile",
+  "def": "A C qualifier telling the compiler a variable may change outside the program's control, so every access must really happen.",
+  "track": "C",
+  "see": "Qualifiers, Storage Classes, Scope and Linkage"
+ },
+ {
+  "term": "Capability (Linux)",
+  "def": "One slice of root's power (for example binding low ports) that can be granted to a process separately.",
+  "track": "Linux",
+  "see": "Users, Permissions, ACLs and Capabilities"
+ },
+ {
+  "term": "cgroup",
+  "def": "A kernel feature that limits and accounts for CPU, memory and I/O used by a group of processes.",
+  "track": "Linux",
+  "see": "systemd Timers, cgroups v2 and Resource Control"
+ },
+ {
+  "term": "Container",
+  "def": "An ordinary process (group) isolated with namespaces and limited with cgroups; not a virtual machine.",
+  "track": "Linux",
+  "see": "Linux Namespaces — The Isolation Primitive Behind Containers"
+ },
+ {
+  "term": "Daemon",
+  "def": "A background process, usually started at boot, that provides a service.",
+  "track": "Linux",
+  "see": "systemd — Units, Dependencies, Targets, Hardening and the Journal"
+ },
+ {
+  "term": "Device driver",
+  "def": "Kernel code that lets the operating system talk to a particular piece of hardware.",
+  "track": "Linux",
+  "see": "Kernel Modules, Device Drivers and udev"
+ },
+ {
+  "term": "eBPF",
+  "def": "A way to run small, verified programs inside the kernel for tracing, networking and security.",
+  "track": "Linux",
+  "see": "eBPF — Programmable Kernel Observability, Networking and Security"
+ },
+ {
+  "term": "epoll",
+  "def": "A Linux system call for efficiently waiting on many file descriptors at once.",
+  "track": "Linux",
+  "see": "Event-Driven I/O: select, poll, epoll and io_uring"
+ },
+ {
+  "term": "File descriptor",
+  "def": "A small integer a process uses to refer to an open file, socket or pipe.",
+  "track": "Linux",
+  "see": "Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors"
+ },
+ {
+  "term": "Filesystem",
+  "def": "The structure on a disk that organises data into files and directories (ext4, XFS, Btrfs).",
+  "track": "Linux",
+  "see": "ext4, XFS, Btrfs, Journaling and Durability (fsync)"
+ },
+ {
+  "term": "fork / exec",
+  "def": "fork duplicates the current process; exec replaces a process's program with a new one. Together they start every program.",
+  "track": "Linux",
+  "see": "Process Lifecycle — fork, exec, wait"
+ },
+ {
+  "term": "init / PID 1",
+  "def": "The first process the kernel starts; on most systems it is systemd and it adopts orphaned processes.",
+  "track": "Linux",
+  "see": "The Boot Process — Firmware, Bootloader, Kernel, initramfs and init"
+ },
+ {
+  "term": "initramfs",
+  "def": "A small temporary root filesystem the kernel uses during boot to find and mount the real root.",
+  "track": "Linux",
+  "see": "The Boot Process — Firmware, Bootloader, Kernel, initramfs and init"
+ },
+ {
+  "term": "Inode",
+  "def": "The on-disk record describing a file (owner, permissions, size, data location); the file's name lives in a directory entry.",
+  "track": "Linux",
+  "see": "Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors"
+ },
+ {
+  "term": "Journal (systemd / filesystem)",
+  "def": "systemd's structured log store; or a filesystem's write-ahead log that keeps the disk consistent after a crash.",
+  "track": "Linux",
+  "see": "systemd — Units, Dependencies, Targets, Hardening and the Journal"
+ },
+ {
+  "term": "Kernel",
+  "def": "The core of the operating system: manages memory, processes, devices and system calls.",
+  "track": "Linux",
+  "see": "The Boot Process — Firmware, Bootloader, Kernel, initramfs and init"
+ },
+ {
+  "term": "Kernel module",
+  "def": "Code that can be loaded into the running kernel (often a driver).",
+  "track": "Linux",
+  "see": "Kernel Modules, Device Drivers and udev"
+ },
+ {
+  "term": "Mount",
+  "def": "Attaching a filesystem to a directory so its files appear in the directory tree.",
+  "track": "Linux",
+  "see": "Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors"
+ },
+ {
+  "term": "Namespace (Linux)",
+  "def": "A kernel feature giving a process its own private view of a resource (PIDs, network, mounts...).",
+  "track": "Linux",
+  "see": "Linux Namespaces — The Isolation Primitive Behind Containers"
+ },
+ {
+  "term": "OOM killer",
+  "def": "The kernel mechanism that terminates a process when the system runs out of memory.",
+  "track": "Linux",
+  "see": "mmap, Overcommit, the OOM Killer, Huge Pages, NUMA and Swap"
+ },
+ {
+  "term": "Package manager",
+  "def": "A tool (apt, dnf) that installs, upgrades and removes software and its dependencies.",
+  "track": "Linux",
+  "see": "Installing Software and Managing Services"
+ },
+ {
+  "term": "Page cache",
+  "def": "RAM the kernel uses to keep recently read file data, making repeated reads fast.",
+  "track": "Linux",
+  "see": "Virtual Memory, Paging and the Page Cache"
+ },
+ {
+  "term": "Pipe",
+  "def": "A one-way channel connecting one process's output to another's input (the | in the shell).",
+  "track": "Linux",
+  "see": "The Shell — Parsing, Expansion, Redirection, Pipes and Job Control"
+ },
+ {
+  "term": "Process",
+  "def": "A running instance of a program with its own memory and resources.",
+  "track": "Linux",
+  "see": "Process Lifecycle — fork, exec, wait"
+ },
+ {
+  "term": "procfs and sysfs (/proc, /sys)",
+  "def": "Virtual filesystems exposing kernel and process information as files.",
+  "track": "Linux",
+  "see": "System Calls, the vDSO, strace, /proc, /sys and Netlink"
+ },
+ {
+  "term": "Root (superuser)",
+  "def": "The all-powerful administrative account (user ID 0).",
+  "track": "Linux",
+  "see": "Users, Permissions, ACLs and Capabilities"
+ },
+ {
+  "term": "Scheduler",
+  "def": "The kernel component that decides which process runs on which CPU and for how long.",
+  "track": "Linux",
+  "see": "The Linux Scheduler: Classes, EEVDF/CFS, Priorities, Affinity and CPU Limits"
+ },
+ {
+  "term": "Shell",
+  "def": "The program (bash, zsh) that reads your commands and runs them.",
+  "track": "Linux",
+  "see": "Linux Command Line Basics"
+ },
+ {
+  "term": "Signal",
+  "def": "A small asynchronous notification sent to a process (SIGINT from Ctrl-C, SIGTERM, SIGKILL).",
+  "track": "Linux",
+  "see": "Signals in Depth"
+ },
+ {
+  "term": "Swap",
+  "def": "Disk space used as overflow when RAM is full.",
+  "track": "Linux",
+  "see": "mmap, Overcommit, the OOM Killer, Huge Pages, NUMA and Swap"
+ },
+ {
+  "term": "System call (syscall)",
+  "def": "A request from a program to the kernel (read, write, open...).",
+  "track": "Linux",
+  "see": "System Calls, the vDSO, strace, /proc, /sys and Netlink"
+ },
+ {
+  "term": "systemd",
+  "def": "The init system and service manager on most distributions; starts services, tracks dependencies and logs.",
+  "track": "Linux",
+  "see": "systemd — Units, Dependencies, Targets, Hardening and the Journal"
+ },
+ {
+  "term": "Thread",
+  "def": "A path of execution inside a process; threads of one process share its memory.",
+  "track": "Linux",
+  "see": "Threads and Synchronization"
+ },
+ {
+  "term": "Virtual memory",
+  "def": "Giving each process its own address space, mapped to physical RAM by the kernel and CPU.",
+  "track": "Linux",
+  "see": "Virtual Memory, Paging and the Page Cache"
+ },
+ {
+  "term": "VFS (virtual filesystem)",
+  "def": "The kernel layer that gives all filesystems the same open/read/write interface.",
+  "track": "Linux",
+  "see": "Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors"
+ },
+ {
+  "term": "ACL (access control list)",
+  "def": "An ordered list of permit/deny rules used to filter traffic.",
+  "track": "Networking",
+  "see": "ACLs, Stateless vs Stateful Filtering and Infrastructure Protection"
+ },
+ {
+  "term": "ARP",
+  "def": "Address Resolution Protocol: finds the MAC address that goes with an IPv4 address on the local network.",
+  "track": "Networking",
+  "see": "ARP and IPv4 Address Conflict Detection"
+ },
+ {
+  "term": "AS (autonomous system)",
+  "def": "A network under one administrative control with its own routing policy, identified by an AS number; the unit BGP connects.",
+  "track": "Networking",
+  "see": "BGP-4 Fundamentals: Sessions, Messages, Attributes and Best-Path Selection"
+ },
+ {
+  "term": "Bandwidth",
+  "def": "How much data a link can carry per second (not how fast one bit travels).",
+  "track": "Networking",
+  "see": "What Is a Network?"
+ },
+ {
+  "term": "BGP",
+  "def": "Border Gateway Protocol: the routing protocol that connects the Internet's autonomous systems.",
+  "track": "Networking",
+  "see": "BGP-4 Fundamentals: Sessions, Messages, Attributes and Best-Path Selection"
+ },
+ {
+  "term": "Bridge / switch",
+  "def": "A device that forwards Ethernet frames between ports by learning which MAC addresses are on which port.",
+  "track": "Networking",
+  "see": "Ethernet Frames and MAC Learning"
+ },
+ {
+  "term": "Broadcast",
+  "def": "Traffic delivered to every device on a local network segment.",
+  "track": "Networking",
+  "see": "Ethernet Frames and MAC Learning"
+ },
+ {
+  "term": "CIDR",
+  "def": "Classless Inter-Domain Routing: writing a network as address/prefix-length, such as 10.1.0.0/16.",
+  "track": "Networking",
+  "see": "IPv4 Addressing, Subnetting, VLSM and CIDR"
+ },
+ {
+  "term": "Collision domain / broadcast domain",
+  "def": "The set of devices that can interfere with each other's transmissions / that receive each other's broadcasts.",
+  "track": "Networking",
+  "see": "Ethernet Frames and MAC Learning"
+ },
+ {
+  "term": "Default gateway",
+  "def": "The router a host sends traffic to when the destination is not on its own network.",
+  "track": "Networking",
+  "see": "A Packet's Journey: Host to Gateway to Host"
+ },
+ {
+  "term": "DHCP",
+  "def": "Dynamic Host Configuration Protocol: automatically gives a device an IP address and settings.",
+  "track": "Networking",
+  "see": "DHCP — Messages, Leases, Relay and Options"
+ },
+ {
+  "term": "DNS",
+  "def": "The Domain Name System: translates names like example.com into IP addresses.",
+  "track": "Networking",
+  "see": "What Is a Network?"
+ },
+ {
+  "term": "ECMP",
+  "def": "Equal-cost multipath: sharing traffic over several routes of equal cost.",
+  "track": "Networking",
+  "see": "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
+ },
+ {
+  "term": "Encapsulation",
+  "def": "Wrapping data in the header of each protocol layer as it goes down the stack.",
+  "track": "Networking",
+  "see": "Network Models, Encapsulation and Device Roles"
+ },
+ {
+  "term": "Ethernet",
+  "def": "The dominant wired local-network technology (IEEE 802.3); defines frames and MAC addresses.",
+  "track": "Networking",
+  "see": "Ethernet Frames and MAC Learning"
+ },
+ {
+  "term": "FIB / RIB",
+  "def": "Forwarding Information Base: the table the data plane actually uses to forward. Routing Information Base: all routes learned by routing protocols.",
+  "track": "Networking",
+  "see": "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
+ },
+ {
+  "term": "Fragmentation",
+  "def": "Splitting an IP packet into smaller pieces to fit a link's MTU.",
+  "track": "Networking",
+  "see": "IPv4 Header, Fragmentation and MTU"
+ },
+ {
+  "term": "Frame",
+  "def": "The unit of data at Layer 2 (an Ethernet frame).",
+  "track": "Networking",
+  "see": "Ethernet Frames and MAC Learning"
+ },
+ {
+  "term": "Gateway",
+  "def": "A router connecting a network to another network.",
+  "track": "Networking",
+  "see": "A Packet's Journey: Host to Gateway to Host"
+ },
+ {
+  "term": "IGP / EGP",
+  "def": "Interior gateway protocols (OSPF, IS-IS) route inside one organisation; exterior ones (BGP) between organisations.",
+  "track": "Networking",
+  "see": "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
+ },
+ {
+  "term": "IP address",
+  "def": "A number identifying a network interface at Layer 3 (32-bit for IPv4, 128-bit for IPv6).",
+  "track": "Networking",
+  "see": "IPv4 Addressing, Subnetting, VLSM and CIDR"
+ },
+ {
+  "term": "IPv6",
+  "def": "The successor to IPv4 with 128-bit addresses.",
+  "track": "Networking",
+  "see": "IPv6 Header, Extension Headers and Addressing"
+ },
+ {
+  "term": "LACP",
+  "def": "Link Aggregation Control Protocol: bundles several physical links into one logical link.",
+  "track": "Networking",
+  "see": "Link Aggregation (802.1AX / LACP) and Load Balancing"
+ },
+ {
+  "term": "Latency",
+  "def": "The time a bit takes to get from sender to receiver.",
+  "track": "Networking",
+  "see": "What Is a Network?"
+ },
+ {
+  "term": "Layer 2 / Layer 3",
+  "def": "The data-link layer (frames, MAC addresses, switches) and the network layer (packets, IP addresses, routers).",
+  "track": "Networking",
+  "see": "Network Models, Encapsulation and Device Roles"
+ },
+ {
+  "term": "LSDB",
+  "def": "Link-state database: every router's copy of the topology that link-state protocols use to compute routes.",
+  "track": "Networking",
+  "see": "OSPFv2 Operation: Neighbors, DR/BDR, Flooding and SPF"
+ },
+ {
+  "term": "MAC address",
+  "def": "A 48-bit hardware address identifying a network interface on a local network.",
+  "track": "Networking",
+  "see": "Ethernet Frames and MAC Learning"
+ },
+ {
+  "term": "Metric / cost",
+  "def": "The number a routing protocol uses to compare routes; lower is better.",
+  "track": "Networking",
+  "see": "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
+ },
+ {
+  "term": "MPLS",
+  "def": "A technique that forwards packets using short labels instead of IP lookups, used by providers for VPNs.",
+  "track": "Networking",
+  "see": "MPLS, LDP and MPLS L3VPN"
+ },
+ {
+  "term": "MTU",
+  "def": "Maximum transmission unit: the largest packet a link can carry (1500 bytes on standard Ethernet).",
+  "track": "Networking",
+  "see": "IPv4 Header, Fragmentation and MTU"
+ },
+ {
+  "term": "Multicast",
+  "def": "Traffic sent once and delivered to a group of interested receivers.",
+  "track": "Networking",
+  "see": "IP Multicast Basics — Addressing, IGMP, MLD and Snooping"
+ },
+ {
+  "term": "NAT",
+  "def": "Network address translation: rewriting addresses (and ports) so many private hosts share a few public addresses.",
+  "track": "Networking",
+  "see": "NAT — Static, NAPT, Port Forwarding, Hairpinning and CGNAT"
+ },
+ {
+  "term": "Neighbor Discovery",
+  "def": "IPv6's replacement for ARP, plus router discovery and address autoconfiguration.",
+  "track": "Networking",
+  "see": "ICMPv6, Neighbor Discovery, SLAAC and DAD"
+ },
+ {
+  "term": "OSI model",
+  "def": "A seven-layer reference model for network functions; real networks follow the simpler TCP/IP four-layer model.",
+  "track": "Networking",
+  "see": "Network Models, Encapsulation and Device Roles"
+ },
+ {
+  "term": "OSPF",
+  "def": "Open Shortest Path First: a link-state interior routing protocol.",
+  "track": "Networking",
+  "see": "OSPFv2 Operation: Neighbors, DR/BDR, Flooding and SPF"
+ },
+ {
+  "term": "Packet",
+  "def": "The unit of data at Layer 3 (an IP packet).",
+  "track": "Networking",
+  "see": "Network Models, Encapsulation and Device Roles"
+ },
+ {
+  "term": "Prefix length",
+  "def": "The number of leading bits that identify the network part of an IP address (the /24 in 10.0.0.0/24).",
+  "track": "Networking",
+  "see": "IPv4 Addressing, Subnetting, VLSM and CIDR"
+ },
+ {
+  "term": "Protocol",
+  "def": "An agreed set of rules and message formats for communication.",
+  "track": "Networking",
+  "see": "What Is a Network?"
+ },
+ {
+  "term": "QoS",
+  "def": "Quality of service: giving some traffic priority or guaranteed bandwidth.",
+  "track": "Networking",
+  "see": "QoS — DiffServ, Classification, Queuing, Policing and Shaping"
+ },
+ {
+  "term": "RFC",
+  "def": "Request for Comments: the numbered documents (many of them standards) that define Internet protocols.",
+  "track": "Networking",
+  "see": "Reading RFCs and IEEE Standards Efficiently"
+ },
+ {
+  "term": "Router",
+  "def": "A device that forwards packets between networks using IP addresses and a routing table.",
+  "track": "Networking",
+  "see": "Network Models, Encapsulation and Device Roles"
+ },
+ {
+  "term": "Routing table",
+  "def": "The list of networks a router knows and the next hop for each.",
+  "track": "Networking",
+  "see": "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
+ },
+ {
+  "term": "Spanning tree (STP)",
+  "def": "A Layer 2 protocol that blocks redundant links so a switched network has no loops.",
+  "track": "Networking",
+  "see": "Spanning Tree: STP, RSTP and MSTP"
+ },
+ {
+  "term": "Subnet / subnet mask",
+  "def": "A subdivision of an IP network; the mask marks which bits are the network part.",
+  "track": "Networking",
+  "see": "IPv4 Addressing, Subnetting, VLSM and CIDR"
+ },
+ {
+  "term": "TCP",
+  "def": "Transmission Control Protocol: reliable, ordered byte-stream delivery between two hosts.",
+  "track": "Networking",
+  "see": "Sockets, TCP Behavior and Linux Network Tuning"
+ },
+ {
+  "term": "TTL",
+  "def": "Time to live: a counter in each IP packet decremented by every router; the packet is dropped at 0, which stops loops.",
+  "track": "Networking",
+  "see": "IPv4 Header, Fragmentation and MTU"
+ },
+ {
+  "term": "Tunnel",
+  "def": "Carrying one protocol's packets inside another's (GRE, IPsec, VXLAN).",
+  "track": "Networking",
+  "see": "Tunneling Fundamentals — GRE, IP-in-IP and GRE-in-UDP"
+ },
+ {
+  "term": "UDP",
+  "def": "User Datagram Protocol: simple, unreliable, message-oriented delivery.",
+  "track": "Networking",
+  "see": "Sockets, TCP Behavior and Linux Network Tuning"
+ },
+ {
+  "term": "VLAN",
+  "def": "A way to split one physical switch into several isolated Layer 2 networks.",
+  "track": "Networking",
+  "see": "VLANs, Trunking, Private VLANs and QinQ"
+ },
+ {
+  "term": "VPN",
+  "def": "A private network built across a public one, usually with tunnels and encryption.",
+  "track": "Networking",
+  "see": "IPsec and IKEv2"
+ },
+ {
+  "term": "VXLAN",
+  "def": "A tunnel that carries Layer 2 frames over a Layer 3 network, used in data-centre overlays.",
+  "track": "Networking",
+  "see": "VXLAN and BGP EVPN"
+ },
+ {
+  "term": "Binary / hexadecimal",
+  "def": "Base-2 and base-16 number systems; computers store binary, people write hex as shorthand (one hex digit = 4 bits).",
+  "track": "General",
+  "see": "Binary, Hexadecimal and Bits"
+ },
+ {
+  "term": "Bit / byte / octet",
+  "def": "A bit is a 0 or 1; a byte is 8 bits (also called an octet in networking).",
+  "track": "General",
+  "see": "Binary, Hexadecimal and Bits"
+ },
+ {
+  "term": "CPU cache",
+  "def": "Small, fast memory on the processor that holds recently used data to avoid slow trips to RAM.",
+  "track": "General",
+  "see": "Performance-Oriented C: Caches, Branches, Data Layout and Vectorization"
+ },
+ {
+  "term": "Bitmask",
+  "def": "A number whose individual bits are used as on/off flags or to select bits from another number.",
+  "track": "General",
+  "see": "Bit Manipulation"
+ },
+ {
+  "term": "Throughput",
+  "def": "How much useful data is actually delivered per second.",
+  "track": "General",
+  "see": "What Is a Network?"
+ }
+]

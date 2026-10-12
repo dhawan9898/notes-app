@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 3
 level: intermediate
 summary: "The array-embedded binary heap, why building one takes O(n), d-ary heaps and cache behavior (measured on two workloads), the indexed heap with decrease-key for Dijkstra, k-way merge, running median and streaming top-k."
+prerequisites:
+  - Dynamic Arrays
 sources:
   - label: "Williams — Algorithm 232, Heapsort (CACM 7(6), 1964)"
   - label: "Floyd — Algorithm 245, Treesort 3 (CACM 7(12), 1964)"

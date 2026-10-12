@@ -6,6 +6,8 @@ moduleOrder: 4
 order: 1
 level: intermediate
 summary: Design a production-quality hash table in C — probing, tombstones, load factor, resizing and the real cost model.
+prerequisites:
+  - Dynamic Arrays
 sources:
   - label: "Knuth, The Art of Computer Programming, Vol. 3 — §6.4 Hashing"
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, Ch. 11 Hash Tables"

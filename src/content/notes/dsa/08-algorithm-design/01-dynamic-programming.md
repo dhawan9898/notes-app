@@ -6,6 +6,8 @@ moduleOrder: 8
 order: 1
 level: advanced
 summary: "A method for designing DP solutions — state, transition, order, answer — with knapsack, coin change, LIS, matrix chain, subset sum and tree DP, every one verified against brute force, plus measured space and time optimizations and the loop-direction bug."
+prerequisites:
+  - Recursion, Divide and Conquer, and Loop Invariants
 sources:
   - label: "Bellman — Dynamic Programming (Princeton University Press, 1957)"
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 14 (Dynamic Programming)"

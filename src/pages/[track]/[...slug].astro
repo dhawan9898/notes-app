@@ -96,6 +96,18 @@ const trackInfo = TRACKS[note.data.track];
         <p class="article-summary-lead">{note.data.summary}</p>
       </header>
 
+      {note.data.prerequisites.length > 0 && (
+        <aside class="prereq-box" data-pagefind-ignore>
+          <strong>Before you read this</strong>
+          <ul>
+            {note.data.prerequisites.map((t) => {
+              const hit = notes.find((n) => n.data.title === t);
+              return <li>{hit ? <a href={noteHref(hit)}>{t}</a> : t}</li>;
+            })}
+          </ul>
+        </aside>
+      )}
+
       <div class="markdown-body">
         <Content />
       </div>

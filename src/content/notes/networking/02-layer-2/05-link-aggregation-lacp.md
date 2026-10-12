@@ -6,6 +6,8 @@ moduleOrder: 2
 order: 5
 level: advanced
 summary: How parallel links are bundled into one logical link, how LACP negotiates membership, how flows are hashed, and where MLAG fits.
+prerequisites:
+  - Ethernet Frames and MAC Learning
 sources:
   - label: "IEEE 802.1AX-2020 — Link Aggregation (LACP, distribution/collection, DRNI)"
   - label: "IEEE 802.3-2022 Annex 57A — Slow Protocols (LACP carried as a slow protocol)"

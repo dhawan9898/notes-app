@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 3
 level: intermediate
 summary: The Linux access-control model from UIDs and mode bits through setuid, ACLs and extended attributes to capabilities — precisely how a permission check is evaluated and how to grant least privilege.
+prerequisites:
+  - Linux Command Line Basics
 sources:
   - label: "POSIX.1-2017 — File access permissions, access(), chmod(), umask"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/

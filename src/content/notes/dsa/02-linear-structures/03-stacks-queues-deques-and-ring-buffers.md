@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 3
 level: advanced
 summary: LIFO and FIFO structures from first principles — the ring buffer with free-running counters, a lock-free single-producer/single-consumer queue with C11 acquire/release ordering (measured against a mutex queue), and the monotonic stack and deque techniques that solve classic O(n) problems.
+prerequisites:
+  - Dynamic Arrays
+  - Linked Lists
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., §10.1 (Simple array-based data structures: stacks and queues)"
   - label: "Lamport — Proving the Correctness of Multiprocess Programs (IEEE TSE, 1977); Lamport — Specifying Concurrent Program Modules (the SPSC ring buffer)"

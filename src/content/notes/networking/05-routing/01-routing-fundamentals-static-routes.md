@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 1
 level: intermediate
 summary: How routes get into a router, the taxonomy of routing protocols, static route variants and tracking, administrative distance, and what convergence really means.
+prerequisites:
+  - "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
 sources:
   - label: "RFC 1812 — Requirements for IP Version 4 Routers (§5.2.4 Routing table, §7 Routing protocols)"
     url: https://www.rfc-editor.org/rfc/rfc1812

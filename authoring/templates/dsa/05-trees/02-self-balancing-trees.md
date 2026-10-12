@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 2
 level: advanced
 summary: "How rotations keep search trees logarithmic — AVL and red-black trees implemented with invariant checkers, treaps and skip lists as randomized alternatives, with heights and timings measured against a plain BST and a sorted array."
+prerequisites:
+  - Binary Trees and Binary Search Trees
 sources:
   - label: Adelson-Velsky & Landis — An algorithm for the organization of information (Doklady Akademii Nauk SSSR 146, 1962)
   - label: Bayer — Symmetric Binary B-Trees, Data Structure and Maintenance Algorithms (Acta Informatica 1, 1972)

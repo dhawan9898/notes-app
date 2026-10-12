@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 4
 level: advanced
 summary: How a router turns routes into forwarding decisions — RIB vs FIB, route selection, recursive resolution, Linux routing tables and rules, ECMP hashing and failure behavior.
+prerequisites:
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
+  - Ethernet Frames and MAC Learning
 sources:
   - label: "RFC 1812 — Requirements for IP Version 4 Routers (§5.2 Forwarding)"
     url: https://www.rfc-editor.org/rfc/rfc1812

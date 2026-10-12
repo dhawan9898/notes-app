@@ -6,6 +6,8 @@ moduleOrder: 3
 order: 3
 level: intermediate
 summary: ICMP message types and codes, how ping and traceroute really work (and mislead), rate limiting, redirects, and what to allow through a firewall.
+prerequisites:
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
 sources:
   - label: "RFC 792 — Internet Control Message Protocol"
     url: https://www.rfc-editor.org/rfc/rfc792

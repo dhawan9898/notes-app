@@ -6,6 +6,8 @@ moduleOrder: 3
 order: 2
 level: advanced
 summary: Six sorting algorithms implemented and verified in C — exact comparison counts, a million-element benchmark over five input patterns, stability, the quadratic trap that caught one of our own implementations, and how production library sorts combine these ideas.
+prerequisites:
+  - Recursion, Divide and Conquer, and Loop Invariants
 sources:
   - label: Knuth — The Art of Computer Programming, Vol. 3, Ch. 5 (Sorting)
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 2, 6, 7, 8.1 (comparison sort lower bound)

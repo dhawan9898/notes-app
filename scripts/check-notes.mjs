@@ -19,7 +19,12 @@ for (const f of walk('src/content/notes').filter((f) => f.endsWith('.md') || f.e
     front = fm;                                  // validate the repaired text, not the original
   }
   try {
-    yaml.load(front);
+    const data = yaml.load(front);
+    const pre = data && data.prerequisites;
+    if (pre !== undefined && !(Array.isArray(pre) && pre.every((x) => typeof x === 'string'))) {
+      bad++;
+      console.error(`${f}: prerequisites must be a list of strings (quote entries that contain a colon)`);
+    }
   } catch (e) {
     bad++;
     const line = e.mark ? e.mark.line + 1 : '?';

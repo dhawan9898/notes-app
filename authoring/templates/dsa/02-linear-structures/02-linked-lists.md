@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 2
 level: intermediate
 summary: Singly, doubly and circular lists in C — pointer manipulation patterns (reversal, middle, merge, cycle detection), sentinel nodes that remove special cases, list merge sort, and an honest look at when lists are the right tool.
+prerequisites:
+  - Pointers for Beginners
+  - Dynamic Arrays
 sources:
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., §10.2 (Linked lists)
   - label: Knuth — The Art of Computer Programming, Vol. 1, §2.2 (Linear lists) and Vol. 3, §5.2.4 (Sorting by merging)

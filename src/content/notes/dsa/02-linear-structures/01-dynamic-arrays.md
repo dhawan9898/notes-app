@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 1
 level: intermediate
 summary: The workhorse data structure — contiguous storage with geometric growth. A generic, differentially tested C implementation, the amortized-cost argument, iterator invalidation, and measurements showing why arrays beat linked lists by 20–200× on real hardware.
+prerequisites:
+  - Complexity Analysis and Amortized Analysis
+  - Pointers for Beginners
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., §16.4 (Dynamic tables)"
   - label: "Stroustrup — Are lists evil? (and Bjarne Stroustrup's keynote \"Software Development for Infrastructure\", GoingNative 2012)"

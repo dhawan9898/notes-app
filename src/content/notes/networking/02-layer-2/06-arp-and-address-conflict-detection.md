@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 6
 level: intermediate
 summary: The ARP packet, the Linux neighbor state machine, gratuitous ARP, proxy ARP, conflict detection (RFC 5227) and the knobs that matter on multihomed hosts.
+prerequisites:
+  - Ethernet Frames and MAC Learning
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
 sources:
   - label: "RFC 826 — An Ethernet Address Resolution Protocol"
     url: https://www.rfc-editor.org/rfc/rfc826

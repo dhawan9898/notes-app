@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 2
 level: intermediate
 summary: How recursion maps to the call stack, the divide-and-conquer pattern with worked examples, why recursive code crashes at depth (and when the compiler removes the recursion), and how loop invariants turn "it seems to work" into a proof you can check at run time.
+prerequisites:
+  - Thinking in Data Structures
 sources:
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 2.1 (Loop invariants), Ch. 4 (Divide-and-Conquer)
   - label: Gries — The Science of Programming (Springer, 1981), Ch. 11 (Developing loops from invariants)

@@ -6,6 +6,8 @@ moduleOrder: 3
 order: 1
 level: intermediate
 summary: Getting binary search right — lower/upper bound from a loop invariant, duplicates, rotated arrays, searching the answer space and real functions, the overflow bug, and why cache layout (Eytzinger) can make it 5–7× faster — all fuzz-tested.
+prerequisites:
+  - Complexity Analysis and Amortized Analysis
 sources:
   - label: Knuth — The Art of Computer Programming, Vol. 3, §6.2.1 (Searching an ordered table)
   - label: Bentley — Programming Pearls, 2nd ed., Column 4 (Writing Correct Programs)

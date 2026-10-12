@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 1
 level: intermediate
 summary: OSI vs TCP/IP, how encapsulation really works, what each device type looks at, and the control/data/management plane split.
+prerequisites:
+  - What Is a Network?
 sources:
   - label: "ISO/IEC 7498-1 — OSI Basic Reference Model"
   - label: "RFC 1122 — Requirements for Internet Hosts (communication layers)"

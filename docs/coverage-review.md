@@ -73,6 +73,8 @@ Keyword counts are notes that mention the term at all; most are passing mentions
 
 ## 3. Recommended work, in priority order
 
+**Status:** P0 items 1-4 are done in a first version (Start Here module per track, prerequisites boxes on 33 existing notes, glossary of about 150 terms, one exercise note per track, 7 beginner notes). Remaining from P0: per-module exercises, linking glossary terms from first use inside notes.
+
 **P0: make the site usable for beginners (small effort, high value)**
 
 1. A **"Start here" page per track** with prerequisites, a beginner-to-expert reading path, and estimated time; add a one-line "Prerequisites" and "Level" banner to every note (front-matter field `prerequisites`).

@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 2
 level: intermediate
 summary: Follow one packet hop by hop and see exactly which header fields change and which stay constant.
+prerequisites:
+  - Network Models, Encapsulation and Device Roles
 sources:
   - label: "RFC 791 — Internet Protocol"
     url: https://www.rfc-editor.org/rfc/rfc791

@@ -6,6 +6,8 @@ moduleOrder: 2
 order: 3
 level: advanced
 summary: How malloc/free work under the hood, the memory-error taxonomy with AddressSanitizer reports, safe allocation patterns, growth policies, and a tested arena allocator.
+prerequisites:
+  - Pointers, Arrays and Decay
 sources:
   - label: ISO/IEC 9899:2018 (C17) §7.22.3 Memory management functions; §6.2.4 Storage durations
   - label: man 3 malloc, man 3 posix_memalign, man 3 mallopt, man 3 malloc_usable_size, man 3 mtrace

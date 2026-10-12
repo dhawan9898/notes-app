@@ -9,8 +9,9 @@ const notes = defineCollection({
     module: z.string(),          // module title, e.g. "Layer 2"
     moduleOrder: z.number(),
     order: z.number(),           // order within module
-    level: z.enum(['intermediate', 'advanced', 'expert']),
+    level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']),
     summary: z.string(),
+    prerequisites: z.array(z.string()).default([]),   // titles of notes (or plain phrases) the reader should know first
     sources: z.array(z.object({ label: z.string(), url: z.string().optional() })).default([]),
   }),
 });

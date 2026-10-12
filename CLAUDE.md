@@ -173,6 +173,12 @@ All 28 DSA notes are written (see `docs/dsa-outline.md`, every box checked). Eac
 
 Possible DSA follow-ups (not required): suffix arrays/automata implementation, persistent and functional structures, geometry (convex hull, sweep line), randomized algorithms (reservoir sampling, skip-list analysis), external sorting in code, a capstone "projects" module.
 
+### 8.1a Beginner on-ramp (done in the P0 pass)
+
+Each track now has a module 0 "Start Here" (`moduleOrder: 0`, `level: beginner`): C (5 notes: start here, C From Zero, Binary/Hex/Bits, Pointers for Beginners, exercises), Linux (4), Networking (3), DSA (3). New schema bits: level `beginner`; optional `prerequisites: [note titles]` rendered as a "Before you read this" box (entries that contain a colon must be quoted; `scripts/check-notes.mjs` validates this); `/glossary/` page driven by `src/data/glossary.json` (every `see` title must exist). Exercise notes hide answers in `<details>` and the answer programs/scripts are compiled/run via `{{run}}` (examples under `authoring/examples/<track>/beginner/`; networking/linux notes also use the pipeline for sandboxed runs: `unshare -Urnm` for namespaces).
+
+**Caution when rebuilding:** `python3 authoring/build.py` with a broad pattern regenerates every output block, re-measuring timings, so prose that quotes ratios can go stale. Rebuild only the note you edit (`build.py <note-substring>`), or restore old output with git and re-apply only intended changes.
+
 ### 8.1b Coverage review
 
 A full coverage review (intern view and expert view) is in `docs/coverage-review.md`; its prioritised backlog (P0 beginner on-ramp, P1 expert gaps, P2 thin notes, P3 verification) supersedes the older backlog in 8.3 where they overlap.

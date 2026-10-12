@@ -6,6 +6,8 @@ moduleOrder: 6
 order: 3
 level: expert
 summary: "Disjoint sets with path compression and union by rank (measured), Kruskal and Prim, Tarjan's strongly connected components, bridges and articulation points, and max-flow/min-cut with Edmonds-Karp, Dinic and bipartite matching — each verified against brute force."
+prerequisites:
+  - Graph Representations and Traversals
 sources:
   - label: Tarjan — Efficiency of a Good But Not Linear Set Union Algorithm (J. ACM 22(2), 1975)
   - label: Kruskal — On the Shortest Spanning Subtree of a Graph and the Traveling Salesman Problem (Proc. AMS 7(1), 1956)

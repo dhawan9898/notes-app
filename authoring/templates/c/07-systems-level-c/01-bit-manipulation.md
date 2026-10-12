@@ -6,6 +6,8 @@ moduleOrder: 7
 order: 1
 level: intermediate
 summary: The bitwise toolbox — masks and fields, classic identities, compiler builtins and CPU instructions, bitsets, SWAR techniques, shift pitfalls — with tested code and a measured comparison of five popcount implementations.
+prerequisites:
+  - Binary, Hexadecimal and Bits
 sources:
   - label: Warren — Hacker's Delight, 2nd ed. (Addison-Wesley, 2012)
   - label: Anderson — Bit Twiddling Hacks

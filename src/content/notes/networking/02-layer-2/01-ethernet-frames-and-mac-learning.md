@@ -6,6 +6,8 @@ moduleOrder: 2
 order: 1
 level: intermediate
 summary: The on-wire frame format, MAC addressing rules, 802.1Q tagging and how a bridge builds its forwarding table.
+prerequisites:
+  - What Is a Network?
 sources:
   - label: "IEEE 802.3-2022, Clause 3 — MAC frame structure; Clause 4 — MAC operation"
   - label: "IEEE 802-2014 — Overview and Architecture (MAC addressing, I/G and U/L bits)"

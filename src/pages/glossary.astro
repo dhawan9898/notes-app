@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import terms from '../data/glossary.json';
+import { getCollection } from 'astro:content';
+import { noteHref } from '../lib/tracks';
+const all = await getCollection('notes');
+const hrefFor = (title: string) => { const n = all.find((x) => x.data.title === title); return n ? noteHref(n) : undefined; };
+const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
+const letters = [...new Set(sorted.map((t) => t.term[0].toUpperCase()))];
+---
+<Base title="Glossary · DeepNotes" description="Plain-language definitions of the terms used across the C, DSA, Linux and Networking tracks.">
+  <main class="wrap track-page">
+    <h1>Glossary</h1>
+    <p>Short definitions of terms used across all four tracks. Each entry says where the idea is taught in depth. Use the box to filter.</p>
+    <p><input id="gl-filter" class="glossary-filter" type="search" placeholder="Filter terms…" aria-label="Filter glossary terms" /></p>
+    <p>{letters.map((l) => <a href={`#g-${l}`} style="margin-right:.6rem">{l}</a>)}</p>
+    <dl class="glossary-list" id="gl-list">
+      {sorted.map((t, i) => (
+        <>
+          {(i === 0 || sorted[i - 1].term[0].toUpperCase() !== t.term[0].toUpperCase()) && <h2 id={`g-${t.term[0].toUpperCase()}`}>{t.term[0].toUpperCase()}</h2>}
+          <div class="gl-item" data-term={t.term.toLowerCase() + ' ' + t.def.toLowerCase()}>
+            <dt>{t.term}<span class="gl-track">{t.track}</span></dt>
+            <dd>{t.def}{t.see && <> <em>Learn more: {hrefFor(t.see) ? <a href={hrefFor(t.see)}>{t.see}</a> : t.see}.</em></>}</dd>
+          </div>
+        </>
+      ))}
+    </dl>
+  </main>
+  <script>
+    const f = document.getElementById('gl-filter') as HTMLInputElement | null;
+    f?.addEventListener('input', () => {
+      const q = f.value.trim().toLowerCase();
+      document.querySelectorAll<HTMLElement>('.gl-item').forEach((el) => { el.style.display = !q || (el.dataset.term || '').includes(q) ? '' : 'none'; });
+    });
+  </script>
+</Base>

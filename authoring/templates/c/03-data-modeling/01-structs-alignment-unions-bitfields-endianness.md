@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 1
 level: intermediate
 summary: How the compiler lays out aggregate types, why member order changes size, safe type punning, tagged unions, bit-field pitfalls, and portable serialization — with measured layouts and tested code.
+prerequisites:
+  - Pointers for Beginners
+  - Binary, Hexadecimal and Bits
 sources:
   - label: ISO/IEC 9899:2018 (C17) §6.7.2.1 Structure and union specifiers; §6.2.8 Alignment of objects; §6.5.2.3
   - label: System V AMD64 psABI §3.1.2 Data Representation (alignment and aggregate layout)
