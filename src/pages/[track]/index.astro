@@ -1,25 +1,73 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { TRACKS, notesForTrack, groupByModule, noteHref, url, type TrackId } from '../../lib/tracks';
-export function getStaticPaths() { return Object.keys(TRACKS).map((track) => ({ params: { track } })); }
+
+export function getStaticPaths() {
+  return Object.keys(TRACKS).map((track) => ({ params: { track } }));
+}
+
 const track = Astro.params.track as TrackId;
-const mods = groupByModule(await notesForTrack(track));
+const trackInfo = TRACKS[track];
+const notes = await notesForTrack(track);
+const mods = groupByModule(notes);
 ---
-<Base title={`${TRACKS[track].name} · DeepNotes`}>
-  <main class="wrap">
-    <section class="hero"><a href={url('/')}>← All tracks</a><h1>{TRACKS[track].name}</h1><p>{TRACKS[track].blurb}</p></section>
-    {mods.length === 0 && <p style="margin-top:2rem;color:var(--muted)">Notes coming soon.</p>}
-    {mods.map((m, mi) => (
-      <section class="module">
-        <h2>{mi + 1}. {m.title}</h2>
-        {m.notes.map((n, i) => (
-          <a class="lesson" href={noteHref(n)}>
-            <span class="n">{mi + 1}.{i + 1}</span>
-            <span><strong>{n.data.title}</strong><br /><span class="s">{n.data.summary}</span></span>
-            <span class="badge">{n.data.level}</span>
-          </a>
+<Base title={`${trackInfo.name} · DeepNotes`}>
+  <main class="wrap track-page">
+    <div class="back-nav">
+      <a href={url('/')} class="back-link">← All tracks</a>
+    </div>
+
+    <section class="track-header">
+      <div class="track-header-top">
+        <span class="track-header-icon">{trackInfo.icon}</span>
+        <div>
+          <div class="track-header-meta">
+            <span class="standards-pill">{trackInfo.standards}</span>
+            <span class="track-stats-pill">{mods.length} modules · {notes.length} notes</span>
+          </div>
+          <h1>{trackInfo.name}</h1>
+        </div>
+      </div>
+      <p class="track-header-blurb">{trackInfo.blurb}</p>
+
+      <div class="track-tags" style="margin-top: 1rem;">
+        {trackInfo.tags.map((tag) => (
+          <span class="tag-pill">{tag}</span>
         ))}
-      </section>
-    ))}
+      </div>
+    </section>
+
+    {mods.length === 0 && (
+      <div class="empty-state">
+        <p>Notes coming soon for this track.</p>
+        <a href={url('/')} class="btn-primary">Return to Tracks</a>
+      </div>
+    )}
+
+    <div class="modules-container">
+      {mods.map((m, mi) => (
+        <section class="module-card">
+          <div class="module-header">
+            <span class="module-index">Module {mi + 1}</span>
+            <h2>{m.title}</h2>
+            <span class="module-count">{m.notes.length} {m.notes.length === 1 ? 'note' : 'notes'}</span>
+          </div>
+          <div class="lesson-list">
+            {m.notes.map((n, i) => (
+              <a class="lesson-item" href={noteHref(n)}>
+                <span class="lesson-num">{mi + 1}.{i + 1}</span>
+                <div class="lesson-content">
+                  <strong class="lesson-title">{n.data.title}</strong>
+                  <p class="lesson-summary">{n.data.summary}</p>
+                </div>
+                <div class="lesson-meta">
+                  <span class={`badge badge-${n.data.level}`}>{n.data.level}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
   </main>
 </Base>

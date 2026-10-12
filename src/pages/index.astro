@@ -1,23 +1,100 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-import { TRACKS, url } from '../lib/tracks';
+import { TRACKS, url, type TrackId } from '../lib/tracks';
+
 const all = await getCollection('notes');
+const totalNotes = all.length;
 ---
-<Base title="DeepNotes">
+<Base title="DeepNotes · Senior Systems Engineering Notes">
   <main class="wrap">
-    <section class="hero">
-      <h1>Senior-level notes, in one place.</h1>
-      <p>Deep, source-backed notes on C, data structures, Linux and L2/L3 networking — distilled from the standards
-      (ISO C, POSIX, IEEE 802, IETF RFCs, kernel docs) so you don't have to read them cold.</p>
+    <section class="hero-home">
+      <div class="badge-eyebrow">
+        <span class="pulse-dot"></span>
+        <span>Source-Backed Knowledge Base · {totalNotes} Deep Notes</span>
+      </div>
+      <h1 class="hero-title">Senior systems notes,<br /><span class="gradient-text">straight from the standards.</span></h1>
+      <p class="hero-sub">
+        Distilled from primary standards — <strong>ISO C</strong>, <strong>POSIX.1-2017</strong>, <strong>IEEE 802</strong>, <strong>IETF RFCs</strong>, and <strong>Linux kernel internals</strong> — with verified memory layouts, disassembly, and real CLI traces.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <span class="stat-num">{totalNotes}+</span>
+          <span class="stat-label">Engineering Notes</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">4</span>
+          <span class="stat-label">Core Tracks</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Tested Listings</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">0</span>
+          <span class="stat-label">Fluff</span>
+        </div>
+      </div>
     </section>
-    <div class="cards">
-      {Object.entries(TRACKS).map(([id, t]) => (
-        <a class="card" href={url(`/${id}/`)}>
-          <h3>{t.name}</h3><p>{t.blurb}</p>
-          <div class="count">{all.filter((n) => n.data.track === id).length} notes</div>
-        </a>
-      ))}
-    </div>
+
+    <section class="tracks-section">
+      <div class="section-header">
+        <h2>Engineering Tracks</h2>
+        <p>Choose a track to explore structured modules, diagrams, and packet-level deep dives.</p>
+      </div>
+
+      <div class="cards-grid">
+        {(Object.entries(TRACKS) as [TrackId, typeof TRACKS[TrackId]][]).map(([id, t]) => {
+          const trackCount = all.filter((n) => n.data.track === id).length;
+          return (
+            <a class="track-card" href={url(`/${id}/`)}>
+              <div class="track-card-header">
+                <span class="track-icon">{t.icon}</span>
+                <span class="track-count-badge">{trackCount} {trackCount === 1 ? 'note' : 'notes'}</span>
+              </div>
+              <h3>{t.name}</h3>
+              <p class="track-blurb">{t.blurb}</p>
+              <div class="track-standards">
+                <span class="standards-label">Standard:</span> {t.standards}
+              </div>
+              <div class="track-tags">
+                {t.tags.map((tag) => (
+                  <span class="tag-pill">{tag}</span>
+                ))}
+              </div>
+              <div class="track-cta">
+                <span>Explore Track</span>
+                <span class="arrow">→</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="philosophy-section">
+      <div class="section-header">
+        <h2>Built for Systems Engineers</h2>
+        <p>How DeepNotes is authored differently from generic tutorials.</p>
+      </div>
+      <div class="philosophy-grid">
+        <div class="philosophy-item">
+          <div class="philosophy-icon">📜</div>
+          <h4>Standards First</h4>
+          <p>Every note cites clauses from ISO C, POSIX, IEEE 802.1/3, and RFCs so you understand the design intent rather than guessing.</p>
+        </div>
+        <div class="philosophy-item">
+          <div class="philosophy-icon">⚙️</div>
+          <h4>Compiled &amp; Verified</h4>
+          <p>C and DSA listings are compiled against GCC/Clang with sanitizers; outputs, disassembly, and timings reflect real executions.</p>
+        </div>
+        <div class="philosophy-item">
+          <div class="philosophy-icon">🔍</div>
+          <h4>Instant Offline Search</h4>
+          <p>Powered by Pagefind with full-text search indexing over 100 pages. Zero tracking, zero latency, runs entirely client-side.</p>
+        </div>
+      </div>
+    </section>
   </main>
 </Base>
