@@ -34,13 +34,13 @@ Status: [x] written, [ ] planned.
 - [x] Union-find, MST, SCC and flow
 
 ## 7. Strings
-- [ ] String matching and edit distance
+- [x] String matching and edit distance
 
 ## 8. Algorithm Design
-- [ ] Dynamic programming
-- [ ] Greedy algorithms
-- [ ] Backtracking and bitmask DP
-- [ ] Number theory essentials
+- [x] Dynamic programming
+- [x] Greedy algorithms
+- [x] Backtracking and bitmask DP
+- [x] Number theory essentials
 
 ## 9. Systems-Flavored Structures
 - [ ] Caches: LRU, LFU, CLOCK

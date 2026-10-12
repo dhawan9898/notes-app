@@ -7,15 +7,15 @@ order: 3
 level: expert
 summary: "Disjoint sets with path compression and union by rank (measured), Kruskal and Prim, Tarjan's strongly connected components, bridges and articulation points, and max-flow/min-cut with Edmonds-Karp, Dinic and bipartite matching — each verified against brute force."
 sources:
-  - label: Tarjan — Efficiency of a Good But Not Linear Set Union Algorithm (J. ACM 22(2), 1975)
-  - label: Kruskal — On the Shortest Spanning Subtree of a Graph and the Traveling Salesman Problem (Proc. AMS 7(1), 1956)
-  - label: Prim — Shortest Connection Networks and Some Generalizations (Bell System Technical Journal 36, 1957)
-  - label: Tarjan — Depth-First Search and Linear Graph Algorithms (SIAM J. Computing 1(2), 1972)
-  - label: Ford & Fulkerson — Maximal Flow Through a Network (Canadian J. Mathematics 8, 1956)
-  - label: Edmonds & Karp — Theoretical Improvements in Algorithmic Efficiency for Network Flow Problems (J. ACM 19(2), 1972)
-  - label: Dinitz — Algorithm for Solution of a Problem of Maximum Flow in a Network with Power Estimation (Soviet Math. Doklady 11, 1970)
-  - label: Hopcroft & Karp — An n^(5/2) Algorithm for Maximum Matchings in Bipartite Graphs (SIAM J. Computing 2(4), 1973)
-  - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 19 (Data Structures for Disjoint Sets), Ch. 21 (Minimum Spanning Trees), Ch. 22.5 (Strongly connected components), Ch. 24 (Maximum Flow)
+  - label: "Tarjan — Efficiency of a Good But Not Linear Set Union Algorithm (J. ACM 22(2), 1975)"
+  - label: "Kruskal — On the Shortest Spanning Subtree of a Graph and the Traveling Salesman Problem (Proc. AMS 7(1), 1956)"
+  - label: "Prim — Shortest Connection Networks and Some Generalizations (Bell System Technical Journal 36, 1957)"
+  - label: "Tarjan — Depth-First Search and Linear Graph Algorithms (SIAM J. Computing 1(2), 1972)"
+  - label: "Ford & Fulkerson — Maximal Flow Through a Network (Canadian J. Mathematics 8, 1956)"
+  - label: "Edmonds & Karp — Theoretical Improvements in Algorithmic Efficiency for Network Flow Problems (J. ACM 19(2), 1972)"
+  - label: "Dinitz — Algorithm for Solution of a Problem of Maximum Flow in a Network with Power Estimation (Soviet Math. Doklady 11, 1970)"
+  - label: "Hopcroft & Karp — An n^(5/2) Algorithm for Maximum Matchings in Bipartite Graphs (SIAM J. Computing 2(4), 1973)"
+  - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 19 (Data Structures for Disjoint Sets), Ch. 21 (Minimum Spanning Trees), Ch. 22.5 (Strongly connected components), Ch. 24 (Maximum Flow)"
 ---
 
 This note collects four graph toolkits that sit on top of traversal: **disjoint sets** (a tiny structure that answers "are these in the same group?" in practically constant time), **minimum spanning trees** (the cheapest way to connect everything), **connectivity analysis** (strongly connected components, bridges, articulation points) and **network flow** (how much can be sent through a capacitated network, and what is the bottleneck).
