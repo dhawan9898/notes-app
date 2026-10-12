@@ -25,3 +25,8 @@ core*
 !Makefile
 !CMakeLists.txt
 !.gitignore
+
+# lab-generated key material and captures
+pki/
+*.pcap
+*.key
