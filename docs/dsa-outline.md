@@ -43,7 +43,7 @@ Status: [x] written, [ ] planned.
 - [x] Number theory essentials
 
 ## 9. Systems-Flavored Structures
-- [ ] Caches: LRU, LFU, CLOCK
-- [ ] Allocators as data structures
-- [ ] Concurrent and lock-free structures
-- [ ] Problem-solving patterns and complexity cheat sheet
+- [x] Caches: LRU, LFU, CLOCK
+- [x] Allocators as data structures
+- [x] Concurrent and lock-free structures
+- [x] Problem-solving patterns and complexity cheat sheet

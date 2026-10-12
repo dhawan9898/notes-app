@@ -46,8 +46,8 @@ Conventions:
 |---|---|---|
 | Networking (L2, L3 and related) | 40 | `docs/networking-outline.md` |
 | Linux | 31 | `docs/linux-outline.md` |
-| C programming | 22 | `docs/c-outline.md` |
-| Data structures & algorithms (in C) | 1 so far | `docs/dsa-outline.md` |
+| C programming | 23 | `docs/c-outline.md` |
+| Data structures & algorithms (in C) | 28 | `docs/dsa-outline.md` |
 
 ## Authoring tools
 

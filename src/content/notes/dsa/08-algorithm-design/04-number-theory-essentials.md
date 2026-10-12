@@ -7,14 +7,14 @@ order: 4
 level: advanced
 summary: "Euclid's algorithm and Bezout coefficients, modular exponentiation and inverses, overflow-safe 128-bit mulmod, bit-array and segmented sieves, deterministic Miller-Rabin for all 64-bit integers, fast-doubling Fibonacci, CRT, binomials mod p and a toy RSA — each checked, with the two overflow bugs the tests caught."
 sources:
-  - label: Knuth — The Art of Computer Programming, Vol. 2, §4.5 (Rational arithmetic, Euclid's algorithm) and §4.5.4 (Factoring into primes; primality tests)
-  - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 31 (Number-Theoretic Algorithms)
-  - label: Miller — Riemann's Hypothesis and Tests for Primality (J. Computer and System Sciences 13, 1976)
-  - label: Rabin — Probabilistic Algorithm for Testing Primality (J. Number Theory 12, 1980)
-  - label: Sorenson & Webster — Strong Pseudoprimes to Twelve Prime Bases (Mathematics of Computation 86, 2017)
-  - label: Rivest, Shamir, Adleman — A Method for Obtaining Digital Signatures and Public-Key Cryptosystems (CACM 21(2), 1978)
-  - label: Hardy & Wright — An Introduction to the Theory of Numbers, 6th ed.
-  - label: Warren — Hacker's Delight, 2nd ed. (Chapter 10, integer division by constants; Chapter 11, number systems)
+  - label: "Knuth — The Art of Computer Programming, Vol. 2, §4.5 (Rational arithmetic, Euclid's algorithm) and §4.5.4 (Factoring into primes; primality tests)"
+  - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 31 (Number-Theoretic Algorithms)"
+  - label: "Miller — Riemann's Hypothesis and Tests for Primality (J. Computer and System Sciences 13, 1976)"
+  - label: "Rabin — Probabilistic Algorithm for Testing Primality (J. Number Theory 12, 1980)"
+  - label: "Sorenson & Webster — Strong Pseudoprimes to Twelve Prime Bases (Mathematics of Computation 86, 2017)"
+  - label: "Rivest, Shamir, Adleman — A Method for Obtaining Digital Signatures and Public-Key Cryptosystems (CACM 21(2), 1978)"
+  - label: "Hardy & Wright — An Introduction to the Theory of Numbers, 6th ed."
+  - label: "Warren — Hacker's Delight, 2nd ed. (Chapter 10, integer division by constants; Chapter 11, number systems)"
 ---
 
 Integer arithmetic with a modulus is the substrate of hashing, random number generators, cyclic buffers, error-correcting codes, and all of public-key cryptography. The algorithms are short — most are under ten lines — but each hides a trap: overflow in the intermediate product, a negative remainder, a probabilistic test that the wrong number fools. This note builds the standard toolbox in C, verifies every piece, and records two overflow bugs that the test suite caught in the *first* version of this code.
