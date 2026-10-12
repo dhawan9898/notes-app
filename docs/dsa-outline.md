@@ -29,9 +29,9 @@ Status: [x] written, [ ] planned.
 - [x] Range-query structures: Fenwick and segment trees
 
 ## 6. Graphs
-- [ ] Representations and traversals
-- [ ] Shortest paths
-- [ ] Union-find, MST, SCC and flow
+- [x] Representations and traversals
+- [x] Shortest paths
+- [x] Union-find, MST, SCC and flow
 
 ## 7. Strings
 - [ ] String matching and edit distance
