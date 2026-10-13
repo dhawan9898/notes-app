@@ -276,9 +276,6 @@ aside.toc .toc-sticky { border: none; background: transparent; padding: 0.6rem 0
 
 /* ---------- motion: short, ease-out, no overshoot ---------- */
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-.hero-home { animation: fade 0.6s var(--ease) both; }
-.js [data-reveal] { opacity: 0; transform: translateY(10px); transition: opacity 0.6s var(--ease) var(--d, 0ms), transform 0.6s var(--ease-out) var(--d, 0ms); }
-.js [data-reveal].shown { opacity: 1; transform: none; }
 
 @view-transition { navigation: auto; }
 ::view-transition-old(root) { animation: 0.16s var(--ease) both vt-out; }
@@ -316,3 +313,118 @@ html { scrollbar-width: thin; scrollbar-color: var(--fill-2) transparent; }
   @view-transition { navigation: none; }
 }
 @media print { header.top, .dock, .readbar, aside.side, aside.toc { display: none !important; } }
+
+
+/* ==========================================================================
+   LIQUID GLASS — clear, refractive-looking panels over a slow, scroll-driven backdrop
+   ========================================================================== */
+:root {
+  --page: #eef1f7;
+  --orb-a: rgba(40, 120, 255, 0.85); --orb-b: rgba(150, 100, 255, 0.62); --orb-c: rgba(40, 200, 220, 0.66);
+  --lg-fill: linear-gradient(135deg, rgba(255, 255, 255, 0.46) 0%, rgba(255, 255, 255, 0.07) 48%, rgba(255, 255, 255, 0.22) 100%);
+  --lg-fill-soft: linear-gradient(135deg, rgba(255, 255, 255, 0.40), rgba(255, 255, 255, 0.12));
+  --lg-rim: rgba(255, 255, 255, 0.98);
+  --lg-rim-dim: rgba(255, 255, 255, 0.45);
+  --lg-shadow: 0 18px 44px -14px rgba(25, 45, 110, 0.34), 0 2px 6px rgba(25, 40, 90, 0.08);
+  --lg-blur: blur(18px) saturate(210%) brightness(1.08);
+  --lg-spec: rgba(255, 255, 255, 0.85);
+}
+:root[data-theme='dark'] {
+  --page: #05070d;
+  --orb-a: rgba(30, 100, 255, 0.70); --orb-b: rgba(120, 70, 255, 0.50); --orb-c: rgba(20, 170, 190, 0.50);
+  --lg-fill: linear-gradient(135deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.08) 100%);
+  --lg-fill-soft: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025));
+  --lg-rim: rgba(255, 255, 255, 0.34); --lg-rim-dim: rgba(255, 255, 255, 0.07);
+  --lg-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --lg-blur: blur(24px) saturate(170%) brightness(1.1);
+  --lg-spec: rgba(255, 255, 255, 0.28);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --page: #05070d;
+    --orb-a: rgba(30, 100, 255, 0.70); --orb-b: rgba(120, 70, 255, 0.50); --orb-c: rgba(20, 170, 190, 0.50);
+    --lg-fill: linear-gradient(135deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.08) 100%);
+    --lg-fill-soft: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025));
+    --lg-rim: rgba(255, 255, 255, 0.34); --lg-rim-dim: rgba(255, 255, 255, 0.07);
+    --lg-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.4);
+    --lg-blur: blur(24px) saturate(170%) brightness(1.1);
+    --lg-spec: rgba(255, 255, 255, 0.28);
+  }
+}
+body { background: var(--page); }
+
+/* the backdrop: three soft light sources the glass bends; they drift with the scroll position (--sy, set by app.ts) */
+.backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.backdrop i { position: absolute; border-radius: 50%; filter: blur(70px); will-change: transform; transition: transform 0.25s linear; }
+.backdrop i:nth-child(1) { width: 62vmax; height: 62vmax; left: -20vmax; top: -24vmax; background: radial-gradient(circle, var(--orb-a), transparent 68%); transform: translate3d(calc(var(--sy, 0) * 0.02px), calc(var(--sy, 0) * -0.06px), 0); }
+.backdrop i:nth-child(2) { width: 56vmax; height: 56vmax; right: -22vmax; top: 18vh; background: radial-gradient(circle, var(--orb-b), transparent 68%); transform: translate3d(calc(var(--sy, 0) * -0.03px), calc(var(--sy, 0) * 0.05px), 0); }
+.backdrop i:nth-child(3) { width: 50vmax; height: 50vmax; left: 18vw; bottom: -30vmax; background: radial-gradient(circle, var(--orb-c), transparent 68%); transform: translate3d(calc(var(--sy, 0) * 0.04px), calc(var(--sy, 0) * -0.09px), 0); }
+
+/* the material */
+header.top, .track-card, .module-card, .dash, .track-header, .rm-hero, .rm-controls, .rm-tools, aside.side, .dock, .toast, .pager-card,
+.prereq-box, .leads-box, .sources, .cta-card, .progress-pill, .chip, .btn, .complete-btn, .pagefind-ui__drawer, .philosophy-item, .rm-list, .mobile-nav-bar {
+  position: relative; isolation: isolate;
+  background: var(--lg-fill);
+  -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur);
+  border: 1px solid var(--lg-rim-dim);
+  box-shadow: var(--lg-shadow), inset 0 1px 0 var(--lg-rim), inset 1px 0 0 var(--lg-rim-dim), inset 0 -1px 0 var(--lg-rim-dim), inset 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 0 28px rgba(255, 255, 255, 0.10);
+}
+header.top { position: sticky; border-width: 0 0 1px 0; border-radius: 0; }
+.dock, .toast { position: fixed; background: var(--lg-fill); }
+.chip, .btn, .complete-btn, .progress-pill { background: var(--lg-fill-soft); box-shadow: inset 0 1px 0 var(--lg-rim), 0 2px 8px -2px rgba(25, 40, 90, 0.15); }
+.chip.on { background: var(--text); color: var(--bg); }
+.rm-list { overflow: hidden; }
+.rm-controls { position: sticky; }
+aside.side { position: sticky; }
+
+/* specular layers: a fixed top-left glint and a cursor-following highlight */
+.track-card::before, .module-card::before, .dash::before, .track-header::before, .rm-hero::before, .rm-controls::before, .rm-tools::before, aside.side::before, .dock::before, .pager-card::before,
+.cta-card::before, .philosophy-item::before, .rm-list::before, .toast::before, .sources::before, .prereq-box::before, .leads-box::before {
+  content: ''; display: block; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  background:
+    radial-gradient(380px circle at var(--mx, 18%) var(--my, 0%), var(--lg-spec), transparent 60%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.35), transparent 38%);
+  opacity: 0.55; transition: opacity 0.4s var(--ease);
+}
+.track-card:hover::before, .cta-card:hover::before, .pager-card:hover::before, .module-card:hover::before, .rm-list:hover::before { opacity: 1; }
+:root[data-theme='dark'] .track-card::before, :root[data-theme='dark'] .module-card::before { mix-blend-mode: plus-lighter; opacity: 0.35; }
+.lesson-item:hover, .rm-row:hover { background: rgba(255, 255, 255, 0.28); }
+:root[data-theme='dark'] .lesson-item:hover, :root[data-theme='dark'] .rm-row:hover { background: rgba(255, 255, 255, 0.06); }
+.rm-row { border-top-color: var(--lg-rim-dim); }
+.track-card:hover, .cta-card:hover { transform: translateY(-4px); }
+.track-card, .cta-card { transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.45s var(--ease); }
+.stat-pill { background: none; border: none; box-shadow: none; }
+.bar, .ring-bg { background-color: rgba(120, 130, 160, 0.22); stroke: rgba(120, 130, 160, 0.25); }
+.side-note-link.cur { background: rgba(255, 255, 255, 0.4); }
+:root[data-theme='dark'] .side-note-link.cur { background: rgba(255, 255, 255, 0.1); }
+.markdown-body pre, article pre { background: var(--lg-fill-soft); -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); border: 1px solid var(--lg-rim-dim); box-shadow: inset 0 1px 0 var(--lg-rim), var(--lg-shadow); }
+article table { background: var(--lg-fill-soft); -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); }
+article blockquote { background: var(--lg-fill-soft); -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); box-shadow: inset 0 1px 0 var(--lg-rim); }
+.hero-home { position: relative; }
+
+/* ---------- scroll-linked motion ---------- */
+@keyframes lg-in { from { opacity: 0; transform: translateY(34px) scale(0.975); } to { opacity: 1; transform: none; } }
+@keyframes lg-out { to { opacity: 0; transform: translateY(-24px) scale(0.985); } }
+@keyframes lg-glide { from { transform: translateY(0); } to { transform: translateY(-60px); } }
+
+/* fallback (JS adds .shown from an IntersectionObserver) */
+.js [data-reveal], .js .markdown-body > * { opacity: 0; transform: translateY(26px) scale(0.985); transition: opacity 0.7s var(--ease) var(--d, 0ms), transform 0.8s var(--ease-out) var(--d, 0ms); }
+.js [data-reveal].shown, .js .markdown-body > *.shown { opacity: 1; transform: none; }
+
+/* browsers with scroll-driven animations: reveal is scrubbed by scroll position, so it moves exactly as fast as you scroll */
+@supports (animation-timeline: view()) {
+  .js [data-reveal], .js .markdown-body > * { opacity: 1; transform: none; transition: none; animation: lg-in linear backwards; animation-timeline: view(); animation-range: entry 0% entry 42%; }
+  .hero-home > * { animation: lg-out linear forwards; animation-timeline: view(); animation-range: exit 0% exit 70%; }
+  .hero-home > .hero-title { animation-name: lg-glide, lg-out; animation-range: cover 0% cover 100%, exit 10% exit 80%; animation-composition: replace; }
+  .article-header { animation: lg-out linear forwards; animation-timeline: view(); animation-range: exit 30% exit 100%; }
+  .readbar i { transition: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal], .js .markdown-body > * { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .hero-home > *, .article-header { animation: none !important; }
+  .backdrop i { transform: none !important; }
+}
+@media (max-width: 850px) {
+  .backdrop i { filter: blur(50px); }
+  :root { --lg-blur: blur(16px) saturate(170%); }
+}

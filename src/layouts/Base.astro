@@ -43,6 +43,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
     </script>
   </head>
   <body data-total={totalNotes}>
+    <div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="readbar" aria-hidden="true"><i id="readbar"></i></div>
     <header class="top">
       <div class="in">

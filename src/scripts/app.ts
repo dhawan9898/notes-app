@@ -183,15 +183,32 @@ function initTools() {
 
 /* ---------- visual polish: cursor-lit glass, scroll reveal, header state ---------- */
 function initVisuals() {
-  const targets = $$('[data-reveal]');
-  if (reduce || !('IntersectionObserver' in window)) { targets.forEach((t) => t.classList.add('shown')); }
-  else {
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { (e.target as HTMLElement).classList.add('shown'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-    targets.forEach((t, i) => { t.style.setProperty('--d', `${Math.min(i % 6, 5) * 40}ms`); io.observe(t); });
-  }
-  const header = document.querySelector('header.top');
-  const onScroll = () => header?.classList.toggle('scrolled', scrollY > 8);
+  const root = document.documentElement;
+  // scroll position drives the backdrop and any CSS that reads --sy
+  let raf = 0;
+  const onScroll = () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; root.style.setProperty('--sy', String(Math.round(scrollY))); document.querySelector('header.top')?.classList.toggle('scrolled', scrollY > 8); });
+  };
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // cursor-following highlight on glass panels
+  if (!reduce) {
+    document.addEventListener('pointermove', (e) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('.track-card, .module-card, .cta-card, .pager-card, .dash, .rm-hero, .rm-list, .philosophy-item, .sources');
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${e.clientX - r.left}px`); el.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }, { passive: true });
+  }
+
+  // reveal: article blocks join the explicitly marked elements. Browsers with scroll-driven animations scrub this in CSS;
+  // the others use an IntersectionObserver (same visual result, time-based instead of scroll-based).
+  const targets = $$('.markdown-body > *, [data-reveal]');
+  const scrubbed = typeof CSS !== 'undefined' && CSS.supports?.('animation-timeline: view()');
+  if (reduce || scrubbed || !('IntersectionObserver' in window)) { targets.forEach((t) => t.classList.add('shown')); return; }
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { (e.target as HTMLElement).classList.add('shown'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px', threshold: 0.04 });
+  targets.forEach((t, i) => { t.style.setProperty('--d', `${Math.min(i % 5, 4) * 45}ms`); io.observe(t); });
 }
 
 renderProgress(); bindFilters(); initNote(); initTools(); initVisuals();
