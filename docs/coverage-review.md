@@ -75,7 +75,7 @@ Keyword counts are notes that mention the term at all; most are passing mentions
 
 **Status:** P0 items 1-4 are done in a first version (Start Here module per track, prerequisites boxes on 33 existing notes, glossary of about 150 terms, one exercise note per track, 7 beginner notes). Remaining from P0: per-module exercises, linking glossary terms from first use inside notes.
 
-**P1 progress:** Networking done (TCP/UDP, DNS, TLS/QUIC, Wi-Fi, packet capture, SNMP/telemetry, NTP/PTP, SRv6, automation, data-centre Clos/ECMP; OSPFv3/EIGRP/MLAG/NAT64 remain). C: threads/atomics/C11 memory model done. DSA: hash tables rewritten (chaining vs open addressing, backward-shift deletion, cuckoo, SipHash flooding). Remaining P1: Linux (virtualisation, kdump/kernel debugging, RCU and allocators, real-time, Kubernetes networking, kernel build), C (embedded C, stdlib tour, FFI), DSA (LCA/HLD, spatial indexes, geometry, FFT/NTT, randomized algorithms, suffix array).
+**P1 progress:** Networking done (TCP/UDP, DNS, TLS/QUIC, Wi-Fi, packet capture, SNMP/telemetry, NTP/PTP, SRv6, automation, data-centre Clos/ECMP; OSPFv3/EIGRP/MLAG/NAT64 remain). C: threads/atomics/C11 memory model and embedded C done. DSA: tree queries (LCA/HLD/centroid) added; hash tables rewritten (chaining vs open addressing, backward-shift deletion, cuckoo, SipHash flooding). P2 started: LACP, bridge reserved addresses/LLDP and BFD notes now carry runnable labs. Remaining P1: Linux (virtualisation, kdump/kernel debugging, RCU and allocators, real-time, Kubernetes networking, kernel build), C (stdlib tour, FFI), DSA (spatial indexes, geometry, FFT/NTT, randomized algorithms, suffix array).
 
 **P0: make the site usable for beginners (small effort, high value)**
 
