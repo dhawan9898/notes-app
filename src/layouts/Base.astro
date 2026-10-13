@@ -19,7 +19,8 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="manifest" href={url('/manifest.webmanifest')} />
-    <meta name="theme-color" content="#0b1020" />
+    <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
@@ -42,7 +43,6 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
     </script>
   </head>
   <body data-total={totalNotes}>
-    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="readbar" aria-hidden="true"><i id="readbar"></i></div>
     <header class="top">
       <div class="in">
