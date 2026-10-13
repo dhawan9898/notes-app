@@ -152,6 +152,157 @@ Unions can also be used for type punning in C (but not C++), per the footnote in
 
 A good default for development builds: `-std=c11 -Wall -Wextra -Wpedantic -fsanitize=address,undefined -g`.
 
+## Lab: two-dimensional arrays and pointer-to-array types
+
+A two-dimensional array is an array of arrays: `int m[3][4]` is three objects of type `int[4]`, laid out one after another (**row-major**). Pointer arithmetic follows the pointed-to type, so what `m` decays to (`int (*)[4]`, a pointer to an array of four ints) advances by a whole row, while `&m[0][0]` (a plain `int *`) advances by one element:
+
+```c
+// Pointer-to-array types, 2-D arrays, and how the same memory is seen through different pointer types.
+#include <stdio.h>
+
+int main(void) {
+    int m[3][4];
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 4; j++) m[i][j] = i * 10 + j;
+
+    printf("sizeof(m) = %zu, sizeof(m[0]) = %zu, sizeof(m[0][0]) = %zu\n", sizeof m, sizeof m[0], sizeof m[0][0]);
+
+    int (*row)[4] = m;                         // pointer to an array of 4 ints: what m decays to
+    int *flat = &m[0][0];                      // pointer to the first int
+    printf("row + 1 advances by %td bytes; flat + 1 advances by %td bytes\n", (char *)(row + 1) - (char *)row, (char *)(flat + 1) - (char *)flat);
+    printf("(*(row + 2))[3] = %d   m[2][3] = %d   *(*(m + 2) + 3) = %d\n", (*(row + 2))[3], m[2][3], *(*(m + 2) + 3));
+
+    // Walking all 12 ints through the flat pointer is how row-major layout is usually exploited. It is accepted practice but
+    // formally goes outside the first row's bounds; strictly conforming code indexes m[i][j].
+    printf("row-major order in memory: ");
+    for (int k = 0; k < 12; k++) printf("%d ", flat[k]);
+    printf("\n");
+
+    // A function taking a 2-D array needs the inner dimension in the type; C99 lets the dimension be a parameter.
+    int total = 0;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 4; j++) total += (*(m + i))[j];
+    printf("sum via pointer-to-array arithmetic: %d\n", total);
+
+    int *rows[3] = { m[0], m[1], m[2] };       // an array of pointers is a different type: no contiguous layout is implied
+    printf("sizeof(rows) = %zu (three pointers), rows[1][2] = %d\n", sizeof rows, rows[1][2]);
+    return 0;
+}
+```
+
+```text
+$ gcc -O2 -Wall -Wextra arrays2d.c -o arrays2d && ./arrays2d
+sizeof(m) = 48, sizeof(m[0]) = 16, sizeof(m[0][0]) = 4
+row + 1 advances by 16 bytes; flat + 1 advances by 4 bytes
+(*(row + 2))[3] = 23   m[2][3] = 23   *(*(m + 2) + 3) = 23
+row-major order in memory: 0 1 2 3 10 11 12 13 20 21 22 23 
+sum via pointer-to-array arithmetic: 138
+sizeof(rows) = 24 (three pointers), rows[1][2] = 12
+```
+
+- The size of the whole array is 48 bytes, of a row 16, of an element 4: `sizeof` sees the real array type, before decay.
+- `row + 1` moves 16 bytes and `flat + 1` moves 4: **the type of a pointer determines the scale of arithmetic**.
+- `m[2][3]`, `(*(row + 2))[3]` and `*(*(m + 2) + 3)` are the same expression written three ways, because `a[i]` is defined as `*(a + i)`.
+- Walking all twelve ints through `flat[k]` shows the contiguous row-major layout. This is widespread practice, but the standard formally treats indexing past the first row through a pointer derived from `m[0]` as out of bounds; code that must be strictly conforming indexes `m[i][j]`.
+- `int *rows[3]` (an *array of pointers*) is a different type with a different layout: 24 bytes of pointers, and each row may live anywhere. A function parameter `int m[][4]` or `int (*m)[4]` accepts the first kind; `int **m` accepts only the second. Passing a true 2-D array where `int **` is expected compiles with a warning at best and crashes at run time.
+
+## Lab: reading declarators
+
+C declarations are read by starting at the identifier and working outward: look right (array `[]` and function `()` suffixes bind tighter than `*`), then left, and parentheses override. The program defines one of each hard case and prints `sizeof` and call results that confirm the reading:
+
+```c
+// Reading declarations: the right-left rule. Each line is compiled, and sizeof/typeid-style output confirms the reading.
+#include <stdio.h>
+
+int add(int a, int b) { return a + b; }
+int mul(int a, int b) { return a * b; }
+
+int (*pick(int which))(int, int) {            // pick is a function (int) returning a pointer to a function (int, int) returning int
+    return which ? mul : add;
+}
+
+int main(void) {
+    int *a[4];                                // a: array of 4 pointers to int
+    int (*b)[4];                              // b: pointer to an array of 4 ints
+    int (*c[3])(int, int) = { add, mul, add };// c: array of 3 pointers to functions (int, int) returning int
+    int (*(*d)(int))(int, int) = pick;        // d: pointer to a function (int) returning a pointer to a function (int,int) returning int
+    const int *e = 0;                         // e: pointer to const int (the int cannot be modified through e)
+    int *const f = 0;                         // f: const pointer to int (f cannot be re-pointed)
+    const int *const g = 0;                   // g: const pointer to const int
+    printf("sizeof a = %zu (4 pointers), sizeof b = %zu (one pointer), sizeof *b = %zu (an array of 4 ints)\n", sizeof a, sizeof b, sizeof *b);
+    printf("c[1](6, 7) = %d, d(0)(6, 7) = %d, d(1)(6, 7) = %d\n", c[1](6, 7), d(0)(6, 7), d(1)(6, 7));
+    printf("sizeof e = sizeof f = sizeof g = %zu: const changes what the compiler lets you do, not the representation\n", sizeof e);
+    (void)a; (void)b; (void)f; (void)g;
+    return 0;
+}
+```
+
+```text
+$ gcc -O2 -Wall -Wextra decl.c -o decl && ./decl
+sizeof a = 32 (4 pointers), sizeof b = 8 (one pointer), sizeof *b = 16 (an array of 4 ints)
+c[1](6, 7) = 42, d(0)(6, 7) = 13, d(1)(6, 7) = 42
+sizeof e = sizeof f = sizeof g = 8: const changes what the compiler lets you do, not the representation
+```
+
+| Declaration | Reading |
+|---|---|
+| `int *a[4]` | `a` is an array of 4 pointers to `int` (the `[]` binds first) |
+| `int (*b)[4]` | `b` is a pointer to an array of 4 `int`: the parentheses force `*` first |
+| `int (*c[3])(int, int)` | `c` is an array of 3 pointers to functions taking two ints and returning an int |
+| `int (*(*d)(int))(int, int)` | `d` is a pointer to a function taking an int and returning a pointer to a function taking two ints and returning an int (what `pick` is) |
+| `const int *e` | pointer to a constant int: the *pointee* cannot be changed through `e` |
+| `int *const f` | constant pointer to int: `f` cannot be re-pointed |
+| `const int *const g` | both |
+
+The sizes show that `const` is a compile-time promise: the three pointers have identical representation. The tool `cdecl` (and `typedef` for function-pointer types, e.g. `typedef int (*binop)(int, int);`) makes complex declarations readable; use the typedef whenever a declarator needs more than one level.
+
+## Lab: the edges of pointer arithmetic
+
+Forming a pointer to **one past the last element** is valid and common (`for (p = a; p != a + n; p++)`), but dereferencing it, or forming a pointer more than one past the end, is undefined behavior, even if the pointer is never used. Pointer comparison and subtraction are defined only for pointers into the same array object. The program below does the legal thing, then four illegal things selected by a command-line argument and compiled with the sanitizers:
+
+```c
+// Pointer arithmetic limits: valid one-past-the-end pointers, and what the sanitizers say about the invalid cases.
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv) {
+    int a[4] = {1, 2, 3, 4}, b[4] = {5, 6, 7, 8};
+    int *end = a + 4;                          // one past the end: valid to form and compare, invalid to dereference
+    int sum = 0;
+    for (int *p = a; p != end; p++) sum += *p;
+    printf("loop to the one-past-the-end pointer: sum = %d\n", sum);
+    printf("pointer difference (end - a) = %td elements, in units of the pointed-to type, not bytes\n", end - a);
+
+    if (argc > 1) {
+        int which = atoi(argv[1]);
+        volatile int idx = 4;                  // volatile: keep the compiler from seeing the constant
+        if (which == 1) printf("a[4] = %d\n", a[idx]);                                  // read one past the end of a: undefined behavior
+        if (which == 2) { int *q = a + 100; printf("formed a + 100 (UB already), b is %s\n", q == b ? "there" : "not there"); }
+        if (which == 3) { int *h = malloc(4 * sizeof *h); free(h); printf("use after free: %d\n", h[0]); }
+        if (which == 4) { int *h = malloc(4 * sizeof *h); h[4] = 1; free(h); }          // heap overflow by one element
+    }
+    return 0;
+}
+```
+
+```text
+$ gcc -g -O0 -fsanitize=address,undefined provenance.c -o prov && ./prov && for n in 1 3 4; do echo "--- case $n"; ./prov $n 2>&1 | grep -E "ERROR|SUMMARY|runtime error" | sed "s#$PWD/##" | head -3; done
+loop to the one-past-the-end pointer: sum = 10
+pointer difference (end - a) = 4 elements, in units of the pointed-to type, not bytes
+--- case 1
+provenance.c:16:48: runtime error: index 4 out of bounds for type 'int [4]'
+provenance.c:16:25: runtime error: load of address 0x7f850f400050 with insufficient space for an object of type 'int'
+==3184421==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7f850f400050 at pc 0x561804fd47f3 bp 0x7ffcf379b360 sp 0x7ffcf379b358
+--- case 3
+==3184425==ERROR: AddressSanitizer: heap-use-after-free on address 0x502000000010 at pc 0x558dd391491c bp 0x7fffb430a170 sp 0x7fffb430a168
+SUMMARY: AddressSanitizer: heap-use-after-free provenance.c:18 in main
+--- case 4
+==3184429==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x502000000020 at pc 0x563ae21c09e9 bp 0x7ffe65210750 sp 0x7ffe65210748
+SUMMARY: AddressSanitizer: heap-buffer-overflow provenance.c:19 in main
+```
+
+- The legal loop ends at the one-past-the-end pointer and the difference `end - a` is 4 **elements**, because pointer subtraction is scaled by the element size.
+- Case 1 (reading `a[4]`) is caught by UBSan as an out-of-bounds index; case 3 (use after free) and case 4 (one element past a heap block) are caught by AddressSanitizer with an exact classification and the source line. Case 2 (forming `a + 100`) is not shown because it is silent in practice, but it is still undefined, and the optimizer may use that fact (for example, to assume a loop bound).
+- The sanitizers check actual accesses, so they only find what the test inputs exercise; combine with a fuzzer or broad test inputs (see the testing note).
+
 ## Key takeaways
 
 - A pointer carries a type and (conceptually) provenance; it is not just an address.
