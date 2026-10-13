@@ -44,10 +44,10 @@ Conventions:
 
 | Track | Notes | Topic map |
 |---|---|---|
-| Networking (L2, L3 and related) | 53 | `docs/networking-outline.md` |
-| Linux | 35 | `docs/linux-outline.md` |
-| C programming | 30 | `docs/c-outline.md` |
-| Data structures & algorithms (in C) | 32 | `docs/dsa-outline.md` |
+| Networking (L2, L3 and related) | 54 | `docs/networking-outline.md` |
+| Linux | 40 | `docs/linux-outline.md` |
+| C programming | 32 | `docs/c-outline.md` |
+| Data structures & algorithms (in C) | 37 | `docs/dsa-outline.md` |
 
 ## Authoring tools
 
