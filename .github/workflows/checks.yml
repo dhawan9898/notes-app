@@ -1,0 +1,27 @@
+name: Checks
+on:
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1"        # weekly link check, Monday 05:17 UTC
+  workflow_dispatch:
+jobs:
+  build:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Validate note front matter (no auto-fix)
+        run: node scripts/check-notes.mjs
+      - name: Build site
+        run: npm run build
+  links:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/check-links.py --out link-check.md
+      - uses: actions/upload-artifact@v4
+        with: { name: link-check, path: link-check.md }

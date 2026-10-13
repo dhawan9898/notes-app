@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { render } from 'astro:content';
+import { render, getCollection } from 'astro:content';
 import { TRACKS, notesForTrack, groupByModule, noteHref, noteSlug, url, type TrackId } from '../../lib/tracks';
 
 export async function getStaticPaths() {
@@ -27,6 +27,12 @@ const rawBody = note.body || '';
 const wordCount = rawBody.split(/\s+/).filter(Boolean).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 220));
 const trackInfo = TRACKS[note.data.track];
+
+// Notes in any track that list this note as a prerequisite ("where to go next"), and cross-track lookup for prerequisites.
+const allNotes = await getCollection('notes');
+const leadsTo = allNotes
+  .filter((n) => n.id !== note.id && n.data.prerequisites.includes(note.data.title))
+  .sort((a, b) => a.data.track.localeCompare(b.data.track) || a.data.moduleOrder - b.data.moduleOrder || a.data.order - b.data.order);
 ---
 <Base 
   title={`${note.data.title} · ${trackInfo.name} · DeepNotes`} 
@@ -101,7 +107,7 @@ const trackInfo = TRACKS[note.data.track];
           <strong>Before you read this</strong>
           <ul>
             {note.data.prerequisites.map((t) => {
-              const hit = notes.find((n) => n.data.title === t);
+              const hit = notes.find((n) => n.data.title === t) ?? allNotes.find((n) => n.data.title === t);
               return <li>{hit ? <a href={noteHref(hit)}>{t}</a> : t}</li>;
             })}
           </ul>
@@ -111,6 +117,20 @@ const trackInfo = TRACKS[note.data.track];
       <div class="markdown-body">
         <Content />
       </div>
+
+      {leadsTo.length > 0 && (
+        <aside class="leads-box" data-pagefind-ignore>
+          <strong>Continue with</strong> <span class="leads-sub">notes that build on this one</span>
+          <ul>
+            {leadsTo.map((n) => (
+              <li>
+                <a href={noteHref(n)}>{n.data.title}</a>
+                {n.data.track !== note.data.track && <span class="leads-track"> · {TRACKS[n.data.track].name}</span>}
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
 
       {note.data.sources.length > 0 && (
         <section class="sources" id="sources-section">

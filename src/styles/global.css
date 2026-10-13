@@ -1203,6 +1203,9 @@ aside.toc {
 /* Prerequisites banner and glossary */
 .prereq-box { margin: 0 0 1.25rem; padding: 0.7rem 1rem; border: 1px solid var(--border, rgba(127,127,127,.25)); border-left: 4px solid #16a34a; border-radius: 8px; font-size: 0.92rem; }
 .prereq-box strong { margin-right: 0.4rem; }
+.leads-box { margin: 2rem 0 1.25rem; padding: 0.7rem 1rem; border: 1px solid var(--border, rgba(127,127,127,.25)); border-left: 4px solid #2563eb; border-radius: 8px; font-size: 0.92rem; }
+.leads-box ul { margin: 0.3rem 0 0; padding-left: 1.2rem; }
+.leads-sub, .leads-track { opacity: 0.7; font-size: 0.85rem; }
 .prereq-box ul { margin: 0.3rem 0 0; padding-left: 1.2rem; }
 .glossary-list dt { font-weight: 700; margin-top: 1rem; }
 .glossary-list dd { margin: 0.15rem 0 0; }
