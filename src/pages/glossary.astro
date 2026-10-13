@@ -18,7 +18,7 @@ const letters = [...new Set(sorted.map((t) => t.term[0].toUpperCase()))];
       {sorted.map((t, i) => (
         <>
           {(i === 0 || sorted[i - 1].term[0].toUpperCase() !== t.term[0].toUpperCase()) && <h2 id={`g-${t.term[0].toUpperCase()}`}>{t.term[0].toUpperCase()}</h2>}
-          <div class="gl-item" data-term={t.term.toLowerCase() + ' ' + t.def.toLowerCase()}>
+          <div class="gl-item" id={t.term.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')} data-term={t.term.toLowerCase() + ' ' + t.def.toLowerCase()}>
             <dt>{t.term}<span class="gl-track">{t.track}</span></dt>
             <dd>{t.def}{t.see && <> <em>Learn more: {hrefFor(t.see) ? <a href={hrefFor(t.see)}>{t.see}</a> : t.see}.</em></>}</dd>
           </div>
