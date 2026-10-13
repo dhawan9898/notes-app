@@ -7,8 +7,9 @@ android {
         applicationId "io.deepnotes.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // CI passes -PversionName=1.2.3 -PversionCode=<commit count>; local builds fall back to 1.0 / 1
+        versionCode Integer.parseInt((project.findProperty('versionCode') ?: '1').toString())
+        versionName (project.findProperty('versionName') ?: '1.0').toString()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +17,19 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        // Stable key so every release can be installed over the previous one. Override with real secrets in CI
+        // (ANDROID_KEYSTORE_PATH / _PASSWORD, ANDROID_KEY_ALIAS / _PASSWORD) for a private signing key.
+        stable {
+            storeFile file(System.getenv('ANDROID_KEYSTORE_PATH') ?: 'deepnotes.keystore')
+            storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD') ?: 'deepnotes-sideload'
+            keyAlias System.getenv('ANDROID_KEY_ALIAS') ?: 'deepnotes'
+            keyPassword System.getenv('ANDROID_KEY_PASSWORD') ?: 'deepnotes-sideload'
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.stable
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

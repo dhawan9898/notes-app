@@ -5,6 +5,21 @@ const $$ = <T extends HTMLElement = HTMLElement>(sel: string, root: ParentNode =
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.add('js');
 
+/* ---------- Android app (Capacitor): the in-app web server answers every extension-less path with the home page, so
+   "/dsa/" would reload "/". Folder links are rewritten to "…/index.html" (a real file) before the browser follows them. ---------- */
+const inApp = !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
+export const appUrl = (u: URL) => (inApp && u.origin === location.origin && u.pathname.endsWith('/') ? `${u.pathname}index.html${u.search}${u.hash}` : u.href);
+if (inApp) {
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+    const u = new URL(a.href, location.href);
+    if (u.origin !== location.origin || !u.pathname.endsWith('/')) return;
+    if (u.pathname === location.pathname && u.hash) return;               // same-page anchor
+    e.preventDefault(); location.assign(appUrl(u));
+  }, true);
+}
+
 /* ---------- data embedded by the page (ordered list of notes) ---------- */
 function items(): Item[] {
   const el = document.getElementById('dn-items');
@@ -151,7 +166,7 @@ function initNote() {
 
   complete.forEach((b) => b.addEventListener('click', () => {
     const now = !isDone(id); setDone(id, now);
-    if (now) { celebrate(b); toast('Marked complete', page.dataset.next ? { label: 'Next note →', run: () => (location.href = page.dataset.next!) } : undefined); }
+    if (now) { celebrate(b); toast('Marked complete', page.dataset.next ? { label: 'Next note →', run: () => location.assign(appUrl(new URL(page.dataset.next!, location.href))) } : undefined); }
   }));
   addEventListener('keydown', (e) => {
     if (e.key.toLowerCase() === 'm' && !e.metaKey && !e.ctrlKey && !e.altKey && !/INPUT|TEXTAREA/.test((document.activeElement as HTMLElement)?.tagName)) complete[0]?.click();
