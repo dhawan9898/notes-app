@@ -1,12 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-import { TRACKS, url, type TrackId } from '../lib/tracks';
+import NotesData from '../components/NotesData.astro';
+import { TRACKS, url, learningPath, type TrackId } from '../lib/tracks';
 
 const all = await getCollection('notes');
 const totalNotes = all.length;
+const steps = await learningPath();
 ---
 <Base title="DeepNotes · Senior Systems Engineering Notes">
+  <NotesData steps={steps} />
   <main class="wrap">
     <section class="hero-home">
       <div class="badge-eyebrow">
@@ -17,6 +20,28 @@ const totalNotes = all.length;
       <p class="hero-sub">
         Distilled from primary standards — <strong>ISO C</strong>, <strong>POSIX.1-2017</strong>, <strong>IEEE 802</strong>, <strong>IETF RFCs</strong>, and <strong>Linux kernel internals</strong> — with verified memory layouts, disassembly, and real CLI traces.
       </p>
+
+      <div class="hero-actions" data-reveal>
+        <a class="cta-card glass-hover" data-continue="all" href={url('/roadmap/')}>
+          <span class="cta-label" data-continue-label>Start learning</span>
+          <strong class="cta-title" data-continue-title>Follow the roadmap from the beginning</strong>
+          <span class="cta-arrow">→</span>
+        </a>
+        <a class="btn ghost" href={url('/roadmap/')}>View roadmap</a>
+      </div>
+
+      <div class="dash glass" data-overall data-reveal>
+        <div class="big-ring small">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52" /><circle class="ring-fg" data-ring-fg cx="60" cy="60" r="52" transform="rotate(-90 60 60)" /></svg>
+          <div class="big-ring-text"><b data-stat="percent">0</b><small>%</small></div>
+        </div>
+        <ul class="stat-list">
+          <li><b><span data-stat="done">0</span><span class="of"> / {totalNotes}</span></b><small>notes completed</small></li>
+          <li><b data-stat="streak">0</b><small>day streak</small></li>
+          <li><b data-stat="hours">0</b><small>hours learned</small></li>
+          <li><b data-stat="remaining">–</b><small>reading left</small></li>
+        </ul>
+      </div>
 
       <div class="hero-stats">
         <div class="stat-pill">
@@ -48,12 +73,16 @@ const totalNotes = all.length;
         {(Object.entries(TRACKS) as [TrackId, typeof TRACKS[TrackId]][]).map(([id, t]) => {
           const trackCount = all.filter((n) => n.data.track === id).length;
           return (
-            <a class="track-card" href={url(`/${id}/`)}>
+            <a class="track-card glass glass-hover" data-reveal data-progress-group data-ids={all.filter((n) => n.data.track === id).map((n) => n.id).join(',')} href={url(`/${id}/`)}>
               <div class="track-card-header">
                 <span class="track-icon">{t.icon}</span>
-                <span class="track-count-badge">{trackCount} {trackCount === 1 ? 'note' : 'notes'}</span>
+                <span class="track-ring" aria-hidden="true">
+                  <svg viewBox="0 0 36 36" width="44" height="44"><circle class="ring-bg" cx="18" cy="18" r="15" /><circle class="ring-fg" data-ring-fg cx="18" cy="18" r="15" transform="rotate(-90 18 18)" /></svg>
+                  <b data-progress-text data-format="pct">0%</b>
+                </span>
               </div>
               <h3>{t.name}</h3>
+              <p class="track-count"><span data-progress-text>0/{trackCount}</span> notes complete</p>
               <p class="track-blurb">{t.blurb}</p>
               <div class="track-standards">
                 <span class="standards-label">Standard:</span> {t.standards}
@@ -79,17 +108,17 @@ const totalNotes = all.length;
         <p>How DeepNotes is authored differently from generic tutorials.</p>
       </div>
       <div class="philosophy-grid">
-        <div class="philosophy-item">
+        <div class="philosophy-item glass" data-reveal>
           <div class="philosophy-icon">📜</div>
           <h4>Standards First</h4>
           <p>Every note cites clauses from ISO C, POSIX, IEEE 802.1/3, and RFCs so you understand the design intent rather than guessing.</p>
         </div>
-        <div class="philosophy-item">
+        <div class="philosophy-item glass" data-reveal>
           <div class="philosophy-icon">⚙️</div>
           <h4>Compiled &amp; Verified</h4>
           <p>C and DSA listings are compiled against GCC/Clang with sanitizers; outputs, disassembly, and timings reflect real executions.</p>
         </div>
-        <div class="philosophy-item">
+        <div class="philosophy-item glass" data-reveal>
           <div class="philosophy-icon">🔍</div>
           <h4>Instant Offline Search</h4>
           <p>Powered by Pagefind with full-text search indexing over 100 pages. Zero tracking, zero latency, runs entirely client-side.</p>

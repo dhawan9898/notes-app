@@ -1,7 +1,10 @@
 ---
 import '../styles/global.css';
+import '../styles/glass.css';
 import Search from 'astro-pagefind/components/Search';
 import { url } from '../lib/tracks';
+import { getCollection } from 'astro:content';
+const totalNotes = (await getCollection('notes')).length;
 
 const { title, description = 'Senior-level, source-backed notes on C, DSA, Linux, and L2/L3 Networking.' } = Astro.props;
 const siteUrl = Astro.site ? Astro.site.toString() : 'https://dhawan9898.github.io/notes-app/';
@@ -15,6 +18,8 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="manifest" href={url('/manifest.webmanifest')} />
+    <meta name="theme-color" content="#0b1020" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
@@ -36,7 +41,9 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
       if (t) document.documentElement.dataset.theme = t;
     </script>
   </head>
-  <body>
+  <body data-total={totalNotes}>
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="readbar" aria-hidden="true"><i id="readbar"></i></div>
     <header class="top">
       <div class="in">
         <a class="brand" href={url('/')}>
@@ -48,9 +55,14 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
           <a href={url('/linux/')} class="nav-link">Linux</a>
           <a href={url('/networking/')} class="nav-link">Networking</a>
           <a href={url('/dsa/')} class="nav-link">DSA</a>
+          <a href={url('/roadmap/')} class="nav-link nav-roadmap">Roadmap</a>
           <a href={url('/glossary/')} class="nav-link">Glossary</a>
         </nav>
         <div class="spacer"></div>
+        <a class="progress-pill glass-hover" href={url('/roadmap/')} data-overall title="Your overall progress">
+          <svg viewBox="0 0 36 36" width="26" height="26" aria-hidden="true"><circle class="ring-bg" cx="18" cy="18" r="15" /><circle class="ring-fg" data-ring-fg cx="18" cy="18" r="15" transform="rotate(-90 18 18)" /></svg>
+          <span class="pp-text"><b data-stat="percent">0</b>%</span>
+        </a>
         <div class="search-wrapper">
           <Search />
           <span class="search-hint" aria-hidden="true" title="Press Ctrl+K or / to search"><kbd>Ctrl</kbd><kbd>K</kbd></span>
@@ -76,6 +88,15 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
       </div>
     </footer>
 
+    <script>
+      import '../scripts/app';
+    </script>
+    <script is:inline>
+      // Offline support: cache pages the reader has visited (see public/sw.js)
+      if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+        addEventListener('load', () => navigator.serviceWorker.register(document.querySelector('link[rel=manifest]').getAttribute('href').replace('manifest.webmanifest', 'sw.js')).catch(() => {}));
+      }
+    </script>
     <script>
       // Theme toggle
       const themeBtn = document.getElementById('theme');

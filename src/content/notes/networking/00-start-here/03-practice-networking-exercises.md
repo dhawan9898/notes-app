@@ -8,7 +8,7 @@ level: beginner
 summary: "Eight graded exercises: binary addresses, network and broadcast addresses, same-network tests, sizing subnets for host counts, splitting a block, classifying special addresses, summarising routes, and a hands-on lab, with answers verified by a Python script."
 prerequisites:
   - "What Is a Network?"
-  - IPv4 Addressing, Subnetting, VLSM and CIDR
+  - "What Is a Network?"
   - Binary, Hexadecimal and Bits
 sources:
   - label: "RFC 4632 — Classless Inter-domain Routing (CIDR)"

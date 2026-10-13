@@ -9,7 +9,6 @@ summary: "What bare-metal C needs beyond hosted C: volatile and register access 
 prerequisites:
   - "The Compilation Pipeline and the ELF Object Model"
   - "Qualifiers, Storage Classes, Scope and Linkage"
-  - "Threads, Atomics and the C11 Memory Model"
 sources:
   - label: ISO/IEC 9899:2011 §6.7.3 and §5.1.2.3 — volatile, observable behavior; §5.1.2.1 freestanding environment
     url: https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
@@ -50,7 +49,7 @@ What `volatile` does **not** do:
 
 - It gives no atomicity: a 32-bit access on a 16-bit bus can tear, and a read-modify-write (`REG |= bit`) is three steps that an interrupt can split.
 - It orders only against other volatile accesses *as the compiler sees them*; it does not emit CPU memory barriers. On cores with write buffers or caches (and on ARM Cortex-M7, Cortex-A), device drivers add explicit barriers (`DMB`/`DSB`) between a register write and a dependent action such as enabling an interrupt or starting DMA.
-- It is **not** a thread synchronization tool; use atomics for data shared with interrupts or other cores (previous note).
+- It is **not** a thread synchronization tool; use atomics for data shared with interrupts or other cores (see the C11 memory model note in the Concurrency module).
 
 Practical register habits:
 

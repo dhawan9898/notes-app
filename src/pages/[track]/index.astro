@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { TRACKS, notesForTrack, groupByModule, noteHref, url, type TrackId } from '../../lib/tracks';
+import NotesData from '../../components/NotesData.astro';
+import { TRACKS, notesForTrack, groupByModule, noteHref, readingMinutes, url, learningPath, type TrackId } from '../../lib/tracks';
 
 export function getStaticPaths() {
   return Object.keys(TRACKS).map((track) => ({ params: { track } }));
@@ -10,14 +11,16 @@ const track = Astro.params.track as TrackId;
 const trackInfo = TRACKS[track];
 const notes = await notesForTrack(track);
 const mods = groupByModule(notes);
+const steps = (await learningPath()).filter((s) => s.note.data.track === track);
 ---
 <Base title={`${trackInfo.name} · DeepNotes`}>
-  <main class="wrap track-page">
+  <NotesData steps={steps} />
+  <main class="wrap track-page" data-progress-group>
     <div class="back-nav">
       <a href={url('/')} class="back-link">← All tracks</a>
     </div>
 
-    <section class="track-header">
+    <section class="track-header glass" data-reveal>
       <div class="track-header-top">
         <span class="track-header-icon">{trackInfo.icon}</span>
         <div>
@@ -29,6 +32,23 @@ const mods = groupByModule(notes);
         </div>
       </div>
       <p class="track-header-blurb">{trackInfo.blurb}</p>
+
+      <div class="track-progress">
+        <span class="bar big"><i data-progress-bar></i></span>
+        <span class="tp-text"><b data-progress-text data-format="pct">0%</b> complete · <span data-progress-text>0/{notes.length}</span> notes</span>
+      </div>
+      <div class="track-actions">
+        <a class="cta-card glass-hover" data-continue={track} hidden>
+          <span class="cta-label" data-continue-label>Start learning</span>
+          <strong class="cta-title" data-continue-title></strong>
+          <span class="cta-arrow">→</span>
+        </a>
+        <div class="chip-row" role="group" aria-label="Filter notes">
+          <button class="chip on" data-filter-status="all">All</button>
+          <button class="chip" data-filter-status="todo">To do</button>
+          <button class="chip" data-filter-status="done">Done</button>
+        </div>
+      </div>
 
       <div class="track-tags" style="margin-top: 1rem;">
         {trackInfo.tags.map((tag) => (
@@ -46,28 +66,35 @@ const mods = groupByModule(notes);
 
     <div class="modules-container">
       {mods.map((m, mi) => (
-        <section class="module-card">
+        <section class="module-card glass" data-reveal data-filter-section data-progress-group>
           <div class="module-header">
             <span class="module-index">Module {mi + 1}</span>
             <h2>{m.title}</h2>
-            <span class="module-count">{m.notes.length} {m.notes.length === 1 ? 'note' : 'notes'}</span>
+            <span class="module-count"><span data-progress-text>0/{m.notes.length}</span><span class="bar"><i data-progress-bar></i></span></span>
           </div>
           <div class="lesson-list">
             {m.notes.map((n, i) => (
-              <a class="lesson-item" href={noteHref(n)}>
-                <span class="lesson-num">{mi + 1}.{i + 1}</span>
-                <div class="lesson-content">
-                  <strong class="lesson-title">{n.data.title}</strong>
-                  <p class="lesson-summary">{n.data.summary}</p>
-                </div>
-                <div class="lesson-meta">
-                  <span class={`badge badge-${n.data.level}`}>{n.data.level}</span>
-                </div>
-              </a>
+              <div class="lesson-item glass-hover" data-filterable data-note-id={n.id} data-track={track}>
+                <button class="check" data-toggle={n.id} aria-label={`Toggle ${n.data.title} complete`} title="Mark complete / not complete">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                </button>
+                <a class="lesson-link" href={noteHref(n)}>
+                  <span class="lesson-num">{mi + 1}.{i + 1}</span>
+                  <span class="lesson-content">
+                    <strong class="lesson-title">{n.data.title}</strong>
+                    <span class="lesson-summary">{n.data.summary}</span>
+                  </span>
+                  <span class="lesson-meta">
+                    <span class="mins">{readingMinutes(n)} min</span>
+                    <span class={`badge badge-${n.data.level}`}>{n.data.level}</span>
+                  </span>
+                </a>
+              </div>
             ))}
           </div>
         </section>
       ))}
+      <p class="rm-empty" data-filter-empty hidden>No notes match this filter.</p>
     </div>
   </main>
 </Base>

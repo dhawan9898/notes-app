@@ -9,7 +9,6 @@ summary: "Source routing with segments: the idea, the SRH and SRv6 behaviors (En
 prerequisites:
   - "IPv6 Header, Extension Headers and Addressing"
   - "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
-  - "MPLS, LDP and MPLS L3VPN"
 sources:
   - label: RFC 8402 — Segment Routing Architecture
     url: https://www.rfc-editor.org/rfc/rfc8402

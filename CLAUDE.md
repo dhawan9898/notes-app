@@ -233,3 +233,12 @@ find src/content/notes -name '*.md' | awk -F/ '{print $4}' | sort | uniq -c     
 git log --oneline --all | head                                                      # history
 git bundle create ~/deepnotes-pr.bundle main add-deepnotes-site                     # portable copy of the work
 ```
+
+## 9. Learning app: roadmap, progress tracking and UI
+
+- **Order.** Each track is ordered by `moduleOrder` then `order`. `scripts/check-notes.mjs` fails the build if a note's prerequisite (a note of the same track) comes later in that track. `src/lib/tracks.ts: learningPath()` builds the global curriculum used by `/roadmap/`: every track's *Start here* module first, then C, DSA, Linux, Networking; a note whose prerequisites (across tracks) are not placed yet is deferred until they are.
+- **Progress** is stored only in the browser (`localStorage`, key `deepnotes:progress:v1`): completed note ids, last-read note, reading position per note, active reading seconds per day (for streak and hours). `src/scripts/progress.ts` is the store (tested by `npm test`); `src/scripts/app.ts` renders it. Pages declare what they need with data attributes: `data-note-id` (an element that reflects completion via `data-done`), `data-progress-group` (+ `data-ids`) with `data-progress-text|bar|ring-fg`, `data-toggle`, `data-complete`, `data-continue`, `data-filter-*`, `data-stat`. Pages that need the ordered list embed it with `<NotesData>`.
+- **UI.** `src/styles/glass.css` (loaded after `global.css`) holds the liquid-glass material (translucent gradient + backdrop blur + specular edge + cursor-lit highlight), the animated aurora backdrop, the progress components and all motion. Page transitions use the cross-document View Transitions API (`@view-transition`), reveal animations use `IntersectionObserver`, and everything respects `prefers-reduced-motion`. Floating layers (`.dock`, `.toast`, search results) use the denser `--float-bg` for readability.
+- **Offline/installable.** `public/manifest.webmanifest` and `public/sw.js` (network-first pages, cache-first assets). The service worker is registered from `Base.astro` relative to the manifest URL, so it works under the GitHub Pages base path.
+- **Glossary links.** `src/plugins/rehype-glossary.mjs` links the first occurrence of each glossary term in beginner and intermediate notes.
+- **Screenshots in headless Firefox** freeze CSS animations at the first frame; use `ui.prefersReducedMotion=1` in the profile, and load pages through a server that delays the `load` event if JS state must be visible.

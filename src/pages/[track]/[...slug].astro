@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { render, getCollection } from 'astro:content';
-import { TRACKS, notesForTrack, groupByModule, noteHref, noteSlug, url, type TrackId } from '../../lib/tracks';
+import { TRACKS, notesForTrack, groupByModule, noteHref, noteSlug, url, learningPath, type TrackId } from '../../lib/tracks';
 
 export async function getStaticPaths() {
   const out = [];
@@ -27,6 +27,9 @@ const rawBody = note.body || '';
 const wordCount = rawBody.split(/\s+/).filter(Boolean).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 220));
 const trackInfo = TRACKS[note.data.track];
+const pathSteps = await learningPath();
+const step = pathSteps.find((x) => x.note.id === note.id)?.step;
+const trackIndex = notes.findIndex((n) => n.id === note.id) + 1;
 
 // Notes in any track that list this note as a prerequisite ("where to go next"), and cross-track lookup for prerequisites.
 const allNotes = await getCollection('notes');
@@ -54,8 +57,12 @@ const leadsTo = allNotes
           <span class="side-track-name">{trackInfo.name}</span>
         </a>
         <div class="side-track-meta">{notes.length} notes across {mods.length} modules</div>
+        <div class="side-progress" data-progress-group data-ids={notes.map((n) => n.id).join(',')}>
+          <span class="bar"><i data-progress-bar></i></span>
+          <span class="sp-text"><b data-progress-text data-format="pct">0%</b> done</span>
+        </div>
       </div>
-      <div class="side-scroll">
+      <div class="side-scroll" data-progress-group>
         {mods.map((m, mi) => (
           <div class="side-module">
             <h4 class="side-module-title">
@@ -67,7 +74,9 @@ const leadsTo = allNotes
                   href={noteHref(n)} 
                   class:list={['side-note-link', { cur: n.id === note.id }]}
                   title={n.data.title}
+                  data-note-id={n.id}
                 >
+                  <span class="side-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
                   <span class="side-note-title">{n.data.title}</span>
                   {n.id === note.id && <span class="active-dot"></span>}
                 </a>
@@ -78,7 +87,7 @@ const leadsTo = allNotes
       </div>
     </aside>
 
-    <article data-pagefind-body class="article-content">
+    <article data-pagefind-body class="article-content" data-note-page data-note-id={note.id} data-title={note.data.title} data-track={note.data.track} data-next={next ? noteHref(next) : ''}>
       <nav class="breadcrumbs" aria-label="Breadcrumbs" data-pagefind-ignore>
         <a href={url('/')}>Home</a>
         <span class="sep">/</span>
@@ -93,6 +102,7 @@ const leadsTo = allNotes
           <span class="meta-pill module-pill">{note.data.module}</span>
           <span class={`badge badge-${note.data.level}`}>{note.data.level}</span>
           <span class="meta-pill reading-pill">⏱ {readingTime} min read</span>
+          {step && <span class="meta-pill step-pill" title="Position in the recommended learning path">Step {step} of {pathSteps.length}</span>}
           {note.data.sources.length > 0 && (
             <a href="#sources-section" class="meta-pill sources-pill">
               🔗 {note.data.sources.length} {note.data.sources.length === 1 ? 'source' : 'sources'}
@@ -100,6 +110,11 @@ const leadsTo = allNotes
           )}
         </div>
         <p class="article-summary-lead">{note.data.summary}</p>
+        <button class="complete-btn glass-hover" data-complete data-note-id={note.id} aria-pressed="false">
+          <span class="cb-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+          <span class="cb-off">Mark as complete</span><span class="cb-on">Completed</span>
+          <kbd>M</kbd>
+        </button>
       </header>
 
       {note.data.prerequisites.length > 0 && (
@@ -179,6 +194,16 @@ const leadsTo = allNotes
         )}
       </nav>
     </article>
+
+    <div class="dock glass" data-note-id={note.id} data-dock>
+      {prev ? <a class="dock-btn" href={noteHref(prev)} title={prev.data.title} aria-label="Previous note">←</a> : <span class="dock-btn off">←</span>}
+      <button class="dock-complete" data-complete aria-label="Toggle complete">
+        <span class="cb-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+        <span class="cb-off">Complete</span><span class="cb-on">Done</span>
+      </button>
+      <span class="dock-read"><b data-read-pct>0%</b> read · {trackIndex}/{notes.length}</span>
+      {next ? <a class="dock-btn" href={noteHref(next)} title={next.data.title} aria-label="Next note">→</a> : <span class="dock-btn off">→</span>}
+    </div>
 
     <aside class="toc" data-pagefind-ignore>
       <div class="toc-sticky">

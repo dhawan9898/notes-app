@@ -1,0 +1,13 @@
+{
+  "name": "DeepNotes",
+  "short_name": "DeepNotes",
+  "description": "Senior-level notes on C, DSA, Linux and Networking with a guided learning path and progress tracking.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

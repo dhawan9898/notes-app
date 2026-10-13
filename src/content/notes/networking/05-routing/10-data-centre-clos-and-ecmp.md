@@ -9,7 +9,6 @@ summary: "Why data centres use a leaf-spine Clos instead of a core/aggregation t
 prerequisites:
   - "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
   - "BGP-4 Fundamentals: Sessions, Messages, Attributes and Best-Path Selection"
-  - "VXLAN and BGP EVPN"
 sources:
   - label: "RFC 7938 — Use of BGP for Routing in Large-Scale Data Centers"
     url: https://www.rfc-editor.org/rfc/rfc7938

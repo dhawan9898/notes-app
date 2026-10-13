@@ -2,6 +2,12 @@
 
 Senior-level, source-backed notes on **C, DSA, Linux and L2/L3 Networking**. Static site (Astro) → GitHub Pages; the same build can later be wrapped for Android with Capacitor.
 
+## Learning app features
+
+- **Roadmap** (`/roadmap/`): one ordered path through all notes (Start-here modules, then C, DSA, Linux, Networking; prerequisites always first).
+- **Progress tracking**: mark notes complete (button, `M` key, or the check circles), per-module/track/overall progress, streak, hours learned, resume prompts, "Continue" shortcuts. Stored in your browser only; export/import/reset on the roadmap page.
+- **Liquid-glass UI** with animated backdrop, smooth page transitions and reveal animations (all disabled by `prefers-reduced-motion`), light/dark themes, installable and available offline once visited.
+
 ## Run
 
 ```bash

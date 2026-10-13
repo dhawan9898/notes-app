@@ -9,7 +9,6 @@ summary: "Answering many queries on a static tree: three lowest-common-ancestor 
 prerequisites:
   - Binary Trees and Binary Search Trees
   - "Range-Query Structures: Prefix Sums, Fenwick and Segment Trees"
-  - Graph Representations and Traversals
 sources:
   - label: "Bender & Farach-Colton — The LCA Problem Revisited (LATIN 2000)"
     url: https://link.springer.com/chapter/10.1007/10719839_9

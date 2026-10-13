@@ -54,3 +54,41 @@ export function groupByModule(notes: Note[]) {
 export const noteSlug = (n: Note) =>
   n.id.split('/').slice(1).map((s) => s.replace(/^\d+-/, '')).join('/');
 export const noteHref = (n: Note) => url(`/${n.data.track}/${noteSlug(n)}/`);
+
+/* ---------------- learning path and progress helpers ---------------- */
+
+/** Recommended track order for someone starting from zero. Every track also stands alone. */
+export const PATH_TRACKS: TrackId[] = ['c', 'dsa', 'linux', 'networking'];
+
+export const readingMinutes = (n: Note) =>
+  Math.max(1, Math.ceil((n.body || '').split(/\s+/).filter(Boolean).length / 220));
+
+export type PathStep = { note: Note; step: number; stage: string };
+
+/**
+ * One ordered curriculum over all notes: first the "Start here" module of every track, then each track in PATH_TRACKS order
+ * (modules and notes in their authored order). A note whose prerequisites (by title, across tracks) have not been placed yet is
+ * deferred until they have, so following the list never meets a note before what it builds on.
+ */
+export async function learningPath(): Promise<PathStep[]> {
+  const all = await getCollection('notes');
+  const byTitle = new Map(all.map((n) => [n.data.title, n]));
+  const preferred: { note: Note; stage: string }[] = [];
+  for (const id of PATH_TRACKS) {
+    for (const n of await notesForTrack(id)) if (n.data.moduleOrder === 0) preferred.push({ note: n, stage: 'Start here' });
+  }
+  for (const id of PATH_TRACKS) {
+    for (const n of await notesForTrack(id)) if (n.data.moduleOrder !== 0) preferred.push({ note: n, stage: TRACKS[id].name });
+  }
+  const placed = new Set<string>();
+  const out: PathStep[] = [];
+  const pending = [...preferred];
+  while (pending.length) {
+    let idx = pending.findIndex(({ note }) => note.data.prerequisites.every((p) => !byTitle.has(p) || placed.has(p)));
+    if (idx < 0) idx = 0;                                   // cycle guard: cannot happen once prerequisites are acyclic
+    const [next] = pending.splice(idx, 1);
+    placed.add(next.note.data.title);
+    out.push({ note: next.note, step: out.length + 1, stage: next.stage });
+  }
+  return out;
+}
