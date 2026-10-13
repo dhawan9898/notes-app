@@ -1,0 +1,7 @@
+{
+  "appId": "io.deepnotes.app",
+  "appName": "DeepNotes",
+  "webDir": "dist",
+  "android": { "allowMixedContent": false },
+  "server": { "androidScheme": "https" }
+}

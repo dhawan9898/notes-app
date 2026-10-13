@@ -1,3 +1,9 @@
 node_modules
 dist
 .astro
+
+# in-app C runner toolchain (downloaded by scripts/fetch-runner.mjs)
+public/runner/clang.wasm
+public/runner/lld.wasm
+public/runner/memfs.wasm
+public/runner/sysroot.tar

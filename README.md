@@ -8,6 +8,9 @@ Senior-level, source-backed notes on **C, DSA, Linux and L2/L3 Networking**. Sta
 - **Progress tracking**: mark notes complete (button, `M` key, or the check circles), per-module/track/overall progress, streak, hours learned, resume prompts, "Continue" shortcuts. Stored in your browser only; export/import/reset on the roadmap page.
 - **Liquid-glass UI** with animated backdrop, smooth page transitions and reveal animations (all disabled by `prefers-reduced-motion`), light/dark themes, installable and available offline once visited.
 
+- **Runnable C**: complete programs in the notes have a Run button (real clang compiled to WebAssembly, on your device); `/playground/` for your own code.
+- **Android app** (Capacitor): same site, fully offline including the C compiler. Build instructions in `CLAUDE.md` §10 or use the *Android APK* GitHub Action.
+
 ## Run
 
 ```bash

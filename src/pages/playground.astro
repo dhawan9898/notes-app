@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import examples from '../data/playground.json';
+---
+<Base title="C playground · DeepNotes" description="Write and run C programs on your device with a real clang compiler running in WebAssembly.">
+  <main class="wrap playground">
+    <header class="pg-head" data-reveal>
+      <p class="eyebrow">Playground</p>
+      <h1>Write C, run it here</h1>
+      <p class="lead">Programs are compiled by clang (WebAssembly build) on your device: no server, works offline in the app. Standard C library only: no threads, sockets or system calls.</p>
+    </header>
+
+    <div class="pg-grid">
+      <aside class="pg-examples" aria-label="Examples" data-reveal>
+        <h2>Examples</h2>
+        <ul>
+          {examples.map((e, i) => (
+            <li><button type="button" class="pg-ex" data-ex={i}><strong>{e.title}</strong><span>{e.blurb}</span></button></li>
+          ))}
+        </ul>
+      </aside>
+
+      <section class="pg-main" data-reveal>
+        <textarea id="pg-code" class="run-editor pg-code" spellcheck="false" rows="22" aria-label="C source code"></textarea>
+        <div class="run-bar">
+          <button class="run-btn" id="pg-run" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Run</span></button>
+          <span class="run-status" id="pg-status" aria-live="polite"></span>
+        </div>
+        <label class="pg-stdin-label">Input (standard input)<textarea id="pg-stdin" class="run-stdin" rows="2" placeholder="Text the program reads with scanf, fgets, getchar…"></textarea></label>
+        <div class="run-out" id="pg-out" hidden aria-live="polite"></div>
+      </section>
+    </div>
+    <script is:inline type="application/json" id="pg-data" set:html={JSON.stringify(examples)}></script>
+  </main>
+</Base>
+
+<script>
+  import { run, renderResult, renderError, isBusy } from '../scripts/runner';
+  const data: { title: string; code: string; stdin: string }[] = JSON.parse(document.getElementById('pg-data')!.textContent || '[]');
+  const code = document.getElementById('pg-code') as HTMLTextAreaElement;
+  const stdin = document.getElementById('pg-stdin') as HTMLTextAreaElement;
+  const out = document.getElementById('pg-out')!, status = document.getElementById('pg-status')!;
+  const btn = document.getElementById('pg-run') as HTMLButtonElement;
+  const KEY = 'deepnotes:playground:v1';
+  const load = (i: number) => { code.value = data[i].code; stdin.value = data[i].stdin; out.hidden = true; document.querySelectorAll('.pg-ex').forEach((b, k) => b.classList.toggle('on', k === i)); };
+  try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) { code.value = s.code; stdin.value = s.stdin || ''; } else load(0); } catch { load(0); }
+  code.addEventListener('input', () => { try { localStorage.setItem(KEY, JSON.stringify({ code: code.value, stdin: stdin.value })); } catch { /* ignore */ } });
+  stdin.addEventListener('input', () => { try { localStorage.setItem(KEY, JSON.stringify({ code: code.value, stdin: stdin.value })); } catch { /* ignore */ } });
+  code.addEventListener('keydown', (e) => { if (e.key === 'Tab') { e.preventDefault(); code.setRangeText('    ', code.selectionStart, code.selectionEnd, 'end'); } if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') btn.click(); });
+  document.querySelectorAll<HTMLElement>('.pg-ex').forEach((b) => b.addEventListener('click', () => { load(Number(b.dataset.ex)); try { localStorage.removeItem(KEY); } catch { /* ignore */ } }));
+  let active: { cancel: () => void } | null = null;
+  btn.addEventListener('click', async () => {
+    if (active) { active.cancel(); return; }
+    if (isBusy()) return;
+    btn.classList.add('running'); btn.querySelector('span')!.textContent = 'Stop'; status.textContent = 'Starting…'; out.hidden = true;
+    try { active = run(code.value, { stdin: stdin.value, onStatus: (m) => (status.textContent = m) }); renderResult(out, await active.promise); }
+    catch (e) { if ((e as Error).message !== 'Cancelled') renderError(out, (e as Error).message); }
+    finally { active = null; btn.classList.remove('running'); btn.querySelector('span')!.textContent = 'Run'; status.textContent = ''; }
+  });
+</script>

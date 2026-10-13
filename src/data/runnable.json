@@ -1,0 +1,961 @@
+{
+ "65ba01bcba1ef377": {
+  "ok": true,
+  "where": "c/00-start-here/02-c-from-zero.md"
+ },
+ "493e92ffd7c8832e": {
+  "ok": true,
+  "where": "c/00-start-here/02-c-from-zero.md"
+ },
+ "b7b1a376112932cb": {
+  "ok": true,
+  "where": "c/00-start-here/02-c-from-zero.md"
+ },
+ "e97e8861259aa5af": {
+  "ok": true,
+  "where": "c/00-start-here/02-c-from-zero.md"
+ },
+ "aba3ee9e24b4c2d6": {
+  "ok": false,
+  "where": "c/00-start-here/02-c-from-zero.md",
+  "note": "main.c:4:18: error: expected ';' at end of declaration"
+ },
+ "9b035745c603c144": {
+  "ok": true,
+  "where": "c/00-start-here/02-c-from-zero.md"
+ },
+ "6932bdd381e162c0": {
+  "ok": true,
+  "where": "c/00-start-here/03-binary-hexadecimal-and-bits.md"
+ },
+ "dfd1a3273447063c": {
+  "ok": true,
+  "where": "c/00-start-here/04-pointers-for-beginners.md"
+ },
+ "6e120b36aa5f945d": {
+  "ok": true,
+  "where": "c/00-start-here/04-pointers-for-beginners.md"
+ },
+ "a91d93ba8dea82d0": {
+  "ok": true,
+  "where": "c/00-start-here/04-pointers-for-beginners.md"
+ },
+ "601a5eac5258c88b": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "2644ea7383323300": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "ee5e8124cdeae1ea": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/01-compilation-pipeline-and-elf.md",
+  "files": [
+   "greet.h"
+  ]
+ },
+ "b41abaad1436e51a": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/02-standards-and-undefined-behavior.md"
+ },
+ "14752346804deee9": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/02-standards-and-undefined-behavior.md"
+ },
+ "a16784e8847af3d3": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/02-standards-and-undefined-behavior.md"
+ },
+ "30ade1defdb863e6": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/03-types-conversions-and-overflow.md"
+ },
+ "8fd0891e324725f3": {
+  "ok": false,
+  "where": "c/01-toolchain-and-foundations/03-types-conversions-and-overflow.md",
+  "note": "main.c:3:10: fatal error: 'stdckdint.h' file not found"
+ },
+ "28400af718ad4c15": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/03-types-conversions-and-overflow.md"
+ },
+ "561d2a724a47c5d3": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "0deb260d1b86c0f9": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "cc46d49dcafec595": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "b9facfd293ca1f12": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/02-stack-frames-and-calling-convention.md"
+ },
+ "4f6f33270933746b": {
+  "ok": false,
+  "where": "c/02-memory-and-pointers/02-stack-frames-and-calling-convention.md",
+  "note": "main.c:4:13: error: WebAssembly hasn't implemented __builtin_return_address"
+ },
+ "617fa293d7803fc7": {
+  "ok": false,
+  "where": "c/02-memory-and-pointers/02-stack-frames-and-calling-convention.md",
+  "note": "wasm-ld: error: unknown file type: main.o"
+ },
+ "521b38f69591d62b": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/03-dynamic-memory-malloc-bugs-and-allocators.md"
+ },
+ "9845cd2515a0fdc2": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/03-dynamic-memory-malloc-bugs-and-allocators.md"
+ },
+ "36244bba4e5cb6c9": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/03-dynamic-memory-malloc-bugs-and-allocators.md"
+ },
+ "bfc64d49eb3be431": {
+  "ok": false,
+  "where": "c/02-memory-and-pointers/04-strings-and-buffer-safety.md",
+  "note": "fatal error: error in backend: Cannot select: 0x7a9c98: i32 = GlobalTLSAddress<i32* @errno> 0"
+ },
+ "94e4f022273bb5b6": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/04-strings-and-buffer-safety.md"
+ },
+ "fe18c0f1b8ef18ad": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/04-strings-and-buffer-safety.md"
+ },
+ "f091182e898a9526": {
+  "ok": true,
+  "where": "c/03-data-modeling/01-structs-alignment-unions-bitfields-endianness.md"
+ },
+ "99630db5f214afe4": {
+  "ok": true,
+  "where": "c/03-data-modeling/01-structs-alignment-unions-bitfields-endianness.md"
+ },
+ "05785029d7a1dbe8": {
+  "ok": true,
+  "where": "c/03-data-modeling/01-structs-alignment-unions-bitfields-endianness.md"
+ },
+ "c9e1b368a4a569b7": {
+  "ok": false,
+  "where": "c/03-data-modeling/02-qualifiers-storage-classes-and-linkage.md",
+  "note": "fatal error: error in backend: Cannot select: 0x75c560: i32 = GlobalTLSAddress<i32* @per_thread> 0"
+ },
+ "36047501fdd9e8c1": {
+  "ok": false,
+  "where": "c/03-data-modeling/02-qualifiers-storage-classes-and-linkage.md",
+  "note": "main.c:2:36: error: redefinition of 'hidden'"
+ },
+ "e5ab9ffa0424574c": {
+  "ok": true,
+  "where": "c/03-data-modeling/02-qualifiers-storage-classes-and-linkage.md"
+ },
+ "3c49431f60b7995d": {
+  "ok": false,
+  "where": "c/03-data-modeling/02-qualifiers-storage-classes-and-linkage.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: twice"
+ },
+ "551a234e32b3b803": {
+  "ok": true,
+  "where": "c/04-advanced-language/01-the-preprocessor-and-macros.md"
+ },
+ "1d3da9f5eb31a66c": {
+  "ok": true,
+  "where": "c/04-advanced-language/01-the-preprocessor-and-macros.md"
+ },
+ "8f5c360edd267cc0": {
+  "ok": true,
+  "where": "c/04-advanced-language/01-the-preprocessor-and-macros.md"
+ },
+ "dc6d834b201ab648": {
+  "ok": true,
+  "where": "c/04-advanced-language/02-function-pointers-callbacks-and-intrusive-containers.md"
+ },
+ "1d6f0c371a7a1157": {
+  "ok": true,
+  "where": "c/04-advanced-language/02-function-pointers-callbacks-and-intrusive-containers.md"
+ },
+ "9941b1ea34b1dd84": {
+  "ok": true,
+  "where": "c/04-advanced-language/03-error-handling-variadics-and-setjmp.md"
+ },
+ "2a4f2d50075037a8": {
+  "ok": false,
+  "where": "c/04-advanced-language/03-error-handling-variadics-and-setjmp.md",
+  "note": "main.c:1:10: fatal error: 'setjmp.h' file not found"
+ },
+ "c12dbe5a9988485b": {
+  "ok": true,
+  "where": "c/04-advanced-language/04-modern-c-c99-c11-c23.md"
+ },
+ "d82bd20000c4f6a3": {
+  "ok": false,
+  "where": "c/04-advanced-language/04-modern-c-c99-c11-c23.md",
+  "note": "main.c:1:10: fatal error: 'stdatomic.h' file not found"
+ },
+ "a8fa0fad87dd458b": {
+  "ok": false,
+  "where": "c/04-advanced-language/04-modern-c-c99-c11-c23.md",
+  "note": "main.c:3:10: fatal error: 'stdckdint.h' file not found"
+ },
+ "a7f77f252caeb13f": {
+  "ok": false,
+  "where": "c/05-linking-and-building/01-static-and-shared-libraries.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: mathx_version"
+ },
+ "454b6fb4d5f71f81": {
+  "ok": false,
+  "where": "c/05-linking-and-building/01-static-and-shared-libraries.md",
+  "note": "main.c:1:10: fatal error: 'dlfcn.h' file not found"
+ },
+ "e8bcbe2a0b0664ca": {
+  "ok": false,
+  "where": "c/05-linking-and-building/02-build-systems-compiler-flags-and-hardening.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: clamp"
+ },
+ "fa4f009486692adb": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/01-debugging-gdb-and-sanitizers.md"
+ },
+ "f024cae63496b839": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/01-debugging-gdb-and-sanitizers.md"
+ },
+ "a6f4e800e2d96bfd": {
+  "ok": false,
+  "where": "c/06-debugging-and-quality/02-static-analysis-fuzzing-and-testing.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: clamp"
+ },
+ "1c0f978e30db3496": {
+  "ok": false,
+  "where": "c/06-debugging-and-quality/02-static-analysis-fuzzing-and-testing.md",
+  "note": "main.c:6:10: fatal error: 'sys/wait.h' file not found"
+ },
+ "1fde4d64712bcde0": {
+  "ok": false,
+  "where": "c/06-debugging-and-quality/03-secure-c-coding.md",
+  "note": "main.c:5:10: fatal error: 'sys/wait.h' file not found"
+ },
+ "c3480a10130157a3": {
+  "ok": false,
+  "where": "c/06-debugging-and-quality/03-secure-c-coding.md",
+  "note": "fatal error: error in backend: Cannot select: 0x7d5bc0: i32 = GlobalTLSAddress<i32* @errno> 0"
+ },
+ "f30d31e0344ae33f": {
+  "ok": false,
+  "where": "c/06-debugging-and-quality/03-secure-c-coding.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: getrandom"
+ },
+ "62f946f16065af11": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/03-secure-c-coding.md"
+ },
+ "b9b967ecddbfd732": {
+  "ok": true,
+  "where": "c/07-systems-level-c/01-bit-manipulation.md"
+ },
+ "78c3e4e979ae4222": {
+  "ok": true,
+  "where": "c/07-systems-level-c/01-bit-manipulation.md"
+ },
+ "e7aeb938c635826c": {
+  "ok": true,
+  "where": "c/07-systems-level-c/02-file-io-stdio-vs-posix.md"
+ },
+ "220c33c98a75dad1": {
+  "ok": false,
+  "where": "c/07-systems-level-c/02-file-io-stdio-vs-posix.md",
+  "note": "fatal error: error in backend: Cannot select: 0x7d3d98: i32 = GlobalTLSAddress<i32* @errno> 0"
+ },
+ "76dafc6545bf76a0": {
+  "ok": false,
+  "where": "c/07-systems-level-c/02-file-io-stdio-vs-posix.md",
+  "note": "/include/sys/mman.h:2:2: error: \"WASI lacks a true mmap; to enable minimal mmap emulation, compile"
+ },
+ "899cc2d5ae134340": {
+  "ok": false,
+  "where": "c/07-systems-level-c/03-sockets-programming.md",
+  "note": "main.c:3:10: fatal error: 'netdb.h' file not found"
+ },
+ "b1c69dce70656139": {
+  "ok": false,
+  "where": "c/07-systems-level-c/03-sockets-programming.md",
+  "note": "main.c:2:10: fatal error: 'netdb.h' file not found"
+ },
+ "1a4c5e8717070a79": {
+  "ok": false,
+  "where": "c/07-systems-level-c/03-sockets-programming.md",
+  "note": "main.c:7:10: fatal error: 'sys/wait.h' file not found"
+ },
+ "232244f3b6fe788c": {
+  "ok": true,
+  "where": "c/07-systems-level-c/04-performance-oriented-c.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "6bcdbdf05d85dd0b": {
+  "ok": true,
+  "where": "c/07-systems-level-c/04-performance-oriented-c.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "e8c3907876090661": {
+  "ok": false,
+  "where": "c/07-systems-level-c/04-performance-oriented-c.md",
+  "note": "main.c:2:10: fatal error: 'pthread.h' file not found"
+ },
+ "e86917e31b5e97e9": {
+  "ok": false,
+  "where": "c/07-systems-level-c/04-performance-oriented-c.md",
+  "note": "timeout"
+ },
+ "0f00d84b5dd6ec87": {
+  "ok": true,
+  "where": "c/07-systems-level-c/05-portability-and-abi.md"
+ },
+ "1b6c1da24a3f95a1": {
+  "ok": true,
+  "where": "c/07-systems-level-c/05-portability-and-abi.md"
+ },
+ "5b4517707c26be5b": {
+  "ok": false,
+  "where": "c/07-systems-level-c/06-embedded-c-volatile-startup-and-linker-scripts.md",
+  "note": "main.c:12:35: error: invalid output constraint '=a' in asm"
+ },
+ "1df6b6660a940e7c": {
+  "ok": false,
+  "where": "c/07-systems-level-c/06-embedded-c-volatile-startup-and-linker-scripts.md",
+  "note": "main.c:4:10: fatal error: 'stdatomic.h' file not found"
+ },
+ "41b51e1aa3590a44": {
+  "ok": true,
+  "where": "c/07-systems-level-c/06-embedded-c-volatile-startup-and-linker-scripts.md"
+ },
+ "65885951154b7fc3": {
+  "ok": false,
+  "where": "c/07-systems-level-c/08-the-c-standard-library-tour-and-pitfalls.md",
+  "note": "fatal error: error in backend: Cannot select: 0x7a1c68: i32 = GlobalTLSAddress<i32* @errno> 0"
+ },
+ "82dc7c270468e716": {
+  "ok": true,
+  "where": "c/07-systems-level-c/08-the-c-standard-library-tour-and-pitfalls.md"
+ },
+ "e8bccdc8048973d9": {
+  "ok": false,
+  "where": "c/07-systems-level-c/08-the-c-standard-library-tour-and-pitfalls.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: tzset"
+ },
+ "e5146c54b550a86d": {
+  "ok": false,
+  "where": "c/07-systems-level-c/08-the-c-standard-library-tour-and-pitfalls.md",
+  "note": "fatal error: error in backend: Cannot select: 0x79e9f8: i32 = GlobalTLSAddress<i32* @errno> 0"
+ },
+ "c6495b88918afcd1": {
+  "ok": false,
+  "where": "c/08-concurrency/01-threads-atomics-and-the-c11-memory-model.md",
+  "note": "main.c:2:10: fatal error: 'pthread.h' file not found"
+ },
+ "131dcc6683c1cce2": {
+  "ok": false,
+  "where": "c/08-concurrency/01-threads-atomics-and-the-c11-memory-model.md",
+  "note": "main.c:3:10: fatal error: 'pthread.h' file not found"
+ },
+ "2fb03c769c0f8b29": {
+  "ok": false,
+  "where": "c/08-concurrency/01-threads-atomics-and-the-c11-memory-model.md",
+  "note": "main.c:3:10: fatal error: 'pthread.h' file not found"
+ },
+ "1da5c56dfb85646f": {
+  "ok": false,
+  "where": "c/08-concurrency/01-threads-atomics-and-the-c11-memory-model.md",
+  "note": "main.c:2:10: fatal error: 'pthread.h' file not found"
+ },
+ "6628ba6ff403b1a1": {
+  "ok": true,
+  "where": "dsa/00-start-here/02-thinking-in-data-structures.md"
+ },
+ "1c24cba44b8afd1c": {
+  "ok": true,
+  "where": "dsa/00-start-here/02-thinking-in-data-structures.md"
+ },
+ "c880f6cb31b6ea40": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "60bb41b7f62da4e1": {
+  "ok": true,
+  "where": "dsa/01-foundations/01-complexity-and-amortized-analysis.md"
+ },
+ "301a74dcc58eb90b": {
+  "ok": true,
+  "where": "dsa/01-foundations/01-complexity-and-amortized-analysis.md"
+ },
+ "64f6b1ad5ccc2fbf": {
+  "ok": false,
+  "where": "dsa/01-foundations/01-complexity-and-amortized-analysis.md",
+  "note": "timeout"
+ },
+ "d2d29e14b1bb112a": {
+  "ok": true,
+  "where": "dsa/01-foundations/02-recursion-divide-and-conquer-and-invariants.md"
+ },
+ "074260f8e767f5f4": {
+  "ok": true,
+  "where": "dsa/01-foundations/02-recursion-divide-and-conquer-and-invariants.md"
+ },
+ "90378c125457de82": {
+  "ok": true,
+  "where": "dsa/01-foundations/02-recursion-divide-and-conquer-and-invariants.md"
+ },
+ "34c45e508516ad2c": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/01-dynamic-arrays.md",
+  "files": [
+   "vec.h"
+  ]
+ },
+ "36841caf8028aea5": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/01-dynamic-arrays.md",
+  "files": [
+   "vec.h",
+   "timing.h"
+  ]
+ },
+ "464abe611aaa782a": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/01-dynamic-arrays.md",
+  "files": [
+   "vec.h",
+   "timing.h"
+  ]
+ },
+ "81d69c1d820eb980": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/02-linked-lists.md"
+ },
+ "8c859d14bd52c5cb": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/02-linked-lists.md"
+ },
+ "a5cefb1761f9ddaf": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/03-stacks-queues-deques-and-ring-buffers.md"
+ },
+ "1348a6bc8c355d75": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/03-stacks-queues-deques-and-ring-buffers.md",
+  "files": [
+   "ring.h"
+  ]
+ },
+ "58bb3c6bc37c1d6a": {
+  "ok": false,
+  "where": "dsa/02-linear-structures/03-stacks-queues-deques-and-ring-buffers.md",
+  "note": "main.c:2:10: fatal error: 'pthread.h' file not found"
+ },
+ "967e6c011f5c2ede": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/01-binary-search-and-variants.md"
+ },
+ "9b0a871e50639e70": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/01-binary-search-and-variants.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "05377fbb2e8c163a": {
+  "ok": false,
+  "where": "dsa/03-searching-and-sorting/02-comparison-sorts.md",
+  "note": "unreachable"
+ },
+ "b9318dfe20004361": {
+  "ok": false,
+  "where": "dsa/03-searching-and-sorting/02-comparison-sorts.md",
+  "note": "unreachable"
+ },
+ "caf1f52b0ee32540": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/03-non-comparison-sorts-and-selection.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "4a9fefa959fc6e06": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/03-non-comparison-sorts-and-selection.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "c8a2de5938e00433": {
+  "ok": true,
+  "where": "dsa/04-hashing/01-hash-tables-open-addressing.md",
+  "files": [
+   "oamap.h"
+  ]
+ },
+ "3ca09de885d5d247": {
+  "ok": true,
+  "where": "dsa/04-hashing/01-hash-tables-open-addressing.md",
+  "files": [
+   "oamap.h"
+  ]
+ },
+ "352e700e88a99bab": {
+  "ok": true,
+  "where": "dsa/04-hashing/01-hash-tables-open-addressing.md"
+ },
+ "2112586bba7c04e9": {
+  "ok": true,
+  "where": "dsa/04-hashing/01-hash-tables-open-addressing.md",
+  "files": [
+   "siphash.h"
+  ]
+ },
+ "7dbda9c245cae416": {
+  "ok": true,
+  "where": "dsa/04-hashing/02-probabilistic-structures.md",
+  "files": [
+   "hash.h"
+  ]
+ },
+ "1449314e645fa0f8": {
+  "ok": true,
+  "where": "dsa/04-hashing/02-probabilistic-structures.md",
+  "files": [
+   "hash.h"
+  ]
+ },
+ "25593599195004dd": {
+  "ok": true,
+  "where": "dsa/04-hashing/02-probabilistic-structures.md",
+  "files": [
+   "hash.h"
+  ]
+ },
+ "6c1b05219d8ced1d": {
+  "ok": true,
+  "where": "dsa/05-trees/01-binary-trees-and-bsts.md",
+  "files": [
+   "bst.h"
+  ]
+ },
+ "c531cd79266678ac": {
+  "ok": true,
+  "where": "dsa/05-trees/01-binary-trees-and-bsts.md",
+  "files": [
+   "bst.h"
+  ]
+ },
+ "830e32c851e90ae9": {
+  "ok": true,
+  "where": "dsa/05-trees/01-binary-trees-and-bsts.md",
+  "files": [
+   "bst.h"
+  ]
+ },
+ "ef52bc461d3df7c3": {
+  "ok": false,
+  "where": "dsa/05-trees/02-self-balancing-trees.md",
+  "note": "run"
+ },
+ "3c3f29aa72c5fd38": {
+  "ok": true,
+  "where": "dsa/05-trees/02-self-balancing-trees.md",
+  "files": [
+   "avl.h",
+   "rb.h",
+   "bst.h",
+   "randomized.h",
+   "timing.h"
+  ]
+ },
+ "734ad0823e620231": {
+  "ok": true,
+  "where": "dsa/05-trees/03-heaps-and-priority-queues.md",
+  "files": [
+   "heap.h"
+  ]
+ },
+ "82e036468096818c": {
+  "ok": true,
+  "where": "dsa/05-trees/03-heaps-and-priority-queues.md",
+  "files": [
+   "heap.h",
+   "timing.h"
+  ]
+ },
+ "96b197fa961b785f": {
+  "ok": false,
+  "where": "dsa/05-trees/03-heaps-and-priority-queues.md",
+  "note": "run"
+ },
+ "956163cc32ae85f7": {
+  "ok": true,
+  "where": "dsa/05-trees/04-tries-and-radix-trees.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "6f206d4b394e2542": {
+  "ok": true,
+  "where": "dsa/05-trees/04-tries-and-radix-trees.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "b5867732f38efc0a": {
+  "ok": true,
+  "where": "dsa/05-trees/05-b-trees-b-plus-trees-and-lsm-trees.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "d368bc617c9b30df": {
+  "ok": false,
+  "where": "dsa/05-trees/05-b-trees-b-plus-trees-and-lsm-trees.md",
+  "note": "timeout"
+ },
+ "dd8cc40e1971fcf4": {
+  "ok": true,
+  "where": "dsa/05-trees/06-range-query-structures.md"
+ },
+ "9936b196c57611c3": {
+  "ok": true,
+  "where": "dsa/05-trees/06-range-query-structures.md",
+  "files": [
+   "structs.h"
+  ]
+ },
+ "cccc0cf802d955aa": {
+  "ok": true,
+  "where": "dsa/05-trees/06-range-query-structures.md",
+  "files": [
+   "structs.h",
+   "timing.h"
+  ]
+ },
+ "ad21224150270eee": {
+  "ok": true,
+  "where": "dsa/05-trees/07-tree-queries-lca-hld-centroid.md",
+  "files": [
+   "treeq.h"
+  ]
+ },
+ "7ff03a4c9631832e": {
+  "ok": true,
+  "where": "dsa/05-trees/07-tree-queries-lca-hld-centroid.md",
+  "files": [
+   "treeq.h"
+  ]
+ },
+ "2ea0b2887e04025c": {
+  "ok": false,
+  "where": "dsa/05-trees/08-spatial-indexes-kd-trees-and-the-curse-of-dimensionality.md",
+  "note": "./kd.h:10:27: error: use of undeclared identifier 'DIM'"
+ },
+ "1226c8fa4d8291e3": {
+  "ok": false,
+  "where": "dsa/05-trees/08-spatial-indexes-kd-trees-and-the-curse-of-dimensionality.md",
+  "note": "./kd.h:10:27: error: use of undeclared identifier 'DIM'"
+ },
+ "7f3ec257c652ca44": {
+  "ok": false,
+  "where": "dsa/06-graphs/01-representations-and-traversals.md",
+  "note": "main.c:3:10: fatal error: 'sys/wait.h' file not found"
+ },
+ "32445b1ac13bc28b": {
+  "ok": true,
+  "where": "dsa/06-graphs/01-representations-and-traversals.md",
+  "files": [
+   "graph.h"
+  ]
+ },
+ "2285802b6f7ef702": {
+  "ok": true,
+  "where": "dsa/06-graphs/01-representations-and-traversals.md"
+ },
+ "562798385f88512f": {
+  "ok": false,
+  "where": "dsa/06-graphs/02-shortest-paths.md",
+  "note": "./sssp.h:4:10: fatal error: '../heaps/indexed.h' file not found"
+ },
+ "6df235168712362c": {
+  "ok": false,
+  "where": "dsa/06-graphs/02-shortest-paths.md",
+  "note": "./sssp.h:4:10: fatal error: '../heaps/indexed.h' file not found"
+ },
+ "a7744e9149a870a8": {
+  "ok": true,
+  "where": "dsa/06-graphs/02-shortest-paths.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "053284473b1d3fa5": {
+  "ok": true,
+  "where": "dsa/06-graphs/02-shortest-paths.md"
+ },
+ "2dfaa0c54d1a9cb5": {
+  "ok": true,
+  "where": "dsa/06-graphs/03-union-find-mst-scc-and-flow.md",
+  "files": [
+   "dsu.h",
+   "timing.h"
+  ]
+ },
+ "a30aff1d3d22612c": {
+  "ok": true,
+  "where": "dsa/06-graphs/03-union-find-mst-scc-and-flow.md",
+  "files": [
+   "dsu.h",
+   "wgraph.h",
+   "timing.h"
+  ]
+ },
+ "8dead80702bc3dc7": {
+  "ok": true,
+  "where": "dsa/06-graphs/03-union-find-mst-scc-and-flow.md",
+  "files": [
+   "graph.h",
+   "timing.h"
+  ]
+ },
+ "d78d19790e2dcfc9": {
+  "ok": true,
+  "where": "dsa/06-graphs/03-union-find-mst-scc-and-flow.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "2b439b27731b0fb0": {
+  "ok": false,
+  "where": "dsa/07-strings/01-string-matching-and-edit-distance.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __multi3"
+ },
+ "587a6741efdc6848": {
+  "ok": false,
+  "where": "dsa/07-strings/01-string-matching-and-edit-distance.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __multi3"
+ },
+ "6935039a7487dc8f": {
+  "ok": true,
+  "where": "dsa/07-strings/01-string-matching-and-edit-distance.md",
+  "files": [
+   "match.h",
+   "timing.h"
+  ]
+ },
+ "92ae5223dfe2de2d": {
+  "ok": true,
+  "where": "dsa/07-strings/01-string-matching-and-edit-distance.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "f2043ae75feab363": {
+  "ok": true,
+  "where": "dsa/07-strings/02-suffix-arrays-lcp-and-the-bwt.md",
+  "files": [
+   "sa.h"
+  ]
+ },
+ "4b11ca9f761ff890": {
+  "ok": true,
+  "where": "dsa/07-strings/02-suffix-arrays-lcp-and-the-bwt.md",
+  "files": [
+   "sa.h"
+  ]
+ },
+ "3a3cfc992efed5eb": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/01-dynamic-programming.md",
+  "files": [
+   "dp.h"
+  ]
+ },
+ "0b5e9660afe87911": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/01-dynamic-programming.md",
+  "files": [
+   "dp.h",
+   "timing.h"
+  ]
+ },
+ "5f028a98ac260ad8": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/02-greedy-algorithms.md"
+ },
+ "46e5e3a0a3b67e5c": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/02-greedy-algorithms.md"
+ },
+ "ab0025c51ce018be": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/03-backtracking-and-bitmask-dp.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "32394a3c18047c6b": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/03-backtracking-and-bitmask-dp.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "c8a08b22c4a61539": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/03-backtracking-and-bitmask-dp.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "6ee4e4c9e9b58b27": {
+  "ok": false,
+  "where": "dsa/08-algorithm-design/04-number-theory-essentials.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __multi3"
+ },
+ "01252876a98277ae": {
+  "ok": false,
+  "where": "dsa/08-algorithm-design/04-number-theory-essentials.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __multi3"
+ },
+ "b51dccda4abfe865": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/05-fft-ntt-and-convolution.md",
+  "files": [
+   "ntt.h"
+  ]
+ },
+ "48accfdf44c8fddf": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/05-fft-ntt-and-convolution.md",
+  "files": [
+   "ntt.h"
+  ]
+ },
+ "4a017156258d756a": {
+  "ok": false,
+  "where": "dsa/08-algorithm-design/05-fft-ntt-and-convolution.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __muldc3"
+ },
+ "6c250a9ff786fde2": {
+  "ok": false,
+  "where": "dsa/08-algorithm-design/06-computational-geometry.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __multi3"
+ },
+ "f8665e0f291ab90d": {
+  "ok": false,
+  "where": "dsa/08-algorithm-design/06-computational-geometry.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __lttf2"
+ },
+ "95e52cc1763b2f6e": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/07-randomized-algorithms.md",
+  "files": [
+   "rnd.h"
+  ]
+ },
+ "ce40e3b082d5f46a": {
+  "ok": false,
+  "where": "dsa/08-algorithm-design/07-randomized-algorithms.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: __multi3"
+ },
+ "17e33fe7495320ca": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/01-caches-lru-lfu-clock.md",
+  "files": [
+   "policies.h"
+  ]
+ },
+ "d452b237aba37b20": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/01-caches-lru-lfu-clock.md",
+  "files": [
+   "policies.h",
+   "timing.h"
+  ]
+ },
+ "1426984a3f98a55e": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/02-allocators-as-data-structures.md",
+  "files": [
+   "fit.h",
+   "timing.h"
+  ]
+ },
+ "26cc04ed8c80d390": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/02-allocators-as-data-structures.md"
+ },
+ "8795b2725307e098": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/02-allocators-as-data-structures.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "7d3e623f0c314a95": {
+  "ok": false,
+  "where": "dsa/09-systems-structures/03-concurrent-and-lock-free-structures.md",
+  "note": "main.c:1:10: fatal error: 'stdatomic.h' file not found"
+ },
+ "9ecb29fcd9077d5e": {
+  "ok": false,
+  "where": "dsa/09-systems-structures/03-concurrent-and-lock-free-structures.md",
+  "note": "./lockfree.h:3:10: fatal error: 'pthread.h' file not found"
+ },
+ "ac9b09f3d882284f": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/04-problem-solving-patterns-and-cheat-sheet.md"
+ },
+ "b76ac5698f35294b": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/04-problem-solving-patterns-and-cheat-sheet.md",
+  "files": [
+   "timing.h"
+  ]
+ },
+ "12204201054b86c0": {
+  "ok": false,
+  "where": "linux/03-processes/01-fork-exec-wait.md",
+  "note": "main.c:5:10: fatal error: 'sys/wait.h' file not found"
+ },
+ "eab58ac0817055ff": {
+  "ok": false,
+  "where": "linux/04-memory/03-kernel-memory-allocators-and-rcu.md",
+  "note": "./qsbr.h:3:10: fatal error: 'pthread.h' file not found"
+ },
+ "2e4048099aaff93c": {
+  "ok": false,
+  "where": "linux/04-memory/03-kernel-memory-allocators-and-rcu.md",
+  "note": "./qsbr.h:3:10: fatal error: 'pthread.h' file not found"
+ },
+ "5f22d8f84fa6e50e": {
+  "ok": false,
+  "where": "linux/08-containers/04-virtualization-kvm-qemu-and-virtio.md",
+  "note": "main.c:4:10: fatal error: 'linux/kvm.h' file not found"
+ },
+ "466cb0e692062146": {
+  "ok": false,
+  "where": "linux/08-containers/04-virtualization-kvm-qemu-and-virtio.md",
+  "note": "main.c:4:10: fatal error: 'linux/kvm.h' file not found"
+ },
+ "e026e0fab5579fb6": {
+  "ok": false,
+  "where": "linux/09-performance/04-latency-and-real-time-tuning.md",
+  "note": "/include/sys/mman.h:2:2: error: \"WASI lacks a true mmap; to enable minimal mmap emulation, compile"
+ }
+}

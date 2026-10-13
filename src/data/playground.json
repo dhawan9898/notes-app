@@ -1,0 +1,74 @@
+[
+ {
+  "title": "Hello, C",
+  "blurb": "Start here: a complete program, compiled and run on your device.",
+  "code": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, C!\\n\");\n    for (int i = 1; i <= 5; i++)\n        printf(\"%d squared is %d\\n\", i, i * i);\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Pointers and arrays",
+  "blurb": "Addresses, pointer arithmetic and how an array decays.",
+  "code": "#include <stdio.h>\n\nint main(void) {\n    int a[5] = {10, 20, 30, 40, 50};\n    int *p = a;                      // an array name decays to a pointer to its first element\n    printf(\"sizeof a = %zu, sizeof p = %zu\\n\", sizeof a, sizeof p);\n    for (int i = 0; i < 5; i++)\n        printf(\"a[%d] = %d   *(p + %d) = %d   address step = %td bytes\\n\", i, a[i], i, *(p + i), (char *)(p + i) - (char *)p);\n    int *end = a + 5;                // one past the end: valid to form, not to dereference\n    printf(\"elements between a and end: %td\\n\", end - a);\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Struct layout",
+  "blurb": "Padding and alignment: reorder fields and watch sizeof change.",
+  "code": "#include <stdio.h>\n#include <stddef.h>\n\nstruct Bad  { char a; double b; char c; int d; };     // padding after a, after c\nstruct Good { double b; int d; char a; char c; };     // largest first\n\nint main(void) {\n    printf(\"Bad : size %zu  offsets a=%zu b=%zu c=%zu d=%zu\\n\", sizeof(struct Bad), offsetof(struct Bad, a), offsetof(struct Bad, b), offsetof(struct Bad, c), offsetof(struct Bad, d));\n    printf(\"Good: size %zu  offsets b=%zu d=%zu a=%zu c=%zu\\n\", sizeof(struct Good), offsetof(struct Good, b), offsetof(struct Good, d), offsetof(struct Good, a), offsetof(struct Good, c));\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Bit tricks",
+  "blurb": "Counting bits, powers of two and isolating the lowest set bit.",
+  "code": "#include <stdio.h>\n#include <stdint.h>\n\nstatic int popcount(uint32_t x) { int n = 0; while (x) { x &= x - 1; n++; } return n; }   // clears the lowest set bit each time\n\nint main(void) {\n    uint32_t v[] = {0, 1, 12, 255, 1024, 0xF0F0F0F0u};\n    for (int i = 0; i < 6; i++) {\n        uint32_t x = v[i];\n        printf(\"%10u  bits=%2d  power of two=%d  lowest set bit=%u\\n\", x, popcount(x), x && !(x & (x - 1)), x & -x);\n    }\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Integer overflow and conversions",
+  "blurb": "Unsigned wraps; signed overflow is undefined; mixed comparisons surprise.",
+  "code": "#include <stdio.h>\n#include <stdint.h>\n#include <limits.h>\n\nint main(void) {\n    unsigned u = UINT_MAX; u += 1;\n    printf(\"UINT_MAX + 1 = %u (defined: wraps)\\n\", u);\n    int8_t small = (int8_t)200;\n    printf(\"(int8_t)200 = %d (implementation-defined conversion)\\n\", small);\n    int s = -1; unsigned t = 1;\n    printf(\"-1 < 1u ? %s   (the int is converted to unsigned)\\n\", s < t ? \"yes\" : \"no\");\n    printf(\"sizeof: char %zu short %zu int %zu long %zu long long %zu pointer %zu\\n\", sizeof(char), sizeof(short), sizeof(int), sizeof(long), sizeof(long long), sizeof(void *));\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Sorting with qsort",
+  "blurb": "A comparator that cannot overflow, and a quick look at the result.",
+  "code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp(const void *a, const void *b) {\n    int x = *(const int *)a, y = *(const int *)b;\n    return (x > y) - (x < y);          // never x - y: that overflows for large values\n}\n\nint main(void) {\n    int v[] = {42, -7, 19, 0, 3, 3, 1000000, -1000000};\n    int n = sizeof v / sizeof v[0];\n    qsort(v, n, sizeof v[0], cmp);\n    for (int i = 0; i < n; i++) printf(\"%d \", v[i]);\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Strings: copy safely",
+  "blurb": "strncpy does not terminate; snprintf reports truncation.",
+  "code": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char dst[8];\n    int needed = snprintf(dst, sizeof dst, \"%s-%d\", \"overlong\", 12345);\n    printf(\"stored \\\"%s\\\", snprintf wanted %d bytes -> truncated: %s\\n\", dst, needed, needed >= (int)sizeof dst ? \"yes\" : \"no\");\n    char word[] = \"stack\";\n    size_t n = strlen(word);\n    for (size_t i = 0; i < n / 2; i++) { char t = word[i]; word[i] = word[n - 1 - i]; word[n - 1 - i] = t; }\n    printf(\"reversed: %s\\n\", word);\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Recursion and the call stack",
+  "blurb": "Factorial, Fibonacci, and why memoization matters.",
+  "code": "#include <stdio.h>\n#include <stdint.h>\n\nstatic uint64_t calls;\nstatic uint64_t fib_slow(int n) { calls++; return n < 2 ? n : fib_slow(n - 1) + fib_slow(n - 2); }\nstatic uint64_t memo[91];\nstatic uint64_t fib_fast(int n) { calls++; if (n < 2) return n; if (memo[n]) return memo[n]; return memo[n] = fib_fast(n - 1) + fib_fast(n - 2); }\n\nint main(void) {\n    calls = 0; uint64_t a = fib_slow(30); printf(\"fib_slow(30) = %llu with %llu calls\\n\", (unsigned long long)a, (unsigned long long)calls);\n    calls = 0; uint64_t b = fib_fast(90); printf(\"fib_fast(90) = %llu with %llu calls\\n\", (unsigned long long)b, (unsigned long long)calls);\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Linked list",
+  "blurb": "Insert, reverse and free a singly linked list.",
+  "code": "#include <stdio.h>\n#include <stdlib.h>\n\nstruct node { int value; struct node *next; };\n\nstatic struct node *push(struct node *head, int v) {\n    struct node *n = malloc(sizeof *n);\n    n->value = v; n->next = head; return n;\n}\nstatic struct node *reverse(struct node *head) {\n    struct node *prev = NULL;\n    while (head) { struct node *next = head->next; head->next = prev; prev = head; head = next; }\n    return prev;\n}\n\nint main(void) {\n    struct node *list = NULL;\n    for (int i = 1; i <= 5; i++) list = push(list, i * i);\n    for (struct node *p = list; p; p = p->next) printf(\"%d \", p->value);\n    printf(\"\\n\");\n    list = reverse(list);\n    while (list) { struct node *n = list; printf(\"%d \", n->value); list = n->next; free(n); }\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Binary search",
+  "blurb": "The classic loop, and the midpoint overflow bug it avoids.",
+  "code": "#include <stdio.h>\n\nstatic int lower_bound(const int *a, int n, int key) {      // first index with a[i] >= key\n    int lo = 0, hi = n;\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;                        // not (lo + hi) / 2: that can overflow\n        if (a[mid] < key) lo = mid + 1; else hi = mid;\n    }\n    return lo;\n}\n\nint main(void) {\n    int a[] = {1, 3, 3, 3, 8, 13, 21, 34};\n    int keys[] = {0, 3, 4, 34, 100};\n    for (int i = 0; i < 5; i++) printf(\"lower_bound(%3d) = %d\\n\", keys[i], lower_bound(a, 8, keys[i]));\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Sieve of Eratosthenes",
+  "blurb": "All primes below N with a byte array.",
+  "code": "#include <stdio.h>\n#include <string.h>\n\n#define N 100\n\nint main(void) {\n    char composite[N + 1]; memset(composite, 0, sizeof composite);\n    for (int i = 2; i * i <= N; i++)\n        if (!composite[i]) for (int j = i * i; j <= N; j += i) composite[j] = 1;\n    int count = 0;\n    for (int i = 2; i <= N; i++) if (!composite[i]) { printf(\"%d \", i); count++; }\n    printf(\"\\n%d primes up to %d\\n\", count, N);\n    return 0;\n}\n",
+  "stdin": ""
+ },
+ {
+  "title": "Read input (stdin)",
+  "blurb": "Uses the Input box: type some numbers separated by spaces.",
+  "code": "#include <stdio.h>\n\nint main(void) {\n    int x, count = 0; long sum = 0;\n    while (scanf(\"%d\", &x) == 1) { sum += x; count++; }\n    if (count) printf(\"read %d numbers, sum = %ld, mean = %.2f\\n\", count, sum, (double)sum / count);\n    else printf(\"type some integers in the Input box and press Run\\n\");\n    return 0;\n}\n",
+  "stdin": "4 8 15 16 23 42"
+ }
+]

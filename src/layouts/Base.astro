@@ -14,11 +14,12 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="manifest" href={url('/manifest.webmanifest')} />
+    <meta name="dn-base" content={url('/')} />
     <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 
@@ -57,6 +58,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
           <a href={url('/networking/')} class="nav-link">Networking</a>
           <a href={url('/dsa/')} class="nav-link">DSA</a>
           <a href={url('/roadmap/')} class="nav-link nav-roadmap">Roadmap</a>
+          <a href={url('/playground/')} class="nav-link">Playground</a>
           <a href={url('/glossary/')} class="nav-link">Glossary</a>
         </nav>
         <div class="spacer"></div>
@@ -91,10 +93,11 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
 
     <script>
       import '../scripts/app';
+      import '../scripts/runner';
     </script>
     <script is:inline>
       // Offline support: cache pages the reader has visited (see public/sw.js)
-      if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      if ('serviceWorker' in navigator && location.protocol !== 'file:' && !window.Capacitor) {
         addEventListener('load', () => navigator.serviceWorker.register(document.querySelector('link[rel=manifest]').getAttribute('href').replace('manifest.webmanifest', 'sw.js')).catch(() => {}));
       }
     </script>

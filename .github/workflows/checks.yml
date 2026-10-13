@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - run: npm run fetch-runner
       - name: Validate note front matter (no auto-fix)
         run: node scripts/check-notes.mjs
       - name: Progress store tests

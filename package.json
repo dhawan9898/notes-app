@@ -8,13 +8,19 @@
     "dev": "astro dev",
     "build": "node scripts/check-notes.mjs --fix && astro build",
     "preview": "astro preview",
-    "check": "node scripts/check-notes.mjs"
+    "check": "node scripts/check-notes.mjs",
+    "fetch-runner": "node scripts/fetch-runner.mjs",
+    "snippets": "node scripts/validate-snippets.mjs",
+    "app:sync": "node scripts/fetch-runner.mjs && npm run build && cap sync android",
+    "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",
+    "@capacitor/android": "^6.2.2",
+    "@capacitor/core": "^6.2.2",
     "astro": "^5.18.2",
     "astro-pagefind": "^1.8.6",
     "mermaid": "^12.1.0",
@@ -22,6 +28,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "@capacitor/cli": "^6.2.2",
     "js-yaml": "^5.4.3"
   }
 }
