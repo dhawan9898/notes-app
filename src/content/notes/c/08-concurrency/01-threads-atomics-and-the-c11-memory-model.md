@@ -18,7 +18,7 @@ sources:
   - label: "POSIX.1-2017 — pthread.h and §4.12 Memory Synchronization"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/
   - label: "Boehm & Adve, \"Foundations of the C++ Concurrency Memory Model\" (PLDI 2008)"
-    url: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
+    url: https://doi.org/10.1145/1375581.1375591
   - label: "Intel 64 and IA-32 Architectures SDM, Vol. 3A §8.2 — Memory Ordering"
     url: https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
   - label: "Linux kernel — Documentation/memory-barriers.txt"

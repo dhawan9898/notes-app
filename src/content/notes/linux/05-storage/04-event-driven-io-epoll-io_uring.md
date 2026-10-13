@@ -9,8 +9,8 @@ summary: How servers handle thousands of connections with one thread — readine
 sources:
   - label: "man 7 epoll, man 2 epoll_ctl, man 2 select, man 2 poll, man 7 aio"
     url: https://man7.org/linux/man-pages/man7/epoll.7.html
-  - label: "Axboe — Efficient IO with io_uring; man 7 io_uring, liburing documentation"
-    url: https://kernel.dk/io_uring.pdf
+  - label: "io_uring(7) man page; Axboe, Efficient IO with io_uring; liburing documentation"
+    url: https://man7.org/linux/man-pages/man7/io_uring.7.html
   - label: "Kegel — The C10K problem"
     url: http://www.kegel.com/c10k.html
   - label: "Kerrisk — The Linux Programming Interface, Ch. 63 Alternative I/O Models"

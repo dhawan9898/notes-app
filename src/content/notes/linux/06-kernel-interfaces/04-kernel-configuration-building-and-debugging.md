@@ -26,7 +26,7 @@ sources:
   - label: "Linux kernel documentation — Linux Magic System Request Key Hacks"
     url: https://docs.kernel.org/admin-guide/sysrq.html
   - label: "Linux kernel documentation — Kernel debugging with kgdb"
-    url: https://docs.kernel.org/dev-tools/kgdb.html
+    url: https://docs.kernel.org/process/debugging/kgdb.html
   - label: "crash utility white paper — analysing kernel crash dumps"
     url: https://crash-utility.github.io/crash_whitepaper.html
 ---

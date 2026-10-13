@@ -18,7 +18,7 @@ sources:
   - label: Stroustrup — Are lists evil?
     url: https://isocpp.org/blog/2014/06/stroustrup-lists
   - label: Binkley — Linked list problems (Stanford CS Education Library, Nick Parlante)
-    url: http://cslibrary.stanford.edu/105/LinkedListProblems.pdf
+    url: http://cslibrary.stanford.edu/
 ---
 
 A **linked list** is a sequence of nodes where each node stores a value and a pointer to the next node. It trades the array's O(1) indexing for O(1) insertion and removal *given a pointer to the position*, and for stable element addresses (nodes never move). Linked lists dominate textbooks and interviews far more than production code, but their patterns — pointer rewiring, sentinels, two-pointer traversal — recur in kernels, allocators, LRU caches, hash chains and graph adjacency lists, so they are worth mastering.

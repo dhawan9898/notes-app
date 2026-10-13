@@ -12,7 +12,7 @@ sources:
   - label: "OpenSSH manual pages — ssh(1), sshd(8), ssh_config(5), sshd_config(5), ssh-keygen(1) (CERTIFICATES), ssh-agent(1)"
     url: https://man.openbsd.org/sshd_config
   - label: "Linux-PAM System Administrators' Guide; pam.conf(5), pam.d(5)"
-    url: https://www.chiark.greenend.org.uk/doc/linux-pam-doc/Linux-PAM_SAG.html
+    url: https://www.chiark.greenend.org.uk/doc/libpam-doc/html/Linux-PAM_SAG.html
   - label: "sudoers(5), sudo.conf(5); visudo(8)"
     url: https://www.sudo.ws/docs/man/sudoers.man/
   - label: "Linux Audit documentation — auditd(8), auditctl(8), audit.rules(7), ausearch(8)"

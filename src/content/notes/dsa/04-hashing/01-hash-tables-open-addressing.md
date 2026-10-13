@@ -13,7 +13,7 @@ sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, Ch. 11 Hash Tables"
   - label: "Celis, Larson, Munro — Robin Hood Hashing (FOCS 1985)"
   - label: "Pagh & Rodler — Cuckoo Hashing (Journal of Algorithms, 2004)"
-    url: https://www.itu.dk/people/pagh/papers/cuckoo-jour.pdf
+    url: https://doi.org/10.1016/j.jalgor.2003.12.002
   - label: "Aumasson & Bernstein — SipHash: a fast short-input PRF (INDOCRYPT 2012)"
     url: https://www.aumasson.jp/siphash/siphash.pdf
   - label: "Crosby & Wallach — Denial of Service via Algorithmic Complexity Attacks (USENIX Security 2003)"

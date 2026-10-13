@@ -12,7 +12,7 @@ prerequisites:
   - Graph Representations and Traversals
 sources:
   - label: "Bender & Farach-Colton — The LCA Problem Revisited (LATIN 2000)"
-    url: https://www.ics.uci.edu/~eppstein/261/BenFar-LCA-00.pdf
+    url: https://link.springer.com/chapter/10.1007/10719839_9
   - label: "Sleator & Tarjan — A Data Structure for Dynamic Trees (JCSS 1983) — origin of heavy-light paths"
     url: https://www.cs.cmu.edu/~sleator/papers/dynamic-trees.pdf
   - label: "Harel & Tarjan — Fast Algorithms for Finding Nearest Common Ancestors (SIAM J. Comput. 1984)"

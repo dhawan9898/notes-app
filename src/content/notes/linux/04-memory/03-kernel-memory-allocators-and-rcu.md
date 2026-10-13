@@ -16,7 +16,7 @@ sources:
   - label: "Linux kernel documentation — Memory Allocation Guide (GFP flags, kmalloc, vmalloc)"
     url: https://docs.kernel.org/core-api/memory-allocation.html
   - label: "Linux kernel documentation — Short users guide for SLUB"
-    url: https://docs.kernel.org/mm/slub.html
+    url: https://docs.kernel.org/admin-guide/mm/slab.html
   - label: "Linux kernel documentation — What is RCU? Fundamentally"
     url: https://docs.kernel.org/RCU/whatisRCU.html
   - label: "Linux kernel documentation — RCU Concepts, Requirements, and Design"
