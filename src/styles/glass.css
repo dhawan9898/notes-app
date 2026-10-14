@@ -537,3 +537,12 @@ html { scroll-behavior: auto; }
   body { background: var(--bg); }
   [data-reveal], .hero-home > * { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
+
+
+/* Home page and lists: no scroll-linked or reveal animation anywhere. Scrolling must only move already-painted layers. */
+.js [data-reveal], .js .markdown-body > *, .hero-home > *, .hero-home > .hero-title, .article-header, .rm-row, .track-card, .philosophy-item {
+  animation: none !important; animation-timeline: auto !important; opacity: 1 !important; transform: none !important; will-change: auto !important;
+}
+.track-card, .cta-card { transition: box-shadow 0.2s var(--ease), border-color 0.2s var(--ease); }
+.track-card:hover, .cta-card:hover { transform: none !important; }
+.ring-fg, .bar i, .readbar i { transition: none; }

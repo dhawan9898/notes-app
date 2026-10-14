@@ -88,7 +88,7 @@ function renderProgress() {
 
 function countTo(el: HTMLElement, value: string) {
   const target = Number(value);
-  if (reduce || Number.isNaN(target) || !value.match(/^\d+$/)) { el.textContent = value; return; }
+  if (reduce || matchMedia('(hover: none)').matches || Number.isNaN(target) || !value.match(/^\d+$/)) { el.textContent = value; return; }
   const from = Number(el.dataset.v ?? 0); el.dataset.v = String(target);
   if (from === target) { el.textContent = value; return; }
   const t0 = performance.now();
