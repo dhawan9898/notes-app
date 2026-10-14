@@ -277,7 +277,7 @@ aside.toc .toc-sticky { border: none; background: transparent; padding: 0.6rem 0
 /* ---------- motion: short, ease-out, no overshoot ---------- */
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-@view-transition { navigation: auto; }
+@media (hover: hover) and (pointer: fine) { @view-transition { navigation: auto; } }   /* page-transition animations only on desktop; phones and the app navigate instantly */
 ::view-transition-old(root) { animation: 0.16s var(--ease) both vt-out; }
 ::view-transition-new(root) { animation: 0.24s var(--ease) 0.04s both vt-in; }
 @keyframes vt-out { to { opacity: 0; } }
@@ -521,3 +521,19 @@ header.top, .dock, .toast, .mobile-nav-bar {
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.12s; }
 .track-card::before, .module-card::before, .dash::before, .rm-hero::before, .rm-list::before { mix-blend-mode: normal !important; }
 html { scroll-behavior: auto; }
+
+
+/* Touch devices and the Android app: no backdrop blur anywhere, flat shadows, opaque bars. These GPUs pay dearly for blur. */
+@media (hover: none), (pointer: coarse) {
+  header.top, .dock, .toast, .mobile-nav-bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bg); }
+  .track-card, .module-card, .dash, .track-header, .rm-hero, .rm-controls, .rm-tools, aside.side, .pager-card, .prereq-box, .leads-box, .sources,
+  .cta-card, .progress-pill, .chip, .btn, .complete-btn, .philosophy-item, .rm-list, .markdown-body pre, article pre, article table, article blockquote {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), inset 0 1px 0 var(--lg-rim-dim);
+  }
+  .dock, .toast { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25); }
+  .track-card::before, .module-card::before, .dash::before, .track-header::before, .rm-hero::before, .rm-controls::before, .rm-tools::before, aside.side::before,
+  .dock::before, .pager-card::before, .cta-card::before, .philosophy-item::before, .rm-list::before, .toast::before, .sources::before, .prereq-box::before, .leads-box::before { display: none; }
+  .backdrop { display: none; }
+  body { background: var(--bg); }
+  [data-reveal], .hero-home > * { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
