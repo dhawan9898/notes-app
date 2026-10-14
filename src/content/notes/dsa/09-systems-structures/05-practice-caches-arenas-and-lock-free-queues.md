@@ -11,10 +11,10 @@ prerequisites:
   - "Allocators as Data Structures"
   - "Concurrent and Lock-Free Structures"
 sources:
-  - label: Belady, L. A. — A study of replacement algorithms for a virtual-storage computer (IBM Systems Journal, 1966)
-  - label: Belady, Nelson, Shedler — An anomaly in space-time characteristics of certain programs running in a paging machine (CACM, 1969)
-  - label: Herlihy & Shavit — The Art of Multiprocessor Programming, 2nd ed., Ch. 3 and 10
-  - label: Hanson — C Interfaces and Implementations, Ch. 6 (Memory management: arenas)
+  - label: "Belady, L. A. — A study of replacement algorithms for a virtual-storage computer (IBM Systems Journal, 1966)"
+  - label: "Belady, Nelson, Shedler — An anomaly in space-time characteristics of certain programs running in a paging machine (CACM, 1969)"
+  - label: "Herlihy & Shavit — The Art of Multiprocessor Programming, 2nd ed., Ch. 3 and 10"
+  - label: "Hanson — C Interfaces and Implementations, Ch. 6 (Memory management: arenas)"
 ---
 
 These three structures turn up in operating systems, databases and servers. Predict first, then simulate: replacement-policy results in particular are not what intuition says.
