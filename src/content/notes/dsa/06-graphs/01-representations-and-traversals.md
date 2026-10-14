@@ -8,6 +8,7 @@ level: intermediate
 summary: "Adjacency matrix vs list vs CSR (measured), BFS and DFS with edge classification, components, bipartite checks, topological sorting two ways, cycle reporting for dependency graphs, and why recursive DFS crashes on long paths."
 prerequisites:
   - Stacks, Queues, Deques and Ring Buffers
+  - "Trees and Graphs for Beginners"
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 20 (Elementary Graph Algorithms)"
   - label: "Tarjan — Depth-First Search and Linear Graph Algorithms (SIAM J. Computing 1(2), 1972)"

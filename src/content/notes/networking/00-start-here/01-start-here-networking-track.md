@@ -23,7 +23,7 @@ Comfort with the command line (see **Linux Command Line Basics** in the Linux tr
 
 | You are… | Read in this order |
 |---|---|
-| **New to networking** | *What Is a Network?* → *Network Models, Encapsulation and Device Roles* → *A Packet's Journey* → *Ethernet Frames and MAC Learning* → *IPv4 Addressing, Subnetting, VLSM and CIDR* → *Practice: Networking Exercises* → *ARP*, *ICMP, Ping, Traceroute* → *Forwarding* → *Routing Fundamentals* |
+| **New to networking** | *What Is a Network?* → the five **Networking Essentials** notes (*How the Internet Works*, *IP Addresses, Subnets and Ports in Plain Language*, *Home and Office Networks*, *Troubleshooting a Network Problem Step by Step*, *Practice: Networking Exercises*) → *Network Models, Encapsulation and Device Roles* → *A Packet's Journey* → *Ethernet Frames and MAC Learning* → *IPv4 Addressing, Subnetting, VLSM and CIDR* → *ARP*, *ICMP, Ping, Traceroute* → *Forwarding* → *Routing Fundamentals* |
 | **Sysadmin / developer who needs the networking layer** | *A Packet's Journey* → modules 2 and 3 (Layer 2 and IPv4) → *NAT* → *DHCP* → *Linux Network Labs* → *IPv6* |
 | **Network engineer going deeper** | modules 5 to 8 in order (Routing, Resilience, Overlays and VPN, Multicast), then *QoS* and *Switch Internals* |
 

@@ -2,8 +2,8 @@
 title: Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
 track: linux
 module: Boot and Foundations
-moduleOrder: 1
-order: 2
+moduleOrder: 2
+order: 1
 level: intermediate
 summary: How "everything is a file" is implemented — the directory layout, the VFS objects (superblock, inode, dentry, file), hard and symbolic links, open file descriptions, and the failure modes that follow from them.
 prerequisites:

@@ -8,6 +8,7 @@ level: intermediate
 summary: "A production-grade hash table in C: chaining vs open addressing, linear probing with backward-shift deletion verified against an oracle, measured probe counts against Knuth's formulas, resizing, cuckoo hashing, and a real hash-flooding attack defeated by SipHash."
 prerequisites:
   - Dynamic Arrays
+  - "Hash Tables for Beginners: Fast Lookup by Key"
 sources:
   - label: "Knuth, The Art of Computer Programming, Vol. 3 — §6.4 Hashing"
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, Ch. 11 Hash Tables"

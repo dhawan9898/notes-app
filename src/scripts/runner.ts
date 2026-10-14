@@ -108,18 +108,24 @@ function hydrateBlock(pre: HTMLElement) {
   });
 }
 
-/** C blocks that are fragments (not whole programs) cannot run as they are: offer to load them into the playground to edit and complete. */
+/** C blocks that cannot run in the app. Fragments (no main) can be completed in the playground; whole programs that failed the
+ *  validator need things the in-app compiler lacks (threads, sockets, several source files, a real OS), so they are labelled instead. */
 function offerPlayground(pre: HTMLElement) {
   if (pre.dataset.hydrated) return; pre.dataset.hydrated = '1';
   const code = (pre.querySelector('code')?.textContent ?? pre.textContent ?? '').replace(/\n$/, '');
+  const whole = /\bmain\s*\(/.test(code);
   const box = document.createElement('div'); box.className = 'runbox'; pre.replaceWith(box); box.append(pre);
   const bar = document.createElement('div'); bar.className = 'run-bar';
-  bar.innerHTML = `<button class="run-edit" type="button" title="Open this code in the playground to edit and run it">✎ Edit in playground</button><span class="run-status">Fragment: complete it into a program to run</span>`;
+  if (whole) {
+    bar.innerHTML = `<span class="run-status">Complete program, but it needs more than the in-app compiler offers (several files, threads, sockets or the real system). Compile it on your computer.</span>`;
+  } else {
+    bar.innerHTML = `<button class="run-edit" type="button" title="Open this code in the playground to edit and run it">✎ Edit in playground</button><span class="run-status">Fragment: complete it into a program to run</span>`;
+    bar.querySelector('button')!.addEventListener('click', () => {
+      try { localStorage.setItem('deepnotes:playground:v1', JSON.stringify({ code, stdin: '' })); } catch { /* ignore */ }
+      location.href = new URL('playground/', BASE).href;
+    });
+  }
   box.append(bar);
-  bar.querySelector('button')!.addEventListener('click', () => {
-    try { localStorage.setItem('deepnotes:playground:v1', JSON.stringify({ code, stdin: '' })); } catch { /* ignore */ }
-    location.href = new URL('playground/', BASE).href;
-  });
 }
 
 export function initRunnableBlocks() {

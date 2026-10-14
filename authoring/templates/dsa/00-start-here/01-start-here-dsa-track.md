@@ -22,7 +22,7 @@ Basic C: variables, loops, functions, arrays and (for most notes) pointers. If a
 
 | You are… | Read in this order |
 |---|---|
-| **Beginner** | *Thinking in Data Structures* → *Practice: DSA Exercises* → *Complexity Analysis and Amortized Analysis* → *Dynamic Arrays* → *Linked Lists* → *Stacks, Queues, Deques and Ring Buffers* → *Binary Search* → *Comparison Sorts* → *Hash Tables* → *Binary Trees and BSTs* → *Graph Representations and Traversals* |
+| **Beginner** | *Thinking in Data Structures* → *Practice: DSA Exercises* → the four **DSA Essentials** notes (*Searching and Sorting for Beginners*, *Linked Lists, Stacks and Queues for Beginners*, *Hash Tables for Beginners*, *Trees and Graphs for Beginners*; they need *Structs, Enums and Typedef* from the C track) → *Complexity Analysis and Amortized Analysis* → *Dynamic Arrays* → *Linked Lists* → *Stacks, Queues, Deques and Ring Buffers* → *Binary Search* → *Comparison Sorts* → *Hash Tables* → *Binary Trees and BSTs* → *Graph Representations and Traversals* |
 | **Preparing for interviews** | modules 1 to 3, then *Hash Tables*, *Heaps*, *Graph Representations and Traversals*, *Shortest Paths*, *Dynamic Programming*, *Greedy Algorithms*, *Problem-Solving Patterns and the Complexity Cheat Sheet* |
 | **Systems engineer** | *Hash Tables*, *Probabilistic Structures*, *Tries and Longest-Prefix Match*, *B-Trees and LSM Trees*, *Caches*, *Allocators*, *Concurrent and Lock-Free Structures* |
 

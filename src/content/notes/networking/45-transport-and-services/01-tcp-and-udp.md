@@ -9,6 +9,7 @@ summary: "Ports and sockets, UDP, the TCP header and options, a real captured ha
 prerequisites:
   - "A Packet's Journey: Host to Gateway to Host"
   - "IPv4 Header, Fragmentation and MTU"
+  - "How the Internet Works: From a Browser Click to a Web Page"
 sources:
   - label: "RFC 9293 — Transmission Control Protocol (TCP), STD 7"
     url: https://www.rfc-editor.org/rfc/rfc9293

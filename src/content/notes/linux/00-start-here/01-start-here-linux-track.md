@@ -25,7 +25,7 @@ A Linux system you may break. Any of these works: a virtual machine (VirtualBox,
 
 | You are… | Read in this order |
 |---|---|
-| **New to Linux** | *Linux Command Line Basics* → *Installing Software and Managing Services* → *Practice: Linux Exercises* → *Users, Permissions, ACLs and Capabilities* → *Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors* → *The Shell* → *Text Processing and Robust Shell Scripting* |
+| **New to Linux** | *Linux Command Line Basics* → *Installing Software and Managing Services* → *Practice: Linux Exercises* → the six **Linux Essentials** notes (*Users, Groups and Permissions in Practice*, *Processes, Monitoring and Scheduled Jobs*, *Disks, Mounts, Archives and Backups*, *Network Commands and SSH for Beginners*, *Your First Shell Scripts*, *Editing Files and Version Control with Git*) → *The Shell* → *Text Processing and Robust Shell Scripting* → *Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors* → *Users, Permissions, ACLs and Capabilities* |
 | **Developer deploying on Linux** | the beginner notes → *Process Lifecycle* → *Threads and Synchronization* → *systemd* → *Linux Troubleshooting Playbook* → *Performance Methodology* |
 | **Systems / SRE / kernel-minded** | *Virtual Memory* → *The Block Layer* → *Event-Driven I/O* → *eBPF* → *Profiling and Tracing* → containers (module 8) → *The Linux Packet Path* |
 

@@ -66,20 +66,39 @@ export const readingMinutes = (n: Note) =>
 export type PathStep = { note: Note; step: number; stage: string };
 
 /**
- * One ordered curriculum over all notes: first the "Start here" module of every track, then each track in PATH_TRACKS order
- * (modules and notes in their authored order). A note whose prerequisites (by title, across tracks) have not been placed yet is
- * deferred until they have, so following the list never meets a note before what it builds on.
+ * One ordered curriculum over all notes, built in three stages so a newcomer never meets a long stretch of one track:
+ *   1. "Start here": the module-0 notes of every track;
+ *   2. "Essentials": the beginner modules (moduleOrder below 1) of every track, interleaved one note at a time;
+ *   3. "Core path, part N": everything else, taking a few notes from each track in turn (authored order kept inside a track).
+ * A note whose prerequisites (by title, across tracks) have not been placed yet is deferred until they have, so following the
+ * list never meets a note before what it builds on.
  */
+const CORE_CHUNK = 5;           // notes taken from one track before moving to the next
+const CORE_PART = 24;           // notes per labelled part of the core path
+
+function interleave<T>(lists: T[][], chunk: number): T[][] {
+  const rounds: T[][] = [];
+  const pos = lists.map(() => 0);
+  while (pos.some((p, i) => p < lists[i].length)) {
+    const round: T[] = [];
+    lists.forEach((l, i) => { round.push(...l.slice(pos[i], pos[i] + chunk)); pos[i] += chunk; });
+    rounds.push(round);
+  }
+  return rounds;
+}
+
 export async function learningPath(): Promise<PathStep[]> {
   const all = await getCollection('notes');
   const byTitle = new Map(all.map((n) => [n.data.title, n]));
+  const perTrack = new Map<TrackId, Note[]>();
+  for (const id of PATH_TRACKS) perTrack.set(id, await notesForTrack(id));
+  const pick = (f: (n: Note) => boolean) => PATH_TRACKS.map((id) => perTrack.get(id)!.filter(f));
+
   const preferred: { note: Note; stage: string }[] = [];
-  for (const id of PATH_TRACKS) {
-    for (const n of await notesForTrack(id)) if (n.data.moduleOrder === 0) preferred.push({ note: n, stage: 'Start here' });
-  }
-  for (const id of PATH_TRACKS) {
-    for (const n of await notesForTrack(id)) if (n.data.moduleOrder !== 0) preferred.push({ note: n, stage: TRACKS[id].name });
-  }
+  for (const l of pick((n) => n.data.moduleOrder === 0)) for (const note of l) preferred.push({ note, stage: 'Start here' });
+  for (const round of interleave(pick((n) => n.data.moduleOrder > 0 && n.data.moduleOrder < 1), 1)) for (const note of round) preferred.push({ note, stage: 'Essentials' });
+  for (const round of interleave(pick((n) => n.data.moduleOrder >= 1), CORE_CHUNK)) for (const note of round) preferred.push({ note, stage: 'Core path' });
+
   const placed = new Set<string>();
   const out: PathStep[] = [];
   const pending = [...preferred];
@@ -90,5 +109,8 @@ export async function learningPath(): Promise<PathStep[]> {
     placed.add(next.note.data.title);
     out.push({ note: next.note, step: out.length + 1, stage: next.stage });
   }
+  // label the core path in equal parts of its final order (deferred notes would otherwise scatter the labels)
+  const firstCore = out.findIndex((x) => x.stage === 'Core path');
+  if (firstCore >= 0) out.forEach((x, i) => { if (i >= firstCore) x.stage = `Core path, part ${Math.floor((i - firstCore) / CORE_PART) + 1}`; });
   return out;
 }

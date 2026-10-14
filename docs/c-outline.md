@@ -38,3 +38,13 @@ Status: [x] written, [ ] planned. Notes are assembled from `authoring/templates/
 - [x] Sockets programming
 - [x] Performance-oriented C
 - [x] Portability and ABI
+
+## C Essentials (moduleOrder 0.5, beginner)
+
+Added after the continuity review (beginner bridge between *Start Here* and module 1).
+
+- [x] Structs, Enums and Typedef
+- [x] Functions, Headers and Multi-File Programs
+- [x] More Control Flow: switch, Loop Control and Recursion
+- [x] Arrays, Strings, Command-Line Arguments and Files
+- [x] From Source to Running Process: A Bridge to Systems C

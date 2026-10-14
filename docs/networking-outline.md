@@ -61,3 +61,13 @@ Status: [x] written, [ ] planned. Module order = `moduleOrder`.
 
 ## 10. Linux networking labs
 - [x] ip, bridge, namespaces, veth, tc, nftables
+
+## Networking Essentials (moduleOrder 0.5, beginner)
+
+Added after the continuity review (beginner bridge between *Start Here* and module 1).
+
+- [x] How the Internet Works: From a Browser Click to a Web Page
+- [x] IP Addresses, Subnets and Ports in Plain Language
+- [x] Home and Office Networks: Switch, Router, Wi-Fi, NAT and Firewall
+- [x] Troubleshooting a Network Problem Step by Step
+- [x] Practice: Networking Exercises (moved here from Start Here so it follows the subnetting primer)

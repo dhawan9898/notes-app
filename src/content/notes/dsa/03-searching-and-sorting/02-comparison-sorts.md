@@ -8,6 +8,7 @@ level: advanced
 summary: Six sorting algorithms implemented and verified in C — exact comparison counts, a million-element benchmark over five input patterns, stability, the quadratic trap that caught one of our own implementations, and how production library sorts combine these ideas.
 prerequisites:
   - Recursion, Divide and Conquer, and Loop Invariants
+  - "Searching and Sorting for Beginners"
 sources:
   - label: "Knuth — The Art of Computer Programming, Vol. 3, Ch. 5 (Sorting)"
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 2, 6, 7, 8.1 (comparison sort lower bound)"
@@ -204,6 +205,8 @@ Pick a **pivot**, partition into `< pivot` and `> pivot`, recurse. Fastest in pr
 
 ### Heapsort — Θ(n log n) worst case, in place, not stable
 
+**What is a heap?** A (max-)heap is an array read as a binary tree: the children of the item at index `i` sit at `2i+1` and `2i+2`, and the rule is that every parent is **at least as large as its children**, so the largest item is always at index 0. *Sifting down* means swapping an item with its larger child until the rule holds again. Heaps get their own note, *Heaps and Priority Queues*, later in the track; this paragraph is all you need for heapsort.
+
 Build a max-heap in O(n), then repeatedly swap the maximum to the end and sift down. Guarantees O(n log n) with O(1) extra space — but it is typically 1.5–2× slower than quicksort/merge sort on large arrays because sift-down jumps around memory (poor locality) and does two comparisons per level. Its role is as the **fallback** that makes quicksort safe.
 
 ### Introsort — quicksort + heapsort + insertion sort
@@ -317,13 +320,13 @@ int main(void) {
 $ gcc -std=gnu11 -O2 -Wall -Wextra bench_sorts.c -o bench_sorts && ./bench_sorts
 time in ms to sort 1000000 ints (lower is better)
 input                merge  quick med3 quick 3-way        heap   introsort  libc qsort
-random               160.3       141.5       211.7       231.3       141.6       238.5
-sorted                 2.1        17.9        93.0        96.8        16.0        45.5
-reversed              22.5        14.8        76.9        85.7        13.2        44.8
-few distinct          38.0        28.7        15.0        66.1        27.5        74.5
-organ pipe             8.8        52.0        47.2        63.5        69.3        30.5
+random               123.1       108.9       160.8       172.2       109.1       184.8
+sorted                 1.6        13.8        74.0        82.4        14.0        41.8
+reversed              21.7        14.5        74.9        89.5        15.0        49.6
+few distinct          43.5        33.7        18.1        82.8        35.4        96.6
+organ pipe            11.1        63.8        57.8        76.6        78.7        32.2
 
-insertion sort on only 20000 random ints: 43.3 ms (O(n^2): the 1,000,000-element version would take ~108 s)
+insertion sort on only 20000 random ints: 45.6 ms (O(n^2): the 1,000,000-element version would take ~114 s)
 ```
 
 Reading the table:

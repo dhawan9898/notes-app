@@ -6,6 +6,8 @@ moduleOrder: 2
 order: 4
 level: intermediate
 summary: How C strings really work, why the classic library functions are dangerous, safe replacements (snprintf, strtol, strlcpy, length-tracking builders), format-string vulnerabilities and UTF-8 pitfalls, with tested code.
+prerequisites:
+  - "Arrays, Strings, Command-Line Arguments and Files"
 sources:
   - label: ISO/IEC 9899:2018 (C17) §7.24 String handling; §7.21.6 Formatted output; §6.4.5 String literals
   - label: "SEI CERT C - STR31-C, STR32-C, STR38-C, FIO30-C (exclude user input from format strings), ARR38-C"

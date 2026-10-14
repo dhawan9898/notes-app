@@ -9,6 +9,7 @@ summary: Prefix arithmetic you can do in your head, special-purpose address bloc
 prerequisites:
   - What Is a Network?
   - Binary, Hexadecimal and Bits
+  - "IP Addresses, Subnets and Ports in Plain Language"
 sources:
   - label: "RFC 4632 — Classless Inter-domain Routing (CIDR)"
     url: https://www.rfc-editor.org/rfc/rfc4632

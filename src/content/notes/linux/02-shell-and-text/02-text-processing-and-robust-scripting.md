@@ -2,7 +2,7 @@
 title: Text Processing (grep, sed, awk) and Robust Shell Scripting
 track: linux
 module: Shell and Text Processing
-moduleOrder: 2
+moduleOrder: 1
 order: 2
 level: intermediate
 summary: The Unix text toolbox applied to a real log, plus a hardened script template and the practices that keep production scripts safe, idempotent and debuggable.

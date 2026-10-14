@@ -18,7 +18,7 @@ const totalMinutes = steps.reduce((a, s) => a + readingMinutes(s.note), 0);
       <div class="rm-hero-main">
         <p class="eyebrow">Learning roadmap</p>
         <h1>Your path through {steps.length} notes</h1>
-        <p class="lead">One recommended order: the four <em>Start here</em> modules first, then C, data structures, Linux and networking. Every note comes after the notes it builds on, so you can follow the list top to bottom. About {Math.round(totalMinutes / 60)} hours of reading in total.</p>
+        <p class="lead">One recommended order: the four <em>Start here</em> modules, then the beginner <em>Essentials</em> of every track, then the core notes with the four tracks taken in turn. Every note comes after the notes it builds on, so you can follow the list top to bottom. About {Math.round(totalMinutes / 60)} hours of reading in total.</p>
         <a class="cta-card glass-hover" data-continue="all" hidden>
           <span class="cta-label" data-continue-label>Start learning</span>
           <strong class="cta-title" data-continue-title></strong>

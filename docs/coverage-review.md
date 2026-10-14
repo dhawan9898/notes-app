@@ -100,3 +100,21 @@ Keyword counts are notes that mention the term at all; most are passing mentions
 10. Fact-check standards claims and keep a log; link-check all source URLs; browser verification (Mermaid, mobile, dark mode, search); CI that runs the build and checkers on every PR; related-notes component.
 
 Rough size: P0 about 8 new notes plus 4 pages and exercises; P1 about 30 notes; P2 about 20 revisions.
+
+## 5. Continuity review and fixes (second pass)
+
+A learner-path review of all notes (prerequisite graph, level ramp, forward references, first use of jargon) found these problems; each has a fix in the repository.
+
+| Finding | Fix |
+|---|---|
+| Beginner cliff: only 20 of 163 notes were beginner; Start Here jumped to ELF/UB | New beginner **Essentials** module (moduleOrder 0.5) in every track: 5 C, 4 DSA, 6 Linux, 5 Networking notes |
+| C never taught `struct`, `enum`, `typedef`, `switch`, headers/multi-file builds, 2-D arrays, `argv`, files | C Essentials notes 1-4, all code compiled and run |
+| No bridge from beginner C to ELF/ABI/memory notes | *From Source to Running Process: A Bridge to Systems C*; added as a prerequisite of the pipeline and stack-frame notes |
+| DSA beginner path had only one note before a 3,800-word complexity note | Four DSA Essentials notes (search/sort, lists/stacks/queues, hash tables, trees/graphs) |
+| Heap sort used before heaps are introduced | Heap primer added to the Comparison Sorts note |
+| Linux: Boot internals came before the shell, permissions and day-to-day tools; no processes/cron, disks/archives, network commands/SSH, scripting, editors/Git for beginners | Six Linux Essentials notes; module order is now Essentials, Shell and Text, Boot and Foundations (filesystem, users, boot) |
+| Networking: no end-to-end beginner story (DNS, TCP, TLS, HTTP), subnetting primer, home-network devices or troubleshooting method | Four Networking Essentials notes; *Practice: Networking Exercises* moved after the subnetting primer |
+| Missing/duplicate prerequisites (ARP, TCP, DNS, Process Lifecycle, Practice note) | Prerequisites added or corrected |
+| Recommended path ran all of C (42 notes) before DSA, Linux or Networking | `learningPath()` now builds Start here, Essentials (interleaved) and a Core path that takes five notes from each track in turn |
+
+Remaining known gaps: only the Start Here and Essentials modules have exercises; intermediate and advanced modules still have none.

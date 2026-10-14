@@ -179,6 +179,10 @@ Each track now has a module 0 "Start Here" (`moduleOrder: 0`, `level: beginner`)
 
 **Caution when rebuilding:** `python3 authoring/build.py` with a broad pattern regenerates every output block, re-measuring timings, so prose that quotes ratios can go stale. Rebuild only the note you edit (`build.py <note-substring>`), or restore old output with git and re-apply only intended changes.
 
+### 8.1a-2 Essentials modules (continuity pass)
+
+After a learner-path review, every track got a beginner **Essentials** module (`moduleOrder: 0.5`): C (5 notes, templates in `authoring/templates/c/00-essentials`), DSA (4, `authoring/templates/dsa/00-essentials`), Linux (6) and Networking (5), the last two plain Markdown with real captured output (loopback-only or documentation addresses; no machine-specific values). The Linux module order is now Essentials, Shell and Text, Boot and Foundations. `learningPath()` builds Start here, Essentials (interleaved) and a Core path that takes five notes from each track in turn. Details and the findings behind them are in `docs/coverage-review.md` section 5. When editing front matter of a templated C/DSA note, change the template and the generated note together (or rebuild only that template).
+
 ### 8.1b Coverage review
 
 A full coverage review (intern view and expert view) is in `docs/coverage-review.md`; its prioritised backlog (P0 beginner on-ramp, P1 expert gaps, P2 thin notes, P3 verification) supersedes the older backlog in 8.3 where they overlap.

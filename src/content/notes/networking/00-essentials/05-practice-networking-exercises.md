@@ -1,15 +1,15 @@
 ---
 title: "Practice: Networking Exercises"
 track: networking
-module: Start Here
-moduleOrder: 0
-order: 3
+module: Networking Essentials
+moduleOrder: 0.5
+order: 5
 level: beginner
 summary: "Eight graded exercises: binary addresses, network and broadcast addresses, same-network tests, sizing subnets for host counts, splitting a block, classifying special addresses, summarising routes, and a hands-on lab, with answers verified by a Python script."
 prerequisites:
   - "What Is a Network?"
-  - "What Is a Network?"
   - Binary, Hexadecimal and Bits
+  - "IP Addresses, Subnets and Ports in Plain Language"
 sources:
   - label: "RFC 4632 — Classless Inter-domain Routing (CIDR)"
     url: https://www.rfc-editor.org/rfc/rfc4632

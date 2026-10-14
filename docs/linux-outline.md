@@ -54,3 +54,14 @@ Status: [x] written, [ ] planned. Module order = `moduleOrder`.
 ## 11. Security
 - [x] SSH, PAM, sudo, auditd
 - [x] SELinux, AppArmor, seccomp and hardening
+
+## Linux Essentials (moduleOrder 0.5, beginner)
+
+Added after the continuity review (beginner bridge between *Start Here* and module 1).
+
+- [x] Users, Groups and Permissions in Practice
+- [x] Processes, Monitoring and Scheduled Jobs
+- [x] Disks, Mounts, Archives and Backups
+- [x] Network Commands and SSH for Beginners
+- [x] Your First Shell Scripts
+- [x] Editing Files and Version Control with Git

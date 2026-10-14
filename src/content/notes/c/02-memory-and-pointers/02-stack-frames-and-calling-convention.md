@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 2
 level: advanced
 summary: How function calls really work — registers vs stack arguments, prologue and epilogue, struct returns, stack growth and limits, stack canaries — shown with disassembly and runtime addresses from real programs.
+prerequisites:
+  - "Structs, Enums and Typedef"
+  - "From Source to Running Process: A Bridge to Systems C"
 sources:
   - label: "System V Application Binary Interface - AMD64 Architecture Processor Supplement (psABI)"
     url: https://gitlab.com/x86-psABIs/x86-64-ABI

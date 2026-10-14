@@ -8,6 +8,7 @@ level: advanced
 summary: Six sorting algorithms implemented and verified in C — exact comparison counts, a million-element benchmark over five input patterns, stability, the quadratic trap that caught one of our own implementations, and how production library sorts combine these ideas.
 prerequisites:
   - Recursion, Divide and Conquer, and Loop Invariants
+  - "Searching and Sorting for Beginners"
 sources:
   - label: Knuth — The Art of Computer Programming, Vol. 3, Ch. 5 (Sorting)
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 2, 6, 7, 8.1 (comparison sort lower bound)
@@ -71,6 +72,8 @@ Pick a **pivot**, partition into `< pivot` and `> pivot`, recurse. Fastest in pr
 - **Cutoff**: stop at ~16 elements and finish with one insertion-sort pass.
 
 ### Heapsort — Θ(n log n) worst case, in place, not stable
+
+**What is a heap?** A (max-)heap is an array read as a binary tree: the children of the item at index `i` sit at `2i+1` and `2i+2`, and the rule is that every parent is **at least as large as its children**, so the largest item is always at index 0. *Sifting down* means swapping an item with its larger child until the rule holds again. Heaps get their own note, *Heaps and Priority Queues*, later in the track; this paragraph is all you need for heapsort.
 
 Build a max-heap in O(n), then repeatedly swap the maximum to the end and sift down. Guarantees O(n log n) with O(1) extra space — but it is typically 1.5–2× slower than quicksort/merge sort on large arrays because sift-down jumps around memory (poor locality) and does two comparisons per level. Its role is as the **fallback** that makes quicksort safe.
 

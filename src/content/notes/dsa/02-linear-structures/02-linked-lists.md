@@ -9,6 +9,7 @@ summary: Singly, doubly and circular lists in C — pointer manipulation pattern
 prerequisites:
   - Pointers for Beginners
   - Dynamic Arrays
+  - "Linked Lists, Stacks and Queues for Beginners"
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., §10.2 (Linked lists)"
   - label: "Knuth — The Art of Computer Programming, Vol. 1, §2.2 (Linear lists) and Vol. 3, §5.2.4 (Sorting by merging)"

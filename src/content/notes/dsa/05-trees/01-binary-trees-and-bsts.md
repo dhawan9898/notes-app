@@ -9,6 +9,7 @@ summary: "Traversals (recursive, explicit-stack, Morris, level order), BST inser
 prerequisites:
   - Recursion, Divide and Conquer, and Loop Invariants
   - Linked Lists
+  - "Trees and Graphs for Beginners"
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 12 (Binary Search Trees) and Ch. 10.3 (Representing rooted trees)"
   - label: "Knuth — The Art of Computer Programming, Vol. 1, §2.3.1 (Traversing Binary Trees) and Vol. 3, §6.2.2 (Binary Tree Searching)"

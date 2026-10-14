@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 1
 level: intermediate
 summary: What actually happens between `gcc hello.c` and a running process — preprocessing, compilation, assembly, linking, relocation, ELF sections and segments, and how to inspect every stage with real tools.
+prerequisites:
+  - "From Source to Running Process: A Bridge to Systems C"
 sources:
   - label: "ISO/IEC 9899:2018 (C17) §5.1.1.2 Translation phases; §6.9 External definitions; §7.22.4.4 exit"
   - label: "System V Application Binary Interface - AMD64 Architecture Processor Supplement"

@@ -47,3 +47,12 @@ Status: [x] written, [ ] planned.
 - [x] Allocators as data structures
 - [x] Concurrent and lock-free structures
 - [x] Problem-solving patterns and complexity cheat sheet
+
+## DSA Essentials (moduleOrder 0.5, beginner)
+
+Added after the continuity review (beginner bridge between *Start Here* and module 1).
+
+- [x] Searching and Sorting for Beginners
+- [x] Linked Lists, Stacks and Queues for Beginners
+- [x] Hash Tables for Beginners: Fast Lookup by Key
+- [x] Trees and Graphs for Beginners

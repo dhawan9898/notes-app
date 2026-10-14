@@ -6,6 +6,8 @@ moduleOrder: 7
 order: 1
 level: intermediate
 summary: How systemd models a system as units with dependency and ordering relations, writing correct service files (types, restart, kill behavior), socket activation, sandboxing directives and scoring, and using journald and journalctl effectively.
+prerequisites:
+  - "Processes, Monitoring and Scheduled Jobs"
 sources:
   - label: "systemd.unit(5), systemd.service(5), systemd.exec(5), systemd.kill(5), systemd.special(7)"
     url: https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html

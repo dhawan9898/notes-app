@@ -8,6 +8,8 @@ level: intermediate
 summary: How Unix creates, transforms and reaps processes, exactly what is inherited, and the failure modes (zombies, fd leaks, signal races).
 prerequisites:
   - Linux Command Line Basics
+  - "C From Zero: Your First Programs"
+  - "Processes, Monitoring and Scheduled Jobs"
 sources:
   - label: "POSIX.1-2017 (IEEE Std 1003.1) — fork(), exec family, waitpid(), posix_spawn()"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/

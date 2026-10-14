@@ -2,8 +2,8 @@
 title: The Boot Process — Firmware, Bootloader, Kernel, initramfs and init
 track: linux
 module: Boot and Foundations
-moduleOrder: 1
-order: 1
+moduleOrder: 2
+order: 3
 level: intermediate
 summary: Follow a Linux machine from power-on to a login prompt, what each stage does, the kernel command-line options that matter, and how to recover a system that will not boot.
 prerequisites:

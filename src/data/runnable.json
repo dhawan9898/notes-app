@@ -957,5 +957,101 @@
   "ok": false,
   "where": "linux/09-performance/04-latency-and-real-time-tuning.md",
   "note": "/include/sys/mman.h:2:2: error: \"WASI lacks a true mmap; to enable minimal mmap emulation, compile"
+ },
+ "7fc3eeb42c8aeacd": {
+  "ok": true,
+  "where": "c/00-essentials/01-structs-enums-and-typedef.md"
+ },
+ "f1165c82606c72d1": {
+  "ok": true,
+  "where": "c/00-essentials/01-structs-enums-and-typedef.md"
+ },
+ "0c34ea1ab880f997": {
+  "ok": true,
+  "where": "c/00-essentials/01-structs-enums-and-typedef.md"
+ },
+ "cb7dfef55c431c23": {
+  "ok": false,
+  "where": "c/00-essentials/02-functions-headers-and-multi-file-programs.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: vec_add"
+ },
+ "e64982c34fe4949c": {
+  "ok": false,
+  "where": "c/00-essentials/02-functions-headers-and-multi-file-programs.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: square"
+ },
+ "b4b0cef28ba53f4f": {
+  "ok": false,
+  "where": "c/00-essentials/02-functions-headers-and-multi-file-programs.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: square"
+ },
+ "e393ea2860b658a4": {
+  "ok": true,
+  "where": "c/00-essentials/03-switch-loops-and-recursion.md"
+ },
+ "9c851dbb6815fa5d": {
+  "ok": true,
+  "where": "c/00-essentials/03-switch-loops-and-recursion.md"
+ },
+ "d03bc13305a7c2e3": {
+  "ok": true,
+  "where": "c/00-essentials/04-arrays-strings-and-files.md"
+ },
+ "fe875b45c17f7659": {
+  "ok": true,
+  "where": "c/00-essentials/04-arrays-strings-and-files.md"
+ },
+ "06f53f5557b404b1": {
+  "ok": true,
+  "where": "c/00-essentials/04-arrays-strings-and-files.md"
+ },
+ "7fe093847bd8f3d4": {
+  "ok": true,
+  "where": "c/00-essentials/04-arrays-strings-and-files.md"
+ },
+ "1b57ccdab46bd12f": {
+  "ok": true,
+  "where": "c/00-essentials/04-arrays-strings-and-files.md"
+ },
+ "53262bbd66b61525": {
+  "ok": true,
+  "where": "c/00-essentials/05-how-a-c-program-runs.md"
+ },
+ "78feb0d765e99c5e": {
+  "ok": false,
+  "where": "c/00-essentials/05-how-a-c-program-runs.md",
+  "note": "unreachable"
+ },
+ "67f6b5b811e3aa14": {
+  "ok": true,
+  "where": "dsa/00-essentials/01-searching-and-sorting-for-beginners.md"
+ },
+ "ea903615bba64945": {
+  "ok": true,
+  "where": "dsa/00-essentials/01-searching-and-sorting-for-beginners.md"
+ },
+ "5fd06eff0ebce49b": {
+  "ok": true,
+  "where": "dsa/00-essentials/02-lists-stacks-and-queues-for-beginners.md"
+ },
+ "3910b73ff614f056": {
+  "ok": true,
+  "where": "dsa/00-essentials/02-lists-stacks-and-queues-for-beginners.md"
+ },
+ "6044a8216fd4d016": {
+  "ok": true,
+  "where": "dsa/00-essentials/02-lists-stacks-and-queues-for-beginners.md"
+ },
+ "945ee0570b1cfa19": {
+  "ok": true,
+  "where": "dsa/00-essentials/03-hash-tables-for-beginners.md"
+ },
+ "a58ebd2e776c7aab": {
+  "ok": true,
+  "where": "dsa/00-essentials/04-trees-and-graphs-for-beginners.md"
+ },
+ "0893e519c1add50b": {
+  "ok": true,
+  "where": "dsa/00-essentials/04-trees-and-graphs-for-beginners.md"
  }
 }

@@ -2,10 +2,12 @@
 title: The Shell — Parsing, Expansion, Redirection, Pipes and Job Control
 track: linux
 module: Shell and Text Processing
-moduleOrder: 2
+moduleOrder: 1
 order: 1
 level: intermediate
 summary: What the shell actually does with a command line — the order of expansions, quoting and word splitting, redirection semantics, pipelines and subshells, exit statuses, startup files and job control.
+prerequisites:
+  - "Your First Shell Scripts"
 sources:
   - label: "POSIX.1-2017 — Shell Command Language"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html

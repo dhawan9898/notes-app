@@ -9,6 +9,7 @@ summary: "How a name becomes an address: the hierarchy of root, TLD and authorit
 prerequisites:
   - What Is a Network?
   - "TCP and UDP: The Transport Layer"
+  - "How the Internet Works: From a Browser Click to a Web Page"
 sources:
   - label: "RFC 1034 — Domain Names, Concepts and Facilities"
     url: https://www.rfc-editor.org/rfc/rfc1034
