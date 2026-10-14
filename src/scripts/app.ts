@@ -199,27 +199,31 @@ function initTools() {
 /* ---------- visual polish: cursor-lit glass, scroll reveal, header state ---------- */
 function initVisuals() {
   const root = document.documentElement;
-  // scroll position drives the backdrop and any CSS that reads --sy
-  let raf = 0;
-  const onScroll = () => {
-    if (raf) return;
-    raf = requestAnimationFrame(() => { raf = 0; root.style.setProperty('--sy', String(Math.round(scrollY))); document.querySelector('header.top')?.classList.toggle('scrolled', scrollY > 8); });
-  };
-  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  // header state: toggles a class only when it changes (no per-frame style writes)
+  const header = document.querySelector('header.top');
+  let scrolled = false;
+  addEventListener('scroll', () => { const now = scrollY > 8; if (now !== scrolled) { scrolled = now; header?.classList.toggle('scrolled', now); } }, { passive: true });
 
   // cursor-following highlight on glass panels
   if (!reduce) {
+    let pending: PointerEvent | null = null;
     document.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      if (pending) { pending = e; return; }
+      pending = e;
+      requestAnimationFrame(() => { const ev = pending!; pending = null; lit(ev); });
+    }, { passive: true });
+    const lit = (e: PointerEvent) => {
       const el = (e.target as HTMLElement).closest<HTMLElement>('.track-card, .module-card, .cta-card, .pager-card, .dash, .rm-hero, .rm-list, .philosophy-item, .sources');
       if (!el) return;
       const r = el.getBoundingClientRect();
       el.style.setProperty('--mx', `${e.clientX - r.left}px`); el.style.setProperty('--my', `${e.clientY - r.top}px`);
-    }, { passive: true });
+    };
   }
 
   // reveal: article blocks join the explicitly marked elements. Browsers with scroll-driven animations scrub this in CSS;
   // the others use an IntersectionObserver (same visual result, time-based instead of scroll-based).
-  const targets = $$('.markdown-body > *, [data-reveal]');
+  const targets = $$('[data-reveal]');
   const scrubbed = typeof CSS !== 'undefined' && CSS.supports?.('animation-timeline: view()');
   if (reduce || scrubbed || !('IntersectionObserver' in window)) { targets.forEach((t) => t.classList.add('shown')); return; }
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { (e.target as HTMLElement).classList.add('shown'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px', threshold: 0.04 });

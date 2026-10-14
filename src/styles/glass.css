@@ -490,3 +490,34 @@ article blockquote { background: var(--lg-fill-soft); -webkit-backdrop-filter: v
   body { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
 }
 @media (display-mode: standalone) { .site-footer { display: none; } }
+
+
+/* ==========================================================================
+   PERFORMANCE — keep the glass look, but stop paying for it on every frame.
+   - blur() filters are costly: only the few fixed bars (header, dock, toast, mobile bar) blur what is behind them
+   - the backdrop is static (no huge blurred layers, no scroll-driven custom property on :root)
+   - article blocks are not individually animated while scrolling
+   ========================================================================== */
+.backdrop i { filter: none !important; will-change: auto; transition: none; transform: none !important; }
+.backdrop { contain: strict; }
+
+.track-card, .module-card, .dash, .track-header, .rm-hero, .rm-controls, .rm-tools, aside.side, .pager-card,
+.prereq-box, .leads-box, .sources, .cta-card, .progress-pill, .chip, .btn, .complete-btn, .pagefind-ui__drawer, .philosophy-item, .rm-list,
+.markdown-body pre, article pre, article table, article blockquote, .run-bar, .run-out {
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+header.top, .dock, .toast, .mobile-nav-bar {
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+}
+/* without a blur behind them, panels need a slightly denser fill to stay readable */
+:root { --lg-fill: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.34)); --lg-fill-soft: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.30)); }
+:root[data-theme='dark'] { --lg-fill: linear-gradient(135deg, rgba(40, 44, 58, 0.72), rgba(24, 27, 38, 0.66)); --lg-fill-soft: linear-gradient(135deg, rgba(40, 44, 58, 0.62), rgba(24, 27, 38, 0.56)); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --lg-fill: linear-gradient(135deg, rgba(40, 44, 58, 0.72), rgba(24, 27, 38, 0.66)); --lg-fill-soft: linear-gradient(135deg, rgba(40, 44, 58, 0.62), rgba(24, 27, 38, 0.56)); }
+}
+.dock, .toast, header.top, .mobile-nav-bar { background: var(--lg-fill); }
+
+.js .markdown-body > *, .article-header { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.12s; }
+.track-card::before, .module-card::before, .dash::before, .rm-hero::before, .rm-list::before { mix-blend-mode: normal !important; }
+html { scroll-behavior: auto; }

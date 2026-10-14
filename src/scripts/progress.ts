@@ -34,9 +34,15 @@ export function setDone(id: string, value: boolean) {
   save();
 }
 export function setLast(l: Omit<Last, 'ts'>) { load().last = { ...l, ts: Date.now() }; save(); }
-export function setScroll(id: string, r: number) { load().scroll[id] = Math.round(r * 1000) / 1000; try { localStorage.setItem(KEY, JSON.stringify(cache)); } catch { /* ignore */ } }
+/** Scroll position and reading time change constantly: keep them in memory and write to storage once things settle. */
+let persistTimer: ReturnType<typeof setTimeout> | undefined;
+const persistSoon = () => { clearTimeout(persistTimer); persistTimer = setTimeout(flush, 600); };
+function flush() { clearTimeout(persistTimer); if (!cache) return; try { localStorage.setItem(KEY, JSON.stringify(cache)); } catch { /* ignore */ } }
+window.addEventListener('pagehide', flush);
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+export function setScroll(id: string, r: number) { load().scroll[id] = Math.round(r * 1000) / 1000; persistSoon(); }
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
-export function addActive(seconds: number) { const s = load(); s.days[today()] = (s.days[today()] || 0) + seconds; try { localStorage.setItem(KEY, JSON.stringify(cache)); } catch { /* ignore */ } }
+export function addActive(seconds: number) { const s = load(); s.days[today()] = (s.days[today()] || 0) + seconds; persistSoon(); }
 
 /** Consecutive days with activity or a completion, ending today or yesterday. */
 export function streak(): number {
