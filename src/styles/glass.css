@@ -443,6 +443,10 @@ article blockquote { background: var(--lg-fill-soft); -webkit-backdrop-filter: v
 .run-btn.running svg { display: none; }
 .run-edit { background: var(--fill); color: var(--text); }
 .run-edit:hover { background: var(--fill-2); }
+.run-reset { font: inherit; font-size: 0.82rem; font-weight: 550; border: none; border-radius: 999px; padding: 0.38rem 0.95rem; cursor: pointer; background: var(--fill); color: var(--text); }
+.run-reset:hover { background: var(--fill-2); }
+.run-reset[hidden], .run-edit[hidden] { display: none; }
+.runbox > pre[data-runnable] { cursor: text; }
 .run-status { font-size: 0.78rem; color: var(--muted); }
 .run-editor { display: block; width: 100%; font: 0.85rem/1.55 var(--mono); tab-size: 4; padding: 1rem 1.1rem; border: 1px solid var(--lg-rim-dim); border-bottom: none; border-radius: 14px 14px 0 0; background: var(--code-bg); color: var(--text); resize: vertical; outline: none; white-space: pre; overflow: auto; }
 .run-editor:focus { border-color: var(--accent); }

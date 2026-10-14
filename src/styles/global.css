@@ -857,14 +857,11 @@ article pre code {
   font-size: 0.88rem;
 }
 
-/* Shiki Code Theme Sync */
-.astro-code, .astro-code span { color: var(--shiki-light); background-color: var(--shiki-light-bg); }
-:root[data-theme='dark'] .astro-code, :root[data-theme='dark'] .astro-code span { color: var(--shiki-dark); background-color: var(--shiki-dark-bg); }
+/* Shiki Code Theme Sync: Shiki writes the light colour inline, so the dark colour must win with !important */
+.astro-code span { background-color: transparent !important; }
+:root[data-theme='dark'] .astro-code, :root[data-theme='dark'] .astro-code span { color: var(--shiki-dark) !important; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .astro-code, :root:not([data-theme='light']) .astro-code span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
+  :root:not([data-theme='light']) .astro-code, :root:not([data-theme='light']) .astro-code span { color: var(--shiki-dark) !important; }
 }
 
 /* Copy Code Button */

@@ -69,22 +69,30 @@ function hydrateBlock(pre: HTMLElement) {
   const box = document.createElement('div'); box.className = 'runbox';
   pre.replaceWith(box); box.append(pre);
   const bar = document.createElement('div'); bar.className = 'run-bar';
-  bar.innerHTML = `<button class="run-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Run</span></button><button class="run-edit" type="button">Edit</button><span class="run-status" aria-live="polite"></span>`;
+  bar.innerHTML = `<button class="run-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Run</span></button><button class="run-edit" type="button" title="Change the code, then press Run">✎ Edit code</button><button class="run-reset" type="button" hidden>Reset</button><span class="run-status" aria-live="polite"></span>`;
   const out = document.createElement('div'); out.className = 'run-out'; out.hidden = true; out.setAttribute('aria-live', 'polite');
   const stdin = document.createElement('textarea'); stdin.className = 'run-stdin'; stdin.placeholder = 'Input for the program (standard input)'; stdin.rows = 2; stdin.hidden = true;
   box.append(bar, stdin, out);
-  const runBtn = bar.querySelector<HTMLButtonElement>('.run-btn')!, editBtn = bar.querySelector<HTMLButtonElement>('.run-edit')!, status = bar.querySelector<HTMLElement>('.run-status')!;
+  const runBtn = bar.querySelector<HTMLButtonElement>('.run-btn')!, editBtn = bar.querySelector<HTMLButtonElement>('.run-edit')!, resetBtn = bar.querySelector<HTMLButtonElement>('.run-reset')!, status = bar.querySelector<HTMLElement>('.run-status')!;
   let editor: HTMLTextAreaElement | null = null, active: { cancel: () => void } | null = null;
   if (needsInput(original)) stdin.hidden = false;
 
-  editBtn.addEventListener('click', () => {
-    if (!editor) {
-      editor = document.createElement('textarea'); editor.className = 'run-editor'; editor.spellcheck = false; editor.value = original;
-      editor.rows = Math.min(40, original.split('\n').length + 1);
-      editor.addEventListener('keydown', (e) => { if (e.key === 'Tab') { e.preventDefault(); const s = editor!.selectionStart; editor!.setRangeText('    ', s, editor!.selectionEnd, 'end'); } });
-      editor.addEventListener('input', () => { stdin.hidden = !needsInput(editor!.value); });
-      pre.hidden = true; box.insertBefore(editor, bar); editBtn.textContent = 'Reset'; editor.focus();
-    } else { editor.remove(); editor = null; pre.hidden = false; editBtn.textContent = 'Edit'; stdin.hidden = !needsInput(original); }
+  const openEditor = () => {
+    if (editor) { editor.focus(); return; }
+    editor = document.createElement('textarea'); editor.className = 'run-editor'; editor.spellcheck = false; editor.value = original;
+    editor.setAttribute('autocapitalize', 'off'); editor.setAttribute('autocorrect', 'off'); editor.setAttribute('aria-label', 'Editable C source');
+    editor.rows = Math.min(40, original.split('\n').length + 1);
+    editor.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') { e.preventDefault(); const s = editor!.selectionStart; editor!.setRangeText('    ', s, editor!.selectionEnd, 'end'); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runBtn.click(); }
+    });
+    editor.addEventListener('input', () => { stdin.hidden = !needsInput(editor!.value); });
+    pre.hidden = true; box.insertBefore(editor, bar); editBtn.hidden = true; resetBtn.hidden = false; editor.focus();
+  };
+  editBtn.addEventListener('click', openEditor);
+  pre.addEventListener('dblclick', openEditor);
+  resetBtn.addEventListener('click', () => {
+    editor?.remove(); editor = null; pre.hidden = false; editBtn.hidden = false; resetBtn.hidden = true; stdin.hidden = !needsInput(original); out.hidden = true;
   });
   runBtn.addEventListener('click', async () => {
     if (active) { active.cancel(); return; }
@@ -92,7 +100,7 @@ function hydrateBlock(pre: HTMLElement) {
     const src = editor ? editor.value : original;
     runBtn.classList.add('running'); runBtn.querySelector('span')!.textContent = 'Stop'; status.textContent = 'Starting…'; out.hidden = true;
     try {
-      const files = editor ? await filesFor(hash) : await filesFor(hash);
+      const files = await filesFor(hash);
       active = run(src, { stdin: stdin.value, files, onStatus: (m) => (status.textContent = m) });
       renderResult(out, await active.promise);
     } catch (e) { if ((e as Error).message !== 'Cancelled') renderError(out, (e as Error).message); }
@@ -100,5 +108,22 @@ function hydrateBlock(pre: HTMLElement) {
   });
 }
 
-export function initRunnableBlocks() { document.querySelectorAll<HTMLElement>('pre[data-runnable]').forEach(hydrateBlock); }
+/** C blocks that are fragments (not whole programs) cannot run as they are: offer to load them into the playground to edit and complete. */
+function offerPlayground(pre: HTMLElement) {
+  if (pre.dataset.hydrated) return; pre.dataset.hydrated = '1';
+  const code = (pre.querySelector('code')?.textContent ?? pre.textContent ?? '').replace(/\n$/, '');
+  const box = document.createElement('div'); box.className = 'runbox'; pre.replaceWith(box); box.append(pre);
+  const bar = document.createElement('div'); bar.className = 'run-bar';
+  bar.innerHTML = `<button class="run-edit" type="button" title="Open this code in the playground to edit and run it">✎ Edit in playground</button><span class="run-status">Fragment: complete it into a program to run</span>`;
+  box.append(bar);
+  bar.querySelector('button')!.addEventListener('click', () => {
+    try { localStorage.setItem('deepnotes:playground:v1', JSON.stringify({ code, stdin: '' })); } catch { /* ignore */ }
+    location.href = new URL('playground/', BASE).href;
+  });
+}
+
+export function initRunnableBlocks() {
+  document.querySelectorAll<HTMLElement>('pre[data-runnable]').forEach(hydrateBlock);
+  document.querySelectorAll<HTMLElement>('article pre[data-language="c"]:not([data-runnable])').forEach(offerPlayground);
+}
 initRunnableBlocks();
