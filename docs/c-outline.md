@@ -48,3 +48,11 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] More Control Flow: switch, Loop Control and Recursion
 - [x] Arrays, Strings, Command-Line Arguments and Files
 - [x] From Source to Running Process: A Bridge to Systems C
+
+### Bridging and practice notes (added in the exercises pass)
+
+- [x] Putting It Together: A Small C Project (Essentials)
+- [x] Practice: Types, Conversions and Undefined Behavior (module 1)
+- [x] Practice: Pointers, Memory and Strings (module 2)
+- [x] Practice: Macros, Callbacks and Error Handling (module 4)
+- [x] Practice: Bits, I/O and Byte Order (module 7)

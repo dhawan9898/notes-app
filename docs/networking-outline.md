@@ -71,3 +71,12 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Home and Office Networks: Switch, Router, Wi-Fi, NAT and Firewall
 - [x] Troubleshooting a Network Problem Step by Step
 - [x] Practice: Networking Exercises (moved here from Start Here so it follows the subnetting primer)
+
+### Bridging and practice notes (added in the exercises pass)
+
+- [x] Wi-Fi for Beginners: Bands, Channels, Signal and Security (Essentials)
+- [x] Planning a Small Office Network: VLANs and an Addressing Plan (Essentials)
+- [x] Practice: A Layer 2 Lab with Bridges, VLANs and STP (module 2)
+- [x] Practice: VLSM, Summarisation, Longest-Prefix Match and Fragmentation (module 3)
+- [x] Practice: IPv6 Addresses and Neighbour Discovery (module 4)
+- [x] Practice: A Static Routing Lab (module 5)

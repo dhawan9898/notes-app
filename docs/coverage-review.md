@@ -117,4 +117,10 @@ A learner-path review of all notes (prerequisite graph, level ramp, forward refe
 | Missing/duplicate prerequisites (ARP, TCP, DNS, Process Lifecycle, Practice note) | Prerequisites added or corrected |
 | Recommended path ran all of C (42 notes) before DSA, Linux or Networking | `learningPath()` now builds Start here, Essentials (interleaved) and a Core path that takes five notes from each track in turn |
 
-Remaining known gaps: only the Start Here and Essentials modules have exercises; intermediate and advanced modules still have none.
+
+
+### Exercises pass
+
+Practice notes (6-7 graded exercises, answers behind `<details>`, every answer verified by running it) now close the core modules: C modules 1, 2, 4 and 7; DSA modules 2, 4, 5, 6 and 8; Linux modules 2 (Shell), 3, 5 and 7; Networking modules 2, 3, 4 and 5. The networking labs run on one machine in a throwaway user, network and mount namespace (`unshare -Urnm`, then `mount -t tmpfs tmpfs /run` so that `ip netns` works). Added bridging notes: a C capstone project, DSA *Measuring Growth* and *Depth-First Search and Ordering Tasks*, Linux *Reading Logs*, Networking *Wi-Fi for Beginners* and *Planning a Small Office Network*.
+
+Remaining known gaps: practice notes do not yet exist for C modules 3, 5, 6 and 8, DSA modules 1, 3, 7 and 9, Linux modules 1, 4, 6, 8-11, and Networking modules 1 and 6-11; protocol facts are still unverified against the standards.

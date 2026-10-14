@@ -1053,5 +1053,156 @@
  "0893e519c1add50b": {
   "ok": true,
   "where": "dsa/00-essentials/04-trees-and-graphs-for-beginners.md"
+ },
+ "4d6e3c38cb958c8b": {
+  "ok": false,
+  "where": "c/00-essentials/06-putting-it-together-a-small-c-project.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: table_new"
+ },
+ "9f8991604017aadd": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/04-practice-types-conversions-and-ub.md"
+ },
+ "e6440ea2a1a5641a": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/04-practice-types-conversions-and-ub.md"
+ },
+ "c94e6c37b4d7b7fc": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/04-practice-types-conversions-and-ub.md"
+ },
+ "397130cd7ddab283": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "a71dace89c0e678d": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "542d668a8f9ce6ec": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "0239fbac59d5fb58": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "3c2f3bade240c164": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "d9ba42cc31c52329": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "21d82283a2956a47": {
+  "ok": true,
+  "where": "c/04-advanced-language/05-practice-macros-callbacks-and-errors.md"
+ },
+ "cda6063a68413292": {
+  "ok": true,
+  "where": "c/04-advanced-language/05-practice-macros-callbacks-and-errors.md"
+ },
+ "6266ba2b5fb9fdaf": {
+  "ok": false,
+  "where": "c/04-advanced-language/05-practice-macros-callbacks-and-errors.md",
+  "note": "fatal error: error in backend: Cannot select: 0x786d58: i32 = GlobalTLSAddress<i32* @errno> 0"
+ },
+ "d028424d5b5ccce2": {
+  "ok": true,
+  "where": "c/04-advanced-language/05-practice-macros-callbacks-and-errors.md"
+ },
+ "e62c6057f8d030f1": {
+  "ok": true,
+  "where": "c/07-systems-level-c/09-practice-bits-io-and-byte-order.md"
+ },
+ "0fe8f3fd2ad6bce6": {
+  "ok": false,
+  "where": "c/07-systems-level-c/09-practice-bits-io-and-byte-order.md",
+  "note": "main.c:3:10: fatal error: 'sys/wait.h' file not found"
+ },
+ "398060ba382b4b4e": {
+  "ok": true,
+  "where": "c/07-systems-level-c/09-practice-bits-io-and-byte-order.md"
+ },
+ "f4a62bda780b6977": {
+  "ok": true,
+  "where": "dsa/00-essentials/05-measuring-growth-in-practice.md"
+ },
+ "fa27d292277dca85": {
+  "ok": true,
+  "where": "dsa/00-essentials/05-measuring-growth-in-practice.md"
+ },
+ "52fdde268447ef11": {
+  "ok": true,
+  "where": "dsa/00-essentials/06-depth-first-search-and-ordering-tasks.md"
+ },
+ "0701bd5875a40ccb": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/04-practice-arrays-lists-and-queues.md"
+ },
+ "eaa46772f3d27831": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/04-practice-arrays-lists-and-queues.md"
+ },
+ "00398195746bb19b": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/04-practice-arrays-lists-and-queues.md"
+ },
+ "7cedaa8f9ac24cbd": {
+  "ok": true,
+  "where": "dsa/04-hashing/03-practice-hash-functions-probing-and-bloom-filters.md"
+ },
+ "736f74d4ba53e2ab": {
+  "ok": true,
+  "where": "dsa/04-hashing/03-practice-hash-functions-probing-and-bloom-filters.md"
+ },
+ "6f342ae3e128d75a": {
+  "ok": true,
+  "where": "dsa/04-hashing/03-practice-hash-functions-probing-and-bloom-filters.md"
+ },
+ "88009dab1afce445": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "c9add3bee248e4e7": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "df6a7195a99ab108": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "fdc1ce674ba5eb68": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "14b96a5751958d41": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "46ef797fca06b9d6": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "d73aaeabc5b18221": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "520ed361fb510374": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "a236e9a7c3a97e01": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "ffdb3eaeea8dfc88": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "77f8ef872c2544f9": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
  }
 }

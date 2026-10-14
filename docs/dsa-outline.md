@@ -56,3 +56,13 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Linked Lists, Stacks and Queues for Beginners
 - [x] Hash Tables for Beginners: Fast Lookup by Key
 - [x] Trees and Graphs for Beginners
+
+### Bridging and practice notes (added in the exercises pass)
+
+- [x] Measuring Growth: Counting and Timing in Practice (Essentials)
+- [x] Depth-First Search and Ordering Tasks (Essentials)
+- [x] Practice: Arrays, Lists and Queues (module 2)
+- [x] Practice: Hash Functions, Probing and Bloom Filters (module 4)
+- [x] Practice: Trees, Heaps and Tries (module 5)
+- [x] Practice: Graph Algorithms (module 6)
+- [x] Practice: Dynamic Programming, Greedy and Backtracking (module 8)

@@ -26,7 +26,7 @@ gcc --version
 
 | You are… | Read in this order |
 |---|---|
-| **New to programming or new to C** | *C From Zero* → *Binary, Hexadecimal and Bits* → *Pointers for Beginners* → *Practice: C Exercises* → the five **C Essentials** notes (*Structs, Enums and Typedef*, *Functions, Headers and Multi-File Programs*, *More Control Flow*, *Arrays, Strings, Command-Line Arguments and Files*, *From Source to Running Process*) → then the track in order from module 1 |
+| **New to programming or new to C** | *C From Zero* → *Binary, Hexadecimal and Bits* → *Pointers for Beginners* → *Practice: C Exercises* → the six **C Essentials** notes (*Structs, Enums and Typedef*, *Functions, Headers and Multi-File Programs*, *More Control Flow*, *Arrays, Strings, Command-Line Arguments and Files*, *From Source to Running Process*, and the capstone *Putting It Together: A Small C Project*) → then the track in order from module 1 |
 | **A programmer in another language** | *C From Zero* (skim) → *Pointers for Beginners* → module 1 (toolchain) → module 2 (memory and pointers) → module 6 (debugging) |
 | **Experienced; want depth** | Module 1 *C Standards, the Abstract Machine and Undefined Behavior* → module 4 (advanced language) → module 5 (linking) → module 7 (systems-level C) |
 

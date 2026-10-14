@@ -65,3 +65,11 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Network Commands and SSH for Beginners
 - [x] Your First Shell Scripts
 - [x] Editing Files and Version Control with Git
+
+### Bridging and practice notes (added in the exercises pass)
+
+- [x] Reading Logs and Finding What Went Wrong (Essentials)
+- [x] Practice: Pipelines, Text Tools and Safe Scripts (module 1 Shell and Text)
+- [x] Practice: Processes, Signals and /proc (module 3)
+- [x] Practice: Files, Links and Durability (module 5)
+- [x] Practice: Units, Limits and Timers (module 7)
