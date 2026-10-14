@@ -710,6 +710,11 @@ aside.side {
   font-weight: 500;
   cursor: pointer;
 }
+.mobile-nav-row { display: flex; gap: 0.6rem; }
+.mobile-nav-row .mobile-nav-btn { flex: 1; justify-content: center; gap: 0.5rem; }
+.mobile-toc { display: flex; flex-direction: column; gap: 0.1rem; margin-top: 0.5rem; max-height: 55vh; overflow-y: auto; padding: 0.4rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-card); }
+.mobile-toc[hidden] { display: none; }
+.mobile-toc .toc-link { padding: 0.45rem 0.6rem; }
 .mobile-nav-btn:hover {
   border-color: var(--accent);
 }

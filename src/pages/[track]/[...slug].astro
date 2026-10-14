@@ -42,10 +42,20 @@ const leadsTo = allNotes
   description={note.data.summary}
 >
   <div class="mobile-nav-bar" data-pagefind-ignore>
-    <button class="mobile-nav-btn" id="mobileNavBtn" aria-label="Toggle navigation outline" aria-expanded="false">
-      <span class="track-curr">{trackInfo.icon} {note.data.module}</span>
-      <span class="btn-indicator">Outline ▾</span>
-    </button>
+    <div class="mobile-nav-row">
+      <button class="mobile-nav-btn" id="mobileNavBtn" aria-label="Open the index of notes" aria-expanded="false">
+        <span class="icon-burger">☰</span><span class="mnb-label">Index</span>
+      </button>
+      <button class="mobile-nav-btn" id="mobileTocBtn" aria-label="Topics covered on this page" aria-expanded="false" aria-controls="mobileToc">
+        <span class="mnb-label">Outline</span><span class="btn-indicator">▾</span>
+      </button>
+    </div>
+    <nav class="mobile-toc" id="mobileToc" aria-label="Topics on this page" hidden>
+      {toc.length > 0 ? toc.map((h) => (
+        <a href={`#${h.slug}`} class:list={['toc-link', { l3: h.depth === 3 }]}>{h.text}</a>
+      )) : <span class="toc-empty">Overview</span>}
+      {note.data.sources.length > 0 && <a href="#sources-section" class="toc-link">Sources &amp; References</a>}
+    </nav>
   </div>
 
   <div class="wrap layout">
@@ -240,6 +250,19 @@ const leadsTo = allNotes
       toggleBtn.addEventListener('click', () => {
         const isOpen = sideNav.classList.toggle('open');
         toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
+    // Outline: topics covered on this page
+    const tocBtn = document.getElementById('mobileTocBtn');
+    const mobileToc = document.getElementById('mobileToc');
+    if (tocBtn && mobileToc) {
+      tocBtn.addEventListener('click', () => {
+        mobileToc.hidden = !mobileToc.hidden;
+        tocBtn.setAttribute('aria-expanded', String(!mobileToc.hidden));
+      });
+      mobileToc.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) { mobileToc.hidden = true; tocBtn?.setAttribute('aria-expanded', 'false'); }
       });
     }
 
