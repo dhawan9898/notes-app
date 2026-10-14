@@ -80,3 +80,13 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Practice: VLSM, Summarisation, Longest-Prefix Match and Fragmentation (module 3)
 - [x] Practice: IPv6 Addresses and Neighbour Discovery (module 4)
 - [x] Practice: A Static Routing Lab (module 5)
+
+### Remaining practice notes (second exercises batch)
+
+- [x] Practice: Building and Parsing a Packet by Hand (Fundamentals)
+- [x] Practice: Watching TCP and UDP Behave (Transport and Services)
+- [x] Practice: Redundant Paths, ECMP and Failure Detection (Resilience)
+- [x] Practice: Building GRE and VXLAN Tunnels and Counting the MTU Cost (Overlays and VPN)
+- [x] Practice: Joining and Leaving a Multicast Group (Multicast)
+- [x] Practice: Shaping, Queuing and Priority with tc (QoS)
+- [x] Practice: Counters, Time and Syslog Arithmetic (Operations and Automation)

@@ -66,3 +66,10 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Practice: Trees, Heaps and Tries (module 5)
 - [x] Practice: Graph Algorithms (module 6)
 - [x] Practice: Dynamic Programming, Greedy and Backtracking (module 8)
+
+### Remaining practice notes (second exercises batch)
+
+- [x] Practice: Complexity and Recursion (module 1)
+- [x] Practice: Search Bounds, Stability and Counting (module 3)
+- [x] Practice: Pattern Matching, Palindromes and Rolling Hashes (module 7)
+- [x] Practice: Caches, Arenas and a Lock-Free Queue (module 9)

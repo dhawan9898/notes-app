@@ -1204,5 +1204,111 @@
  "77f8ef872c2544f9": {
   "ok": true,
   "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "a2be0b775ba58ff8": {
+  "ok": true,
+  "where": "c/03-data-modeling/03-practice-layout-unions-and-scope.md"
+ },
+ "b5b22f5e3f4bf7b2": {
+  "ok": true,
+  "where": "c/03-data-modeling/03-practice-layout-unions-and-scope.md"
+ },
+ "326754fdb266c53f": {
+  "ok": false,
+  "where": "c/05-linking-and-building/03-practice-libraries-and-the-linker.md",
+  "note": "wasm-ld: error: main.o: undefined symbol: mx_square"
+ },
+ "370227f9e27ab9e6": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/04-practice-bug-hunt-with-sanitizers.md"
+ },
+ "626801bce0e0d1de": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/04-practice-bug-hunt-with-sanitizers.md"
+ },
+ "c4164a31e01118f7": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/04-practice-bug-hunt-with-sanitizers.md"
+ },
+ "217b8d28dacbbb59": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/04-practice-bug-hunt-with-sanitizers.md"
+ },
+ "d3b5c23d6a8e32c0": {
+  "ok": true,
+  "where": "c/06-debugging-and-quality/04-practice-bug-hunt-with-sanitizers.md"
+ },
+ "66fb4528f938d7ff": {
+  "ok": false,
+  "where": "c/08-concurrency/02-practice-races-locks-and-queues.md",
+  "note": "main.c:1:10: fatal error: 'pthread.h' file not found"
+ },
+ "eca156ce640dc4cb": {
+  "ok": false,
+  "where": "c/08-concurrency/02-practice-races-locks-and-queues.md",
+  "note": "main.c:1:10: fatal error: 'pthread.h' file not found"
+ },
+ "9f2a1879e236702c": {
+  "ok": false,
+  "where": "c/08-concurrency/02-practice-races-locks-and-queues.md",
+  "note": "main.c:3:10: fatal error: 'pthread.h' file not found"
+ },
+ "512eb6aa331cabc1": {
+  "ok": false,
+  "where": "c/08-concurrency/02-practice-races-locks-and-queues.md",
+  "note": "main.c:1:10: fatal error: 'pthread.h' file not found"
+ },
+ "c9721324dbda96c1": {
+  "ok": true,
+  "where": "dsa/01-foundations/03-practice-complexity-and-recursion.md"
+ },
+ "4734aefa94039495": {
+  "ok": true,
+  "where": "dsa/01-foundations/03-practice-complexity-and-recursion.md"
+ },
+ "1196a96736091693": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "8dd663157fbd20f1": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "85dcb429b72b3036": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "4756d629ffc169cd": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "efde6cb8713f5dae": {
+  "ok": true,
+  "where": "dsa/07-strings/03-practice-matching-palindromes-and-hashing.md"
+ },
+ "6a03ef71d83f2490": {
+  "ok": true,
+  "where": "dsa/07-strings/03-practice-matching-palindromes-and-hashing.md"
+ },
+ "8d86350bb57cc8f1": {
+  "ok": true,
+  "where": "dsa/07-strings/03-practice-matching-palindromes-and-hashing.md"
+ },
+ "2e1e80dc51d6b73c": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/05-practice-caches-arenas-and-lock-free-queues.md"
+ },
+ "9a2502d68cad3dd9": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/05-practice-caches-arenas-and-lock-free-queues.md"
+ },
+ "978534fbade62c6a": {
+  "ok": false,
+  "where": "dsa/09-systems-structures/05-practice-caches-arenas-and-lock-free-queues.md",
+  "note": "main.c:1:10: fatal error: 'pthread.h' file not found"
+ },
+ "9d6a32674fa44c4b": {
+  "ok": true,
+  "where": "linux/09-performance/05-practice-measuring-before-tuning.md"
  }
 }

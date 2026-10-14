@@ -56,3 +56,10 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Practice: Pointers, Memory and Strings (module 2)
 - [x] Practice: Macros, Callbacks and Error Handling (module 4)
 - [x] Practice: Bits, I/O and Byte Order (module 7)
+
+### Remaining practice notes (second exercises batch)
+
+- [x] Practice: Struct Layout, Unions and Scope (module 3)
+- [x] Practice: Libraries and the Linker (module 5)
+- [x] Practice: A Bug Hunt with Sanitizers and Static Analysis (module 6)
+- [x] Practice: Races, Locks and a Blocking Queue (module 8)

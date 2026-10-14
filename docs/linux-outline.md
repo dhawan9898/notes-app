@@ -73,3 +73,13 @@ Added after the continuity review (beginner bridge between *Start Here* and modu
 - [x] Practice: Processes, Signals and /proc (module 3)
 - [x] Practice: Files, Links and Durability (module 5)
 - [x] Practice: Units, Limits and Timers (module 7)
+
+### Remaining practice notes (second exercises batch)
+
+- [x] Practice: ACLs, Capabilities and Namespaces (Boot and Foundations)
+- [x] Practice: Watching Virtual Memory Work (Memory)
+- [x] Practice: System Calls, the vDSO and /proc, /sys, sysctl (Kernel Interfaces)
+- [x] Practice: Namespaces and cgroups by Hand (Containers)
+- [x] Practice: Measuring Before Tuning (Performance)
+- [x] Practice: A Firewall and Traffic Control Lab (Network Stack)
+- [x] Practice: Hardening and Measuring Exposure (Security)
