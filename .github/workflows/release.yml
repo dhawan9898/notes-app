@@ -20,7 +20,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with: { fetch-depth: 0 }      # tags and history are needed to compute the next version
 
       - name: Compute next version
@@ -50,12 +50,12 @@ jobs:
           echo "previous=$last" >> "$GITHUB_OUTPUT"
           echo "Next version: $major.$minor.$patch ($bump bump from $last)"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with: { node-version: 22, cache: npm }
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: 17 }
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: android-actions/setup-android@v4
+      - uses: gradle/actions/setup-gradle@v5
 
       - run: npm ci
       - name: Build the site (base path /) and copy it into the Android project
@@ -98,5 +98,5 @@ jobs:
           notes="Install: download **${{ steps.apk.outputs.file }}** on your Android phone and open it (allow installs from this source when asked). It installs over the previous version. Offline: all notes and the C compiler are inside the app."
           gh release create "$tag" "${{ steps.apk.outputs.file }}" --title "DeepNotes $tag" --notes "$notes" --generate-notes --latest
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with: { name: DeepNotes-apk, path: "${{ steps.apk.outputs.file }}" }
