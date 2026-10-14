@@ -324,15 +324,15 @@ SUMMARY: AddressSanitizer: stack-buffer-overflow ..sanitizer_common_interceptors
 ==2437273==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7f2731b00030 at pc 0x7f2733ef27ef bp 0x7ffd823509c0 sp 0x7ffd82350180
 WRITE of size 18 at 0x7f2731b00030 thread T0
     #0 0x7f2733ef27ee in memcpy ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors_memintrinsics.inc:115
-    #1 0x55f962e64453 in parse_records /home/dhawank/deepnotes/authoring/examples/c/fuzz/parser.c:19
-    #2 0x55f962e64c9e in run_one /home/dhawank/deepnotes/authoring/examples/c/fuzz/fuzz_main.c:41
-    #3 0x55f962e64c9e in main /home/dhawank/deepnotes/authoring/examples/c/fuzz/fuzz_main.c:61
+    #1 0x55f962e64453 in parse_records authoring/examples/c/fuzz/parser.c:19
+    #2 0x55f962e64c9e in run_one authoring/examples/c/fuzz/fuzz_main.c:41
+    #3 0x55f962e64c9e in main authoring/examples/c/fuzz/fuzz_main.c:61
     #4 0x7f2733c35ca7  (/lib/x86_64-linux-gnu/libc.so.6+0x29ca7) (BuildId: c495b62edadd6c356265942ec1282d98058a7b41)
     #5 0x7f2733c35d64 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x29d64) (BuildId: c495b62edadd6c356265942ec1282d98058a7b41)
-    #6 0x55f962e641f0 in _start (/home/dhawank/deepnotes/authoring/examples/c/fuzz/fuzz+0x21f0) (BuildId: aa75eed696d97dafa916c033cea2eb5dbc790213)
+    #6 0x55f962e641f0 in _start (authoring/examples/c/fuzz/fuzz+0x21f0) (BuildId: aa75eed696d97dafa916c033cea2eb5dbc790213)
 
 Address 0x7f2731b00030 is located in stack of thread T0 at offset 48 in frame
-    #0 0x55f962e642c8 in parse_records /home/dhawank/deepnotes/authoring/examples/c/fuzz/parser.c:8
+    #0 0x55f962e642c8 in parse_records authoring/examples/c/fuzz/parser.c:8
 
   This frame has 1 object(s):
     [32, 48) 'buf' (line 18) <== Memory access at offset 48 overflows this variable
