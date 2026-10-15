@@ -62,10 +62,23 @@ export function renderError(out: HTMLElement, msg: string) { out.innerHTML = `<d
 
 const needsInput = (src: string) => /\b(scanf|getchar|fgets|getline|fread|gets|getc|fscanf)\s*\(/.test(src);
 
-function hydrateBlock(pre: HTMLElement) {
+/** A fragment (no main) opened for editing becomes a program to complete: the usual headers if it has none, then
+ *  either the fragment above a main() (when it defines functions, types or macros) or the fragment inside main()
+ *  (when it is only statements and local declarations, which cannot stand at file scope). */
+export const completeFragment = (code: string) => {
+  const head = /^\s*#\s*include\b/m.test(code) ? '' : '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n';
+  const topLevel = /^\s*#\s*(define|if|include)|^(typedef|struct|union|enum)\b|^[A-Za-z_][\w\s*]*\([^;]*\)\s*(\{|$)/m.test(code);
+  if (topLevel) return head + code + '\n\nint main(void) {\n    // Use the code above here, then press Run.\n    return 0;\n}\n';
+  const body = code.split('\n').map((l) => (l ? '    ' + l : l)).join('\n');
+  return head + 'int main(void) {\n' + body + '\n    return 0;\n}\n';
+};
+
+/** Inline Run / Edit UI. A fragment starts read-only with an "Edit and run" button and stays on the page (no navigation). */
+function hydrateBlock(pre: HTMLElement, fragment = false) {
   if (pre.dataset.hydrated) return; pre.dataset.hydrated = '1';
-  const hash = pre.dataset.runnable!;
+  const hash = pre.dataset.runnable;
   const original = (pre.querySelector('code')?.textContent ?? pre.textContent ?? '').replace(/\n$/, '');
+  const startText = fragment ? completeFragment(original) : original;
   const box = document.createElement('div'); box.className = 'runbox';
   pre.replaceWith(box); box.append(pre);
   const bar = document.createElement('div'); bar.className = 'run-bar';
@@ -76,23 +89,28 @@ function hydrateBlock(pre: HTMLElement) {
   const runBtn = bar.querySelector<HTMLButtonElement>('.run-btn')!, editBtn = bar.querySelector<HTMLButtonElement>('.run-edit')!, resetBtn = bar.querySelector<HTMLButtonElement>('.run-reset')!, status = bar.querySelector<HTMLElement>('.run-status')!;
   let editor: HTMLTextAreaElement | null = null, active: { cancel: () => void } | null = null;
   if (needsInput(original)) stdin.hidden = false;
+  if (fragment) {
+    runBtn.hidden = true; editBtn.textContent = '✎ Edit and run'; editBtn.title = 'Complete this fragment into a program and run it here';
+    status.textContent = 'Fragment: add a main() to run it';
+  }
 
   const openEditor = () => {
     if (editor) { editor.focus(); return; }
-    editor = document.createElement('textarea'); editor.className = 'run-editor'; editor.spellcheck = false; editor.value = original;
+    editor = document.createElement('textarea'); editor.className = 'run-editor'; editor.spellcheck = false; editor.value = startText;
     editor.setAttribute('autocapitalize', 'off'); editor.setAttribute('autocorrect', 'off'); editor.setAttribute('aria-label', 'Editable C source');
-    editor.rows = Math.min(40, original.split('\n').length + 1);
+    editor.rows = Math.min(40, startText.split('\n').length + 1);
     editor.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') { e.preventDefault(); const s = editor!.selectionStart; editor!.setRangeText('    ', s, editor!.selectionEnd, 'end'); }
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runBtn.click(); }
     });
     editor.addEventListener('input', () => { stdin.hidden = !needsInput(editor!.value); });
-    pre.hidden = true; box.insertBefore(editor, bar); editBtn.hidden = true; resetBtn.hidden = false; editor.focus();
+    pre.hidden = true; box.insertBefore(editor, bar); editBtn.hidden = true; resetBtn.hidden = false; runBtn.hidden = false; if (fragment) status.textContent = ''; editor.focus();
   };
   editBtn.addEventListener('click', openEditor);
   pre.addEventListener('dblclick', openEditor);
   resetBtn.addEventListener('click', () => {
     editor?.remove(); editor = null; pre.hidden = false; editBtn.hidden = false; resetBtn.hidden = true; stdin.hidden = !needsInput(original); out.hidden = true;
+    if (fragment) { runBtn.hidden = true; status.textContent = 'Fragment: add a main() to run it'; }
   });
   runBtn.addEventListener('click', async () => {
     if (active) { active.cancel(); return; }
@@ -108,28 +126,21 @@ function hydrateBlock(pre: HTMLElement) {
   });
 }
 
-/** C blocks that cannot run in the app. Fragments (no main) can be completed in the playground; whole programs that failed the
- *  validator need things the in-app compiler lacks (threads, sockets, several source files, a real OS), so they are labelled instead. */
-function offerPlayground(pre: HTMLElement) {
+/** C blocks that cannot run in the app as they stand. Fragments (no main) are completed and run in place, inside the note;
+ *  whole programs that failed the validator need things the in-app compiler lacks (threads, sockets, several source files,
+ *  a real OS), so they are labelled instead. */
+function offerFragment(pre: HTMLElement) {
+  const code = (pre.querySelector('code')?.textContent ?? pre.textContent ?? '');
+  if (!/\bmain\s*\(/.test(code)) { hydrateBlock(pre, true); return; }
   if (pre.dataset.hydrated) return; pre.dataset.hydrated = '1';
-  const code = (pre.querySelector('code')?.textContent ?? pre.textContent ?? '').replace(/\n$/, '');
-  const whole = /\bmain\s*\(/.test(code);
   const box = document.createElement('div'); box.className = 'runbox'; pre.replaceWith(box); box.append(pre);
   const bar = document.createElement('div'); bar.className = 'run-bar';
-  if (whole) {
-    bar.innerHTML = `<span class="run-status">Complete program, but it needs more than the in-app compiler offers (several files, threads, sockets or the real system). Compile it on your computer.</span>`;
-  } else {
-    bar.innerHTML = `<button class="run-edit" type="button" title="Open this code in the playground to edit and run it">✎ Edit in playground</button><span class="run-status">Fragment: complete it into a program to run</span>`;
-    bar.querySelector('button')!.addEventListener('click', () => {
-      try { localStorage.setItem('deepnotes:playground:v1', JSON.stringify({ code, stdin: '' })); } catch { /* ignore */ }
-      location.href = new URL('playground/', BASE).href;
-    });
-  }
+  bar.innerHTML = `<span class="run-status">Complete program, but it needs more than the in-app compiler offers (several files, threads, sockets or the real system). Compile it on your computer.</span>`;
   box.append(bar);
 }
 
 export function initRunnableBlocks() {
   document.querySelectorAll<HTMLElement>('pre[data-runnable]').forEach(hydrateBlock);
-  document.querySelectorAll<HTMLElement>('article pre[data-language="c"]:not([data-runnable])').forEach(offerPlayground);
+  document.querySelectorAll<HTMLElement>('article pre[data-language="c"]:not([data-runnable])').forEach(offerFragment);
 }
 initRunnableBlocks();

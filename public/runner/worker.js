@@ -19,6 +19,7 @@ onmessage = async (e) => {
     postMessage({ id, status: 'Starting…' });
     postMessage({ id, result: await runner.runC(source, { stdin, files }) });
   } catch (err) {
+    runner = null;                       // a crashed compiler instance is not reused; the next run starts a fresh one
     postMessage({ id, error: String((err && err.message) || err) });
   }
 };
