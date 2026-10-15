@@ -123,13 +123,13 @@
   "term": "Hash function",
   "def": "A function that turns a key into a fixed-size number, ideally spreading keys evenly.",
   "track": "DSA",
-  "see": "Hash Tables with Open Addressing"
+  "see": "Hash Tables: Open Addressing, Deletion, Cuckoo and Hash Flooding"
  },
  {
   "term": "Hash table",
   "def": "A structure mapping keys to values in expected O(1) time by using a hash of the key as an array index.",
   "track": "DSA",
-  "see": "Hash Tables with Open Addressing"
+  "see": "Hash Tables: Open Addressing, Deletion, Cuckoo and Hash Flooding"
  },
  {
   "term": "Heap (priority queue)",

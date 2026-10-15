@@ -9,4 +9,4 @@ Without running anything, write the value of `INT_MAX`, `INT_MIN` and `UINT_MAX`
 
 ## Explanation
 
-`INT_MAX = 2147483647`, `INT_MIN = -2147483648`, `UINT_MAX = 4294967295` (the program above prints them with the sizes: 1, 2, 4, 8, 8 and 8 on LP64 Linux).
+`INT_MAX = 2147483647`, `INT_MIN = -2147483648`, `UINT_MAX = 4294967295` (print them with `%zu` and `sizeof`: 1, 2, 4, 8, 8 and 8 on LP64 Linux).

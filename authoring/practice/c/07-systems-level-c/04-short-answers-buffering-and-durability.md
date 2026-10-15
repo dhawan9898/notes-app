@@ -1,6 +1,6 @@
 ---
 kind: question
-title: Short answer
+title: Short answers on buffering and durability
 module: Systems-Level C
 difficulty: Hard
 ---

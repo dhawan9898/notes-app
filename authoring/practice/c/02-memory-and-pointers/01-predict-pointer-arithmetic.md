@@ -1,6 +1,6 @@
 ---
 kind: question
-title: Predict
+title: Predict pointer arithmetic and sizeof
 module: Memory and Pointers
 difficulty: Medium
 ---

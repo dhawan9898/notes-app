@@ -1,6 +1,6 @@
 ---
 kind: question
-title: Short answer
+title: Short answers on strings and free
 module: Memory and Pointers
 difficulty: Medium
 ---

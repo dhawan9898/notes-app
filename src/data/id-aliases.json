@@ -33,5 +33,8 @@
  "dsa/00-start-here/02-thinking-in-data-structures": "dsa/00-getting-started/01-thinking-in-data-structures",
  "linux/00-start-here/02-linux-command-line-basics": "linux/00-getting-started/01-linux-command-line-basics",
  "linux/00-start-here/03-installing-software-and-managing-services": "linux/00-getting-started/02-installing-software-and-managing-services",
- "networking/00-start-here/02-what-is-a-network": "networking/00-getting-started/01-what-is-a-network"
+ "networking/00-start-here/02-what-is-a-network": "networking/00-getting-started/01-what-is-a-network",
+ "linux/01-boot-and-foundations/01-the-boot-process": "linux/01-boot-and-foundations/03-the-boot-process",
+ "linux/01-boot-and-foundations/02-filesystem-hierarchy-vfs-inodes": "linux/01-boot-and-foundations/01-filesystem-hierarchy-vfs-inodes",
+ "linux/01-boot-and-foundations/03-users-permissions-acls-capabilities": "linux/01-boot-and-foundations/02-users-permissions-acls-capabilities"
 }

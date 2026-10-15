@@ -31,6 +31,6 @@ A function that builds `"Hello, <name>"` in a local array and returns its addres
 
 ## Explanation
 
-The compiler warns "function returns address of local variable". The array lives in the function's stack frame, which is gone after the return; using the pointer is undefined behaviour. In practice GCC even replaces the returned address with `NULL`, so the program below crashes in `strlen`:
+The compiler warns "function returns address of local variable". The array lives in the function's stack frame, which is gone after the return; using the pointer is undefined behaviour. In practice GCC even replaces the returned address with `NULL`, so a program that calls `strlen` on the result crashes.
 
 Fix 1 (`make_greeting_buf`): the caller owns the buffer and passes its size. Fix 2 (`make_greeting_heap`): allocate with `malloc`, document that the caller must `free`, and handle `NULL`. A third option is a `static` buffer, which is not re-entrant or thread-safe and is usually a poor choice.

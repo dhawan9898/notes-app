@@ -32,4 +32,4 @@ Never perform an addition that overflows.
 
 ## Explanation
 
-`safe_add` in the program above tests *before* adding: if `b > 0` the sum overflows exactly when `a > INT_MAX - b`; if `b < 0` it underflows when `a < INT_MIN - b`. The subtractions on the right cannot overflow because `b` has the opposite sign. GCC and Clang also provide `__builtin_add_overflow(a, b, out)`, and C23 adds `ckd_add` in `<stdckdint.h>`.
+The check must happen *before* the addition: if `b > 0` the sum overflows exactly when `a > INT_MAX - b`; if `b < 0` it underflows when `a < INT_MIN - b`. The subtractions on the right cannot overflow because `b` has the opposite sign. GCC and Clang also provide `__builtin_add_overflow(a, b, out)`, and C23 adds `ckd_add` in `<stdckdint.h>`.

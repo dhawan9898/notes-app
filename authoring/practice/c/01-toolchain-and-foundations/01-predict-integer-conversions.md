@@ -1,6 +1,6 @@
 ---
 kind: question
-title: Predict (paper)
+title: Predict integer conversions
 module: Toolchain and Language Foundations
 difficulty: Medium
 ---

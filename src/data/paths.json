@@ -1,0 +1,80 @@
+[
+  {
+    "id": "programming-foundations",
+    "title": "Programming foundations",
+    "audience": "Students and anyone new to systems programming",
+    "summary": "Start from zero: how a C program works, then the data structures every programmer reuses.",
+    "modules": [
+      { "track": "c", "module": "Getting Started" },
+      { "track": "c", "module": "C Essentials" },
+      { "track": "dsa", "module": "Getting Started" },
+      { "track": "dsa", "module": "DSA Essentials" }
+    ]
+  },
+  {
+    "id": "linux-confident",
+    "title": "Linux, from zero to confident",
+    "audience": "Interns, students and developers who now run their own machines",
+    "summary": "The command line, users and permissions, processes, services and the habits that keep a system safe.",
+    "modules": [
+      { "track": "linux", "module": "Getting Started" },
+      { "track": "linux", "module": "Linux Essentials" },
+      { "track": "linux", "module": "Shell and Text Processing" },
+      { "track": "linux", "module": "Boot and Foundations" },
+      { "track": "linux", "module": "Processes" },
+      { "track": "linux", "module": "systemd and Services" },
+      { "track": "linux", "module": "Security" }
+    ]
+  },
+  {
+    "id": "network-engineer",
+    "title": "Network engineer",
+    "audience": "Students and engineers moving into networking",
+    "summary": "From what a network is to Ethernet, IP, IPv6, TCP/UDP, routing and resilient designs, grounded in the standards.",
+    "modules": [
+      { "track": "networking", "module": "Getting Started" },
+      { "track": "networking", "module": "Networking Essentials" },
+      { "track": "networking", "module": "Fundamentals" },
+      { "track": "networking", "module": "Layer 2" },
+      { "track": "networking", "module": "IPv4" },
+      { "track": "networking", "module": "IPv6" },
+      { "track": "networking", "module": "Transport and Services" },
+      { "track": "networking", "module": "Routing" },
+      { "track": "networking", "module": "Resilience" }
+    ]
+  },
+  {
+    "id": "systems-programmer",
+    "title": "Systems programmer",
+    "audience": "Working programmers who want to understand what the machine does",
+    "summary": "C at depth (memory, linking, debugging, concurrency) together with the Linux interfaces it runs on.",
+    "modules": [
+      { "track": "c", "module": "Toolchain and Language Foundations" },
+      { "track": "c", "module": "Memory and Pointers" },
+      { "track": "c", "module": "Data Modeling" },
+      { "track": "c", "module": "Linking and Building" },
+      { "track": "c", "module": "Debugging and Quality" },
+      { "track": "c", "module": "Systems-Level C" },
+      { "track": "c", "module": "Concurrency in C" },
+      { "track": "linux", "module": "Processes" },
+      { "track": "linux", "module": "Memory" },
+      { "track": "linux", "module": "Kernel Interfaces" }
+    ]
+  },
+  {
+    "id": "performance-reliability",
+    "title": "Performance and reliability",
+    "audience": "Experienced engineers who tune and run production systems",
+    "summary": "Data structures with cache and system behaviour in mind, then measurement, containers and the network stack.",
+    "modules": [
+      { "track": "dsa", "module": "Foundations" },
+      { "track": "dsa", "module": "Searching and Sorting" },
+      { "track": "dsa", "module": "Hashing" },
+      { "track": "dsa", "module": "Trees" },
+      { "track": "dsa", "module": "Systems-Flavored Structures" },
+      { "track": "linux", "module": "Performance and Observability" },
+      { "track": "linux", "module": "Containers" },
+      { "track": "linux", "module": "Network Stack" }
+    ]
+  }
+]

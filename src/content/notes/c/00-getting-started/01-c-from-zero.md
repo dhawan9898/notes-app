@@ -6,8 +6,6 @@ moduleOrder: 0
 order: 1
 level: beginner
 summary: "Write, compile and run your first C programs: variables and types, printf and input, if/for/while, functions, arrays and strings, and how to read compiler errors and warnings."
-prerequisites:
-  - A Linux (or macOS/WSL) terminal and gcc or clang installed
 sources:
   - label: "Kernighan & Ritchie — The C Programming Language, 2nd ed., Ch. 1 (A Tutorial Introduction) and Ch. 2-4"
   - label: "King — C Programming, A Modern Approach, 2nd ed., Ch. 2-10"
