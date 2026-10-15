@@ -8,7 +8,7 @@ Directives (each on its own line in authoring/templates/<track>/<module>/<note>.
 Output goes to src/content/notes/<track>/<module>/<note>.md, or to src/content/labs/<track>/<module>/<note>.md for
 templates under authoring/templates/<track>/labs/.
 """
-import re, subprocess, sys, pathlib
+import re, shutil, subprocess, sys, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TPL = ROOT / "authoring" / "templates"
@@ -27,7 +27,7 @@ def include(arg):
 
 def run(arg):
     where, cmd = [x.strip() for x in arg.split("::", 1)]
-    r = subprocess.run(cmd, shell=True, cwd=ROOT / "authoring" / "examples" / where, capture_output=True, text=True, timeout=300, executable="/bin/bash")
+    r = subprocess.run(cmd, shell=True, cwd=ROOT / "authoring" / "examples" / where, capture_output=True, text=True, timeout=300, executable=shutil.which("bash") or "/bin/bash")
     out = (r.stdout + r.stderr).rstrip("\n")
     return "```text\n$ " + cmd + "\n" + out + "\n```"
 

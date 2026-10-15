@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Check every source URL in src/content/notes. Usage: scripts/check-links.py [--out docs/link-check.md]
+"""Check every source URL in src/content/notes and src/content/labs. Usage: scripts/check-links.py [--out docs/link-check.md]
 Treats 2xx/3xx as alive. 401/403/429 (bot blocking) are reported separately as 'blocked', not as broken."""
 import concurrent.futures, pathlib, re, sys, urllib.request, urllib.error, collections, datetime
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 urls = collections.defaultdict(list)
-for f in sorted((ROOT / "src/content/notes").rglob("*.md")):
-    for m in re.finditer(r"^\s+url:\s*(https?://\S+)\s*$", f.read_text(), re.M):
-        urls[m.group(1).strip('"')].append(str(f.relative_to(ROOT / "src/content/notes")))
+for base in (ROOT / "src/content/notes", ROOT / "src/content/labs"):
+    for f in sorted(base.rglob("*.md")):
+        for m in re.finditer(r"^\s+url:\s*(https?://\S+)\s*$", f.read_text(), re.M):
+            urls[m.group(1).strip('"')].append(str(f.relative_to(base.parent)))
 
 def check(url):
     for method in ("HEAD", "GET"):

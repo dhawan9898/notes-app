@@ -1,13 +1,16 @@
 {
   "name": "DeepNotes",
   "short_name": "DeepNotes",
-  "description": "Senior-level notes on C, DSA, Linux and Networking with a guided learning path and progress tracking.",
+  "description": "Source-backed lessons, practice problems and labs on C, data structures and algorithms, Linux and networking.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fbfbfd",
-  "theme_color": "#fbfbfd",
-  "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  "background_color": "#f3f5fa",
+  "theme_color": "#f3f5fa",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }],
+  "shortcuts": [
+    { "name": "Learn", "url": "learn/" },
+    { "name": "Practice", "url": "practice/" },
+    { "name": "Search", "url": "search/" }
   ]
 }

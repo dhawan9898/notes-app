@@ -151,4 +151,10 @@ See `docs/release-checklist.md` (device checks the build cannot do).
 
 ## 13. Deviations while building
 
-(Filled in as the work proceeds.)
+- **Labs are a separate collection** (`src/content/labs`) instead of `kind: lab` in the notes collection: cleaner types and routing.
+- **Problems are Markdown files** (`authoring/practice/**`), not JSON/JS data: one authoring format for code problems and questions, rendered with the same highlighter as lessons.
+- **Generated data is not committed** (`src/data/generated`, `public/search-index.json`); `npm run data` regenerates it before dev, build and tests.
+- **Lab template**: labs keep their existing `## Exercises` / `## Answers` structure instead of a new "Check yourself" section; the validator only requires Key takeaways.
+- **Header progress ring dropped**: it needed the full lesson manifest on every page. Progress lives on Home, Learn, track and You pages.
+- **Per-page CSS**: `problem.css` and `reading.css` load only on the pages that use them.
+- **jsdom UI tests** were added because no browser is available on the authoring machine; they do not replace the release checklist.

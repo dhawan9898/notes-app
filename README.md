@@ -1,67 +1,29 @@
 # DeepNotes
 
-Senior-level, source-backed notes on **C, DSA, Linux and L2/L3 Networking**. Static site (Astro) → GitHub Pages; the same build can later be wrapped for Android with Capacitor.
+Source-backed lessons, practice problems and labs on **C, data structures and algorithms, Linux and networking**, from a first program to the kernel. A static site (Astro) for GitHub Pages that is also an offline Android app (Capacitor). No accounts: progress and saved code stay on your device.
 
-## Learning app features
+- **Learn**: four tracks (Getting started → Essentials → Core modules) and five goal-based learning paths.
+- **Practice**: code problems run in the browser with a real C compiler (WebAssembly), questions with answers, guided labs and a playground. Your code is saved when you submit.
+- **You**: progress, streak, settings, backup and restore.
+- **Search**: instant and offline over lessons, labs, problems and the glossary.
 
-- **Roadmap** (`/roadmap/`): one ordered path through all notes (Start-here modules, then C, DSA, Linux, Networking; prerequisites always first).
-- **Progress tracking**: mark notes complete (button, `M` key, or the check circles), per-module/track/overall progress, streak, hours learned, resume prompts, "Continue" shortcuts. Stored in your browser only; export/import/reset on the roadmap page.
-- **Liquid-glass UI** with animated backdrop, smooth page transitions and reveal animations (all disabled by `prefers-reduced-motion`), light/dark themes, installable and available offline once visited.
-
-- **Runnable C**: complete programs in the notes have a Run button (real clang compiled to WebAssembly, on your device); `/playground/` for your own code.
-- **Android app** (Capacitor): same site, fully offline including the C compiler. Build instructions in `CLAUDE.md` §10 or download the latest APK from the Releases page (built automatically on every push to main).
-
-## Run
+## Run it
 
 ```bash
 npm install
-npm run dev       # http://localhost:4321
-npm run build     # static output in dist/, search index via Pagefind
+npm run fetch-runner   # downloads the in-browser C compiler (about 58 MB, pinned by SHA-256)
+npm run dev            # http://localhost:4321
+npm run build          # validates content, generates data, builds dist/
 ```
 
-Deploy: push to `main`; `.github/workflows/deploy.yml` builds with `SITE`/`BASE` set for GitHub Pages (enable Pages → "GitHub Actions" in the repo settings).
+Deploy: push to `main`; `.github/workflows/deploy.yml` builds with the Pages `SITE`/`BASE` and publishes. Android: `npm run app:sync` then `cd android && ./gradlew assembleDebug` (JDK 17, Android SDK 34), or take the APK from the latest release.
 
-Note: Astro 5 is pinned because the local Node is 20; CI uses Node 22.
+Node 20 or newer; Astro 5 and Capacitor 6 are pinned for Node 20 compatibility (CI uses Node 22).
 
-## Writing a note
+## Add content
 
-Create `src/content/notes/<track>/<NN-module>/<NN-note>.md` (`track`: `c | dsa | linux | networking`). The numeric prefixes only control order; URLs drop them.
+Lessons, labs and problems are Markdown files with front matter; `npm run validate` explains what is wrong. The formats, the rules and the commands are in [`CLAUDE.md`](CLAUDE.md); the product design is in [`docs/design.md`](docs/design.md); the C and DSA authoring pipeline is in [`authoring/README.md`](authoring/README.md).
 
-```yaml
----
-title: ...
-track: networking
-module: Layer 2          # module title (same string in every note of the module)
-moduleOrder: 2
-order: 1                 # position in the module
-level: intermediate      # intermediate | advanced | expert
-summary: One sentence.
-sources:                 # primary sources first (RFC / IEEE / ISO / POSIX / kernel docs)
-  - label: RFC 826 — ARP
-    url: https://www.rfc-editor.org/rfc/rfc826
----
-```
+## Quality gates
 
-Conventions:
-
-1. Start from the standard's mechanism and explain *why* it is designed that way.
-2. Tables for field layouts and rules; `mermaid` code fences for flows; real, compiled code and real CLI output.
-3. Call out pitfalls and failure modes, and show how to observe the behavior (Linux commands, Wireshark filters).
-4. End with **Key takeaways**. Cite exact clauses/sections in `sources`.
-
-## Tracks and status
-
-| Track | Notes | Topic map |
-|---|---|---|
-| Networking (L2, L3 and related) | 54 | `docs/networking-outline.md` |
-| Linux | 40 | `docs/linux-outline.md` |
-| C programming | 32 | `docs/c-outline.md` |
-| Data structures & algorithms (in C) | 37 | `docs/dsa-outline.md` |
-
-## Authoring tools
-
-The C and DSA notes are assembled from tested sources; see [`authoring/README.md`](authoring/README.md).
-
-## Quality checks
-
-`npm run build` first runs `scripts/check-notes.mjs --fix`, which validates every note's front matter and quotes source labels (a colon inside an unquoted YAML label breaks parsing).
+`npm run check` (content, data, unit tests, UI lint) · `npm run build && npm run check:dist && npm run test:ui` (built pages and behaviour) · `npm run starters` and `npm run practice:verify` (every exercise compiles, fails as shipped, passes with its solution). CI runs all of them on pull requests.

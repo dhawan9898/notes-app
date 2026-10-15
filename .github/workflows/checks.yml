@@ -14,19 +14,29 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run fetch-runner
-      - name: Validate note front matter (no auto-fix)
-        run: node scripts/check-notes.mjs
-      - name: Progress store tests
+      - name: Content gate (front matter, lesson template, problems, paths, glossary, references)
+        run: npm run validate
+      - name: Generate data
+        run: npm run data
+      - name: Unit tests (storage layer, progress, practice, search, judge)
         run: npm test
+      - name: UI lint (classes and data hooks defined and used)
+        run: npm run lint:ui
       - name: Exercise starter programs (tests fail as shipped, pass with the reference solutions)
         run: npm run starters
-      - name: Practice problems (generated data is current; starter fails and solution passes in the in-app compiler)
-        run: |
-          npm run practice
-          git diff --exit-code src/data/practice.json
-          npm run practice:verify
+      - name: Practice problems in the in-app compiler (starter is not accepted, solution is)
+        run: npm run practice:verify
       - name: Build site
         run: npm run build
+        env:
+          SITE: https://${{ github.repository_owner }}.github.io
+          BASE: /${{ github.event.repository.name }}
+      - name: Built pages (links, anchors, headings, names)
+        run: npm run check:dist
+        env:
+          BASE: /${{ github.event.repository.name }}
+      - name: UI behaviour tests (jsdom, real page scripts, real compiler)
+        run: npm run test:ui
   links:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
