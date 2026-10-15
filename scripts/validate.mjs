@@ -36,6 +36,17 @@ function checkCommon(item, label) {
   if (/^#\s/m.test(item.body.replace(/```[\s\S]*?```/g, ''))) err(f, 'the body must not contain a level-1 heading (the title is the h1)');
   if ((item.body.match(/```/g) || []).length % 2) err(f, 'unbalanced code fence');
   if (!/^## Key takeaways\s*$/m.test(item.body)) err(f, 'missing the "## Key takeaways" section');
+  else {
+    const prose = item.body.replace(/```[\s\S]*?```/g, (m) => m.replace(/^#/gm, ' #'));
+    const heads = [...prose.matchAll(/^(#{2,4}) (.+)$/gm)].map((m) => ({ d: m[1].length, t: m[2].trim() }));
+    const h2 = heads.filter((h) => h.d === 2);
+    if (h2.at(-1).t !== 'Key takeaways') err(f, '"## Key takeaways" must be the last section (sources are added by the page)');
+    let prev = 1; for (const h of heads) { if (h.d > prev + 1) { err(f, `heading "${h.t}" skips a level`); break; } prev = h.d; }
+    const seen = new Set(); for (const h of h2) { if (seen.has(h.t)) { err(f, `duplicate section "${h.t}"`); break; } seen.add(h.t); }
+    const n = ((prose.split(/^## Key takeaways\s*$/m)[1] || '').match(/^(?:[-*] |\d+\. )/gm) || []).length;
+    if (n < 3 || n > 10) err(f, `Key takeaways has ${n} items; write 3 to 10`);
+  }
+  if (d.title && d.title.length > 100) err(f, `title is ${d.title.length} characters; keep it under 100`);
   if (/^title:\s*"?(Practice|Lab):/m.test(item.text ?? '')) err(f, 'do not prefix titles with "Practice:" or "Lab:"');
 }
 
