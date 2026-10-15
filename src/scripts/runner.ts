@@ -87,7 +87,7 @@ function hydrateBlock(pre: HTMLElement, fragment = false) {
   const stdin = document.createElement('textarea'); stdin.className = 'run-stdin'; stdin.placeholder = 'Input for the program (standard input)'; stdin.rows = 2; stdin.hidden = true;
   box.append(bar, stdin, out);
   const runBtn = bar.querySelector<HTMLButtonElement>('.run-btn')!, editBtn = bar.querySelector<HTMLButtonElement>('.run-edit')!, resetBtn = bar.querySelector<HTMLButtonElement>('.run-reset')!, status = bar.querySelector<HTMLElement>('.run-status')!;
-  let editor: HTMLTextAreaElement | null = null, active: { cancel: () => void } | null = null;
+  let editor: HTMLTextAreaElement | null = null, active: ReturnType<typeof run> | null = null;
   if (needsInput(original)) stdin.hidden = false;
   if (fragment) {
     runBtn.hidden = true; editBtn.textContent = '✎ Edit and run'; editBtn.title = 'Complete this fragment into a program and run it here';
@@ -140,7 +140,7 @@ function offerFragment(pre: HTMLElement) {
 }
 
 export function initRunnableBlocks() {
-  document.querySelectorAll<HTMLElement>('pre[data-runnable]').forEach(hydrateBlock);
+  document.querySelectorAll<HTMLElement>('pre[data-runnable]').forEach((pre) => hydrateBlock(pre));      // not forEach(hydrateBlock): the index would arrive as `fragment`
   document.querySelectorAll<HTMLElement>('article pre[data-language="c"]:not([data-runnable])').forEach(offerFragment);
 }
 initRunnableBlocks();

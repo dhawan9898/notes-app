@@ -13,8 +13,8 @@ if (!isMainThread) {
   const { JSDOM } = await import('jsdom');
   const { build } = await import('esbuild');
   const bundles = {};
-  const bundle = async (name) => bundles[name] ??= (await build({ entryPoints: [path.join(ROOT, 'src/scripts', name + '.ts')], bundle: true, format: 'iife', write: false, logLevel: 'error', external: ['mermaid'],
-    plugins: [{ name: 'stub', setup(b) { b.onResolve({ filter: /^\.\/runner$/ }, () => ({ path: path.join(HERE, 'stub-runner.ts') })); } }] })).outputFiles[0].text;
+  const bundle = async (name, stub = true) => bundles[name + stub] ??= (await build({ entryPoints: [path.join(ROOT, 'src/scripts', name + '.ts')], bundle: true, format: 'iife', write: false, logLevel: 'error', external: ['mermaid'],
+    plugins: stub ? [{ name: 'stub', setup(b) { b.onResolve({ filter: /^\.\/runner$/ }, () => ({ path: path.join(HERE, 'stub-runner.ts') })); } }] : [] })).outputFiles[0].text;
   const worker = new Worker(new URL(import.meta.url));
   const hostRun = (code) => new Promise((res, rej) => { worker.once('message', (m) => (m.error ? rej(new Error(m.error)) : res(m.r))); worker.postMessage({ code }); });
   const problems = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/generated/practice.json'), 'utf8'));
@@ -27,7 +27,7 @@ if (!isMainThread) {
     const w = dom.window; w.__run = hostRun; w.scrollTo = () => {}; w.matchMedia = (q) => ({ matches: /max-width: 900px/.test(q), addEventListener() {}, removeEventListener() {} });
     w.fetch = async () => ({ ok: true, json: async () => JSON.parse(searchIndex) }); w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); }; w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); };
     for (const [k, v] of Object.entries(storage)) w.localStorage.setItem(k, v);
-    for (const s of scripts) w.eval(await bundle(s));
+    for (const s of scripts) w.eval(await (s === 'runner!' ? bundle('runner', false) : bundle(s)));
     return w;
   };
   const $ = (w, s) => w.document.querySelector(s), $$ = (w, s) => [...w.document.querySelectorAll(s)];
@@ -102,6 +102,12 @@ if (!isMainThread) {
   ok($(w, '[data-complete]').getAttribute('aria-pressed') === 'true', 'button reflects the state');
   await sleep(700); ok(JSON.parse(w.localStorage.getItem('dn:progress')).data.last.id === L.i, 'last-read lesson recorded');
   ok($$(w, '.prose pre .copy').length > 0 || !$(w, '.prose pre'), 'code blocks get copy buttons');
+
+  /* ---- runnable C blocks inside a lesson: every one gets its own Run button (regression: forEach(hydrate) passed the index as an argument) */
+  const withBlocks = manifest.lessons.find((l) => (fs.readFileSync(path.join(ROOT, 'dist', l.u, 'index.html'), 'utf8').match(/data-runnable=/g) || []).length >= 3);
+  w = await open(withBlocks.u.replace(/^\/|\/$/g, ''), ['runner!']);
+  const blocks = $$(w, 'pre[data-runnable]'), boxes = $$(w, '.runbox');
+  ok(boxes.length >= 3 && $$(w, '.run-btn').length === boxes.length && $$(w, '.run-btn').every((b) => !b.hidden), 'every runnable block has a visible Run button (' + boxes.length + ' blocks)'); void blocks;
 
   /* ---- search */
   w = await open('search', ['shell', 'search'], {}, 'http://localhost/search/?q=spanning');

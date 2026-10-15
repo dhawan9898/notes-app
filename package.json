@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "test": "node scripts/test-lib.mjs",
     "lint:ui": "node scripts/lint-ui.mjs",
-    "check": "node scripts/validate.mjs && node scripts/build-data.mjs && node scripts/test-lib.mjs && node scripts/lint-ui.mjs",
+    "check": "node scripts/validate.mjs && node scripts/build-data.mjs && npm run typecheck && node scripts/test-lib.mjs && node scripts/lint-ui.mjs",
     "fetch-runner": "node scripts/fetch-runner.mjs",
     "snippets": "node scripts/validate-snippets.mjs",
     "starters": "node scripts/verify-starters.mjs",
@@ -19,7 +19,8 @@
     "app:sync": "node scripts/fetch-runner.mjs && npm run build && cap sync android",
     "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug",
     "test:ui": "node scripts/test-ui.mjs",
-    "check:dist": "node scripts/check-dist.mjs"
+    "check:dist": "node scripts/check-dist.mjs",
+    "typecheck": "tsc -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +36,7 @@
     "@capacitor/cli": "^6.2.2",
     "esbuild": "^0.25.12",
     "js-yaml": "^5.4.3",
-    "jsdom": "^24.1.3"
+    "jsdom": "^24.1.3",
+    "typescript": "^5.9.0"
   }
 }

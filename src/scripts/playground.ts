@@ -32,7 +32,7 @@ runBtn.addEventListener('click', async () => {
   const r = await import('./runner');
   if (r.isBusy()) return;
   runBtn.classList.add('running'); runBtn.querySelector('span')!.textContent = 'Stop'; status.textContent = 'Starting…'; out.hidden = true;
-  try { active = r.run(ed.get(), { stdin: stdin.value, onStatus: (m) => (status.textContent = m) }); r.renderResult(out, await active.promise); }
+  try { const h = r.run(ed.get(), { stdin: stdin.value, onStatus: (m) => (status.textContent = m) }); active = h; r.renderResult(out, await h.promise); }
   catch (e) { if ((e as Error).message !== 'Cancelled') r.renderError(out, (e as Error).message); }
   finally { active = null; runBtn.classList.remove('running'); runBtn.querySelector('span')!.textContent = 'Run'; status.textContent = ''; }
 });
