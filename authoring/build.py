@@ -5,6 +5,8 @@ Directives (each on its own line in authoring/templates/<track>/<module>/<note>.
   {{include c/dir/file.c}}              -> fenced code block (language from extension)
   {{include path/to/file.c 10-30}}        -> only lines 10-30
   {{run c/dir :: command}}       -> "$ command" + its stdout/stderr (run in that dir, 300 s timeout)
+  {{vm :: command}}              -> "$ command" + its output, run inside the in-browser Linux (programs from examples/vm are in /labs;
+                                    needs `npm run fetch-linux` first). Several commands: {{vm :: cmd1 ;; cmd2}}, run in one session.
 Output goes to src/content/notes/<track>/<module>/<note>.md, or to src/content/labs/<track>/<module>/<note>.md for
 templates under authoring/templates/<track>/labs/.
 """
@@ -31,11 +33,18 @@ def run(arg):
     out = (r.stdout + r.stderr).rstrip("\n")
     return "```text\n$ " + cmd + "\n" + out + "\n```"
 
+def vm(arg):
+    cmds = [c.strip() for c in arg.split("::", 1)[1].split(";;")]
+    r = subprocess.run(["node", str(ROOT / "scripts" / "vm-run.mjs"), *cmds], capture_output=True, text=True, timeout=600, cwd=ROOT)
+    if r.returncode != 0:
+        raise SystemExit("vm directive failed: " + (r.stderr or r.stdout)[-800:])
+    return "```text\n" + r.stdout.rstrip("\n") + "\n```"
+
 def render(src):
     def sub(m):
         kind, arg = m.group(1), m.group(2).strip()
-        return include(arg) if kind == "include" else run(arg)
-    return re.sub(r"^\{\{(include|run) (.+?)\}\}$", sub, src, flags=re.M)
+        return include(arg) if kind == "include" else run(arg) if kind == "run" else vm(arg)
+    return re.sub(r"^\{\{(include|run|vm) (.+?)\}\}$", sub, src, flags=re.M)
 
 def main():
     only = sys.argv[1:]
