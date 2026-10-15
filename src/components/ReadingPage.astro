@@ -19,8 +19,9 @@ export interface Props {
   leads?: { title: string; href: string; track?: string }[];
   sources: { label: string; url?: string }[];
   position?: string;
+  lab?: { env: 'browser' | 'machine'; terminalHref: string };
 }
-const { kind, id, title, summary, level, minutes, track, crumbs, side, sideTitle, sideHref, toc, prereqs, prev, next, practice, leads = [], sources, position } = Astro.props as Props;
+const { kind, id, title, summary, level, minutes, track, crumbs, side, sideTitle, sideHref, toc, prereqs, prev, next, practice, leads = [], sources, position, lab } = Astro.props as Props;
 const t = TRACKS[track];
 const shownProblems = practice?.problems.slice(0, 4) ?? [];
 ---
@@ -48,6 +49,18 @@ const shownProblems = practice?.problems.slice(0, 4) ?? [];
         </div>
         <p class="lead">{summary}</p>
       </header>
+
+      {lab && (lab.env === 'browser' ? (
+        <aside class="lab-env env-browser" aria-label="Where this lab runs">
+          <div><strong>Runs in the Linux terminal</strong><p>Everything this lab needs is installed in the Linux that runs inside this app. Open the terminal with the lab's commands ready to run.</p></div>
+          <a class="btn primary" href={lab.terminalHref}><Icon name="play" size={16} /> Open the terminal</a>
+        </aside>
+      ) : (
+        <aside class="lab-env env-machine" aria-label="Where this lab runs">
+          <div><strong>Needs your own Linux machine</strong><p>This lab uses root and kernel features (namespaces, bridges, traffic control, or a compiler toolchain) that the in-app Linux does not have. Use a Linux machine or virtual machine you can safely break. The captured output shows what to expect.</p></div>
+          <a class="btn" href={url('/practice/terminal/')}>Open the Linux terminal anyway</a>
+        </aside>
+      ))}
 
       {prereqs.length > 0 && (
         <aside class="callout" aria-label="Before you read this">

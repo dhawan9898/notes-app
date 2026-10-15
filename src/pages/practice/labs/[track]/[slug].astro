@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import ReadingPage from '../../../../components/ReadingPage.astro';
+import { queueQuery } from '../../../../scripts/lib/terminal-queue';
 import { TRACKS, loadAll, labSlug, labHref, labKey, lessonHref, url, type Lab } from '../../../../lib/content';
 
 export async function getStaticPaths() {
@@ -23,5 +24,6 @@ void mod;
   toc={headings.filter((h) => h.depth === 2 || h.depth === 3)}
   prereqs={d.prerequisites.map((t) => ({ title: t, href: byTitle.has(t) ? lessonHref(byTitle.get(t)!) : undefined }))}
   prev={link(prev)} next={link(next)}
+  lab={{ env: d.env, terminalHref: url('/practice/terminal/') + (d.terminal.length ? queueQuery(d.terminal) : '') }}
   sources={d.sources} position={d.module}
 ><Content /></ReadingPage>

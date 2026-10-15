@@ -1,0 +1,137 @@
+{
+ "fbda6701bf27fbb3": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/02-stack-frames-and-calling-convention",
+  "n": 1
+ },
+ "25554ebe166cfd67": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/02-stack-frames-and-calling-convention",
+  "n": 1
+ },
+ "8c169f8f93de4412": {
+  "ok": true,
+  "where": "linux/00-essentials/01-users-groups-and-permissions-in-practice",
+  "n": 1
+ },
+ "bb44e9854ccf3349": {
+  "ok": true,
+  "where": "linux/00-essentials/01-users-groups-and-permissions-in-practice",
+  "n": 3
+ },
+ "3cfe9f3e2b4c1155": {
+  "ok": true,
+  "where": "linux/00-essentials/01-users-groups-and-permissions-in-practice",
+  "n": 1
+ },
+ "6368381e07535f55": {
+  "ok": true,
+  "where": "linux/00-essentials/01-users-groups-and-permissions-in-practice",
+  "n": 1
+ },
+ "b21ff4fade17c64b": {
+  "ok": true,
+  "where": "linux/00-essentials/02-processes-monitoring-and-scheduled-jobs",
+  "n": 2
+ },
+ "f435667a28fa1459": {
+  "ok": true,
+  "where": "linux/00-essentials/04-network-commands-and-ssh-for-beginners",
+  "n": 1
+ },
+ "b98beab1053ca8af": {
+  "ok": true,
+  "where": "linux/00-essentials/07-reading-logs-and-finding-what-went-wrong",
+  "n": 2
+ },
+ "03aa43d0ec5d63ad": {
+  "ok": true,
+  "where": "linux/02-shell-and-text/01-the-shell-parsing-expansion-redirection-jobs",
+  "n": 3
+ },
+ "a642e44830a41194": {
+  "ok": true,
+  "where": "linux/02-shell-and-text/01-the-shell-parsing-expansion-redirection-jobs",
+  "n": 3
+ },
+ "ebcfb78b4b1cadc4": {
+  "ok": true,
+  "where": "linux/02-shell-and-text/01-the-shell-parsing-expansion-redirection-jobs",
+  "n": 2
+ },
+ "6e08059a4c17d2d1": {
+  "ok": true,
+  "where": "linux/02-shell-and-text/01-the-shell-parsing-expansion-redirection-jobs",
+  "n": 2
+ },
+ "c4858f19e8c2e93d": {
+  "ok": true,
+  "where": "linux/02-shell-and-text/02-text-processing-and-robust-scripting",
+  "n": 1
+ },
+ "f2aad163ea54a864": {
+  "ok": true,
+  "where": "linux/03-processes/02-the-scheduler",
+  "n": 2
+ },
+ "26ff1cebd381a73c": {
+  "ok": true,
+  "where": "linux/02-shell-and-text/01-pipelines-text-and-safe-scripts",
+  "n": 1
+ },
+ "68f8cb0d7819902f": {
+  "ok": true,
+  "where": "linux/03-processes/01-processes-signals-and-proc",
+  "n": 1
+ },
+ "e81f99c2e3413b86": {
+  "ok": true,
+  "where": "linux/04-memory/01-watching-virtual-memory-work",
+  "n": 1
+ },
+ "f3cb0b7b61d9eec7": {
+  "ok": true,
+  "where": "linux/05-storage/01-files-links-and-durability",
+  "n": 1
+ },
+ "6a81b3897f4477a7": {
+  "ok": true,
+  "where": "linux/06-kernel-interfaces/01-syscalls-proc-sys-and-sysctl",
+  "n": 1
+ },
+ "b8e2f0a9809cf9df": {
+  "ok": true,
+  "where": "linux/06-kernel-interfaces/01-syscalls-proc-sys-and-sysctl",
+  "n": 3
+ },
+ "7fdf952b37590b29": {
+  "ok": true,
+  "where": "networking/00-essentials/01-networking-exercises",
+  "n": 1
+ },
+ "1ba26329729589af": {
+  "ok": true,
+  "where": "networking/01-fundamentals/01-building-and-parsing-a-packet",
+  "n": 2
+ },
+ "a34e0b00d6fbfc43": {
+  "ok": true,
+  "where": "networking/03-ipv4/01-vlsm-summarisation-and-fragmentation",
+  "n": 1
+ },
+ "39b3af82b1d5e9f8": {
+  "ok": true,
+  "where": "networking/04-ipv6/01-addresses-and-neighbour-discovery",
+  "n": 1
+ },
+ "dca3bb082bcb9740": {
+  "ok": true,
+  "where": "networking/08-multicast/01-joining-and-leaving-a-multicast-group",
+  "n": 2
+ },
+ "1ad16178893ff51e": {
+  "ok": true,
+  "where": "networking/11-operations-and-automation/01-counters-time-and-syslog-arithmetic",
+  "n": 2
+ }
+}

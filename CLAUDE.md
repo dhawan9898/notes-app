@@ -11,12 +11,12 @@ Hand-off document for any Claude Code session in this repository. Read it before
 | Kind | Where | Notes |
 |---|---|---|
 | **Lesson** | `src/content/notes/<track>/<NN-module>/<NN-name>.md` | Explanation only. Must end with `## Key takeaways`. No exercises or answers. Front matter: `title, track, module, moduleOrder, order, level, summary, prerequisites[], sources[]` (quote `title`/`summary` that contain `: `). `module` is the same string in every lesson of a module; file number = `order`. |
-| **Lab** | `src/content/labs/<track>/<NN-module>/<NN-name>.md` | Guided hands-on session; same front matter plus `minutes`. `module` names an existing lesson module. Needs ≥ 1 lesson prerequisite. |
+| **Lab** | `src/content/labs/<track>/<NN-module>/<NN-name>.md` | Guided hands-on session; same front matter plus `minutes` and `env`. `module` names an existing lesson module. Needs ≥ 1 lesson prerequisite. `env: browser` = runs in the in-app Linux terminal and lists `terminal: [commands]` (verified by `npm run terminal:verify`); `env: machine` = needs the reader's own Linux machine (namespaces, bridges, `tc`, compilers, GNU tools) and shows a banner saying so. Labs use C or shell, never Python. |
 | **Problem** | `authoring/practice/<track>/<NN-module>/<NN-slug>.md` | `kind: code` (a starter program under `authoring/examples/<track>/starters/**` with `.solution.c`; front matter has `starter`, `examples`, `constraints`, `hints`) or `kind: question` (statement, then `## Explanation` with the answer). Body = statement; text after `## Explanation` = explanation. |
 
 Modules are derived from lessons; stages derive from `moduleOrder` (0 getting started, below 1 essentials, 1+ core). Learning paths are `src/data/paths.json` (ordered `{track, module}` lists). Glossary: `src/data/glossary.json` (`see` must be a lesson title). Old ids that were renamed are mapped in `src/data/id-aliases.json` so saved progress survives.
 
-C and DSA lessons and the C labs are generated from `authoring/templates/<track>/…` (labs under `authoring/templates/<track>/labs/…`) by `python3 authoring/build.py [substring…]`, embedding tested sources and real command output. Edit the template, then rebuild only that note (a full rebuild re-measures timings and makes quoted ratios stale). Linux and networking notes are written directly in `src/content`.
+C and DSA lessons and the C labs, and every lab with a program, are generated from `authoring/templates/<track>/…` (labs under `authoring/templates/<track>/labs/…`) by `python3 authoring/build.py [substring…]`, embedding tested sources and real command output (`{{include}}`, `{{run}}` on the host, `{{vm :: cmd}}` inside the in-browser Linux, `{{vm mem=1024 :: cmd}}` with 1 GiB of memory). Edit the template, then rebuild only that note (a full rebuild re-measures timings and makes quoted ratios stale). Linux and networking notes are written directly in `src/content`.
 
 ## 3. Repository layout
 
@@ -27,18 +27,18 @@ src/lib/content.ts            the one content API for pages: tracks, lessons, la
 src/layouts/Base.astro        shell: top bar (desktop), tab bar (phone/app), theme init, service worker
 src/components/               Icon, Ring, TrackCard, PathCard, LessonRow, ProblemRow, PracticeNav, ReadingPage (lessons and labs)
 src/pages/                    index, learn, [track], [track]/[...slug] (lesson), paths, practice (hub, problems, labs, playground), you, search, glossary, about, 404
-src/scripts/                  shell.ts (every page), meters.ts (declarative progress), lesson.ts, problem.ts, practice-list.ts, playground.ts, search.ts, you.ts, runner.ts (C compiler worker client)
-src/scripts/lib/              store.ts (versioned storage), progress.ts, practice.ts, settings.ts, backup.ts, judge.ts, editor.ts, search.ts, ui.ts, manifest.ts
+src/scripts/                  shell.ts (every page), meters.ts (declarative progress), lesson.ts, problem.ts, practice-list.ts, playground.ts, terminal.ts, search.ts, you.ts, runner.ts (C compiler worker client)
+src/scripts/lib/              store.ts (versioned storage), progress.ts, practice.ts, settings.ts, backup.ts, judge.ts, editor.ts, search.ts, terminal-queue.ts, terminal-engine.ts (v86), ui.ts, manifest.ts
 src/styles/                   tokens.css, base.css, components.css (shared + list pages), reading.css, problem.css
 src/plugins/                  rehype-glossary, rehype-runnable, shiki-compact
 src/data/                     paths.json, glossary.json, playground.json, id-aliases.json, runnable.json (validated snippets), generated/ (git-ignored)
-public/                       manifest, service worker, icon, runner/ (WebAssembly clang, fetched, git-ignored)
-scripts/                      validate, build-data, check-dist, lint-ui, test-lib, test-ui, verify-starters, verify-practice, validate-snippets, fetch-runner, make-app-icons, check-links.py
+public/                       manifest, service worker, icon, runner/ (WebAssembly clang) and vm/ (Linux kernel, BIOS, lab programs): both fetched or built, git-ignored
+scripts/                      validate, build-data, check-dist, lint-ui, test-lib, test-ui, verify-starters, verify-practice, verify-terminal, validate-snippets, fetch-runner, fetch-linux, vm-run, make-app-icons, check-links.py; lib/ has the shared loaders, the VM runner (vm.mjs) and the 32-bit toolchain (vm-assets.mjs)
 android/                      Capacitor 6 project
 docs/                         design.md, release-checklist.md, backlog.md, fact-check-log.md
 ```
 
-URL scheme: lessons `/{track}/{module}/{lesson}/` (numeric prefixes stripped), tracks `/{track}/`, labs `/practice/labs/{track}/{lab}/`, problems `/practice/{track}/{slug}/`, paths `/paths/{id}/`, plus `/learn/ /practice/ /practice/labs/ /practice/playground/ /you/ /search/ /glossary/ /about/`.
+URL scheme: lessons `/{track}/{module}/{lesson}/` (numeric prefixes stripped), tracks `/{track}/`, labs `/practice/labs/{track}/{lab}/`, problems `/practice/{track}/{slug}/`, paths `/paths/{id}/`, plus `/learn/ /practice/ /practice/labs/ /practice/terminal/ /practice/playground/ /you/ /search/ /glossary/ /about/`.
 
 ## 4. Commands
 
@@ -52,9 +52,20 @@ npm run check:dist      # links, anchors, h1, titles, accessible names in dist/
 npm run test:ui         # jsdom + real page scripts + real compiler (needs a build)
 npm run starters        # every starter fails as shipped and passes with its solution under ASan/UBSan (native cc)
 npm run practice:verify # every code problem in the in-app WebAssembly compiler: starter not accepted, solution accepted
+npm run fetch-linux     # downloads the Linux kernel image and BIOS (SHA-256 pinned) and builds the lab programs into public/vm (needs clang with x86, ld.lld, llvm-ar; first run builds musl, about 5 minutes on a phone)
+npm run terminal:verify # the terminal page examples and the in-app labs' commands run in the real VM; add --blocks (npm run terminal:blocks) to rescan lesson command blocks into src/data/terminal-blocks.json
+node scripts/vm-run.mjs "cmd" …  # run commands in the in-browser Linux headlessly and print a transcript
 npm run snippets        # which C blocks in lessons can run in the app (src/data/runnable.json); re-run after editing C blocks
 npm run check           # validate + data + test + lint:ui
 ```
+
+## 4a. The in-browser Linux (terminal and labs)
+
+- **What it is:** the v86 PC emulator (WebAssembly, `npm` package `v86`) running a Buildroot Linux 5.6 with BusyBox (i686) and 128 MiB of RAM; serial console in xterm.js on `/practice/terminal/`. Assets in `public/vm/`: `bzImage`, `seabios.bin`, `vgabios.bin` (downloaded, SHA-256 pinned in `scripts/lib/vm-assets.mjs`) and `labs.cpio` (built: an initramfs unpacked under `/labs`). Booting is on demand (about 5 to 20 seconds); nothing persists.
+- **Lab programs:** every file in `authoring/examples/vm/` is installed in `/labs`: `*.c` is compiled to a static 32-bit executable (clang, lld, a musl libc built once into `.cache/vm` with the compiler-rt integer helpers; musl has no `linux/*.h` headers, so use `<netinet/if_ether.h>`, `<netpacket/packet.h>`), `*.sh` and `*.log/.txt/.csv/.conf` are copied. Pure-computation programs stay portable C so lessons can also give them a Run button.
+- **Capabilities:** root, loopback networking, raw packet sockets, `/proc`, BusyBox applets. **Missing:** bridges, veth, network namespaces, `unshare`, `tc`, nftables, `/proc/net/igmp`, `stat`, GNU option sets, a compiler, bash, enforcement of `RLIMIT_AS`, more than 128 MiB (the initrd sits at 64 MiB; the capture tool can boot with more). Labs needing these are `env: machine`.
+- **Honest outputs:** `{{vm :: …}}` captures real output from this VM, so lab text must not claim host-specific values. The QoS lab (`env: machine`) keeps transcripts captured earlier on a real machine and says so.
+- **Hand-over:** `terminal-queue.ts` turns commands into `?c=` links; the terminal page queues them and types them one by one, waiting for the prompt. Lesson command blocks that pass `terminal:blocks` get a "Run in terminal" button (`rehype-terminal.mjs`).
 
 ## 5. Rules for changes
 
@@ -88,4 +99,4 @@ Commit or push only when asked; never force-push. Commits made in these sessions
 
 ## 10. Verification status (read before trusting)
 
-Run and passing on the authoring machine: validator, unit tests, UI lint, dist check, jsdom UI tests (including the real compiler), starters and practice verification, full static build. **Never done:** a look at the rendered site in a real browser or on a device (layout, glass look, editor overlay alignment, soft-keyboard behaviour, Mermaid rendering), and the Android build in this environment. Protocol/standard facts in networking and Linux lessons come from the author's knowledge and cited sources, not from fetching the standards: spot-check before publishing (`docs/fact-check-log.md`).
+Run and passing on the authoring machine: validator, unit tests, UI lint, dist check, jsdom UI tests (including the real compiler and a fake xterm/engine for the terminal page), starters and practice verification, terminal verification in the real VM, full static build. **Never done:** a look at the rendered site in a real browser or on a device (layout, glass look, editor overlay alignment, soft-keyboard behaviour, Mermaid rendering), **v86 and xterm.js running inside a real browser or the Android WebView** (the VM was only run headlessly in Node; boot time, memory use on phones and the on-screen key row are unmeasured), and the Android build in this environment. Protocol/standard facts in networking and Linux lessons come from the author's knowledge and cited sources, not from fetching the standards: spot-check before publishing (`docs/fact-check-log.md`).

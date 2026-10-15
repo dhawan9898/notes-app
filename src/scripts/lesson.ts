@@ -1,6 +1,7 @@
 // Lesson and lab pages: reading position and progress bar, resume, active time, completion, outline, code-block helpers, diagrams.
 import { progress, setLast, setScroll, setDone, isDone, addActive } from './lib/progress';
-import { $, $$, toast, go, reduceMotion } from './lib/ui';
+import { $, $$, toast, go, reduceMotion, href } from './lib/ui';
+import { commandsFromBlock, queueQuery } from './lib/terminal-queue';
 
 const page = document.querySelector<HTMLElement>('[data-lesson]');
 if (page) init(page);
@@ -67,6 +68,10 @@ function init(page: HTMLElement) {
       catch { b.textContent = 'Press Ctrl+C'; }
     });
     pre.classList.add('has-copy'); pre.append(b);
+    if (pre.hasAttribute('data-terminal')) {                             // a command block that works in the in-app Linux (verified at build time)
+      const cmds = commandsFromBlock(pre.querySelector('code')?.textContent ?? pre.textContent ?? '');
+      if (cmds.length) { const a = document.createElement('a'); a.className = 'term-run'; a.href = href('/practice/terminal/') + queueQuery(cmds); a.textContent = 'Run in terminal'; a.title = 'Opens the Linux terminal with these commands ready to run'; pre.append(a); }
+    }
   });
   $$('.prose h2[id], .prose h3[id]').forEach((h) => { const a = document.createElement('a'); a.className = 'anchor'; a.href = `#${h.id}`; a.setAttribute('aria-label', `Link to ${h.textContent}`); a.textContent = '#'; h.append(a); });
 

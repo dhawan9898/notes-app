@@ -55,3 +55,12 @@ dialog.sheet[open] { display: flex; flex-direction: column; } dialog.sheet::back
   .pager { grid-template-columns: 1fr; } .pager-card.next { text-align: left; } .finish .btn { width: 100%; } .finish-hint { display: none; } .finish { margin-bottom: var(--s4); }
   .practice-block { padding: var(--s4); }
 }
+
+/* where a lab runs */
+.lab-env { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); margin: var(--s5) 0; padding: var(--s4) var(--s5); border-radius: var(--r3); border: 1px solid var(--line); background: var(--surface-2); } .lab-env p { margin: 2px 0 0; font-size: 0.9rem; color: var(--text-2); } .lab-env .btn { flex: none; }
+.lab-env.env-browser { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 35%, transparent); } .lab-env.env-machine { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+@media (max-width: 900px) { .lab-env { flex-direction: column; align-items: stretch; } .lab-env .btn { width: 100%; } }
+
+.prose pre .term-run { position: absolute; top: var(--s2); right: 4.4rem; border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--accent); font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.6rem; border-radius: var(--pill); opacity: 0; text-decoration: none; transition: opacity var(--t1); } .prose pre:hover .term-run, .prose pre .term-run:focus { opacity: 1; }
+@media (hover: none) { .prose pre .term-run { opacity: 0.9; } }
+.prose pre[data-terminal].has-copy { padding-right: 9rem; }

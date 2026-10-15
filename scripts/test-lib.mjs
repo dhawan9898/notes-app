@@ -3,7 +3,7 @@
 import { build } from 'esbuild'; import path from 'node:path'; import os from 'node:os'; import fs from 'node:fs';
 const out = fs.mkdtempSync(path.join(process.env.TMPDIR || os.tmpdir(), 'dn-lib-'));
 const src = (f) => new URL(`../src/scripts/lib/${f}`, import.meta.url).pathname;
-const mods = ['store', 'progress', 'practice', 'settings', 'backup', 'judge', 'search'].filter((m) => fs.existsSync(src(m + '.ts')));
+const mods = ['store', 'progress', 'practice', 'settings', 'backup', 'judge', 'search', 'terminal-queue'].filter((m) => fs.existsSync(src(m + '.ts')));
 await build({ entryPoints: mods.map(src), bundle: false, format: 'esm', outdir: out, logLevel: 'error', outExtension: { '.js': '.mjs' } });
 // bundle each entry separately so the JSON aliases and relative imports resolve
 for (const m of mods) await build({ entryPoints: [src(m + '.ts')], bundle: true, format: 'esm', outfile: path.join(out, m + '.bundle.mjs'), logLevel: 'error' });
@@ -108,5 +108,20 @@ if (mods.includes('search')) {
   ok(S.search(idx, '  ').length === 0 && S.search(idx, 'a').length === 0, 'blank or one-letter queries return nothing');
   ok(S.search(idx, 'mtu')[0], 'headings are searchable (mtu)');
   ok(top('tcp').length > 0 && S.search(idx, 'TCP')[0].t === S.search(idx, 'tcp')[0].t, 'case-insensitive');
+}
+/* ---- terminal queue (src/scripts/lib/terminal-queue.ts) */
+{
+  const Q = await load('terminal-queue');
+  const block = 'intro line\n$ ls -l /tmp   # list it\nfile1 file2\n$ echo "a b"\na b\n$   \n$ cat f';
+  ok(JSON.stringify(Q.commandsFromBlock(block)) === JSON.stringify(['ls -l /tmp', 'echo "a b"', 'cat f']), 'commands are the "$ " lines; output, blank prompts and trailing comments are dropped');
+  const q = Q.queueQuery(['echo "a&b"', 'ls /tmp']);
+  ok(JSON.stringify(Q.commandsFromQuery(q)) === JSON.stringify(['echo "a&b"', 'ls /tmp']), 'commands survive the round trip through a URL, including & and quotes');
+  ok(Q.commandsFromQuery('?c=' + encodeURIComponent('a\nb')).join('|') === 'a b', 'newlines in a command are flattened to spaces');
+  ok(Q.commandsFromQuery('?c=' + 'x'.repeat(500)).length === 0, 'an absurdly long command is ignored');
+  ok(Q.commandsFromQuery('?' + Array.from({ length: 50 }, (_, i) => 'c=cmd' + i).join('&')).length === 30, 'at most 30 commands are accepted from a link');
+  ok(Q.queueQuery(Array.from({ length: 50 }, (_, i) => 'c' + i)).split('&').length === 30, 'and at most 30 are put into a link');
+  ok(Q.commandsFromQuery('').length === 0 && Q.commandsFromQuery('?x=1').length === 0, 'no commands in the URL, no queue');
+  ok(Q.ctrlOf('c') === '\x03' && Q.ctrlOf('D') === '\x04' && Q.ctrlOf('1') === null && Q.ctrlOf('ab') === null, 'Ctrl plus a letter gives the control character');
+  ok(Q.KEY_CODES.Esc === '\x1b' && Q.KEY_CODES.Up === '\x1b[A' && Q.KEY_CODES.Tab === '\t', 'key row codes');
 }
 process.exit(bad ? 1 : 0);

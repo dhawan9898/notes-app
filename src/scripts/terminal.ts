@@ -9,7 +9,7 @@ const startBox = $('[data-t-start]')!, termBox = $('[data-t-term]')!, statusEl =
 const bootBtn = $<HTMLButtonElement>('[data-t-boot]')!, restartBtn = $<HTMLButtonElement>('[data-t-restart]')!;
 const queueBox = $('[data-t-queue]')!, queueList = $('[data-t-queue-list]')!;
 let engine: Engine | null = null, term: import('@xterm/xterm').Terminal | null = null, fit: import('@xterm/addon-fit').FitAddon | null = null;
-let ready = false, tail = '', ctrl = false, queue: string[] = [], running = false;
+let ready = false, tail = '', ctrl = false, queue: string[] = [], running = false, stopBootTimer = () => {};
 
 const setStatus = (text: string, state: 'idle' | 'busy' | 'ready' | 'error') => { statusEl.textContent = text; dot.dataset.state = state; };
 const strip = (s: string) => s.replace(/\x1b\[[0-9;?]*[A-Za-z]/g, '');
@@ -32,8 +32,16 @@ async function runNext() {
 async function runAll() { if (running) return; running = true; while (queue.length && ready) await runNext(); running = false; }
 function enqueue(cmds: string[], runNow = false) { queue = [...queue, ...cmds]; renderQueue(); if (runNow && ready) void runAll(); }
 
+function fail(message: string) {
+  shutdown(); setStatus(message, 'error');
+  termBox.hidden = true; startBox.hidden = false; bootBtn.disabled = false; bootBtn.textContent = 'Try again';
+  const note = $('[data-t-error]'); if (note) { note.textContent = message; note.hidden = false; }
+}
 async function boot() {
-  bootBtn.disabled = true; startBox.hidden = true; termBox.hidden = false; restartBtn.hidden = true;
+  try { await bootUnsafe(); } catch (e) { fail(`Linux could not start: ${(e as Error).message || 'unknown error'}. This device or browser may not support it.`); }
+}
+async function bootUnsafe() {
+  bootBtn.disabled = true; startBox.hidden = true; termBox.hidden = false; restartBtn.hidden = true; const note = $('[data-t-error]'); if (note) note.hidden = true;
   setStatus('Starting Linux (about 10 seconds, the first time a little longer)…', 'busy');
   const [{ Terminal }, { FitAddon }, { startEngine }] = await Promise.all([import('@xterm/xterm'), import('@xterm/addon-fit'), import('./lib/terminal-engine')]);
   term = new Terminal({ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace', fontSize: 14, cursorBlink: true, scrollback: 2000, theme: terminalTheme(), allowProposedApi: false });
@@ -44,6 +52,8 @@ async function boot() {
     if (booting) { hold += text; if (/~% ?$/.test(strip(hold))) { booting = false; finishBoot(); } return; }      // hide the boot messages
     term!.write(bytes);
   });
+  const bootTimer = setTimeout(() => { if (booting) fail('Linux did not finish starting within two minutes. The device may be too slow or short of memory; close other tabs and try again.'); }, 120000);
+  stopBootTimer = () => clearTimeout(bootTimer);
   term.onData((d) => {
     if (!ready) return;
     if (ctrl && d.length === 1) { const c = ctrlOf(d); ctrl = false; $$('[data-key="Ctrl"]').forEach((b) => b.classList.remove('on')); if (c) return send(c); }
@@ -52,7 +62,7 @@ async function boot() {
   addEventListener('resize', refit);
 }
 function finishBoot() {
-  ready = true; refit();
+  stopBootTimer(); ready = true; refit();
   // a clean, familiar shell: "$ " prompt, a real terminal type, the window size, and the lab programs as the working directory
   send(`export PS1='$ ' TERM=xterm-256color; stty rows ${term!.rows} cols ${term!.cols}; cd /labs; clear\n`);
   setTimeout(() => {
@@ -67,7 +77,7 @@ function terminalTheme() {
   const dark = document.documentElement.dataset.theme === 'dark';
   return dark ? { background: '#0e1424', foreground: '#eef1f8', cursor: '#5aa2ff', selectionBackground: '#2b3a5f' } : { background: '#f7f9fd', foreground: '#131822', cursor: '#0a62e6', selectionBackground: '#cfe0ff' };
 }
-function shutdown() { engine?.stop(); engine = null; term?.dispose(); term = null; ready = false; running = false; }
+function shutdown() { stopBootTimer(); engine?.stop(); engine = null; term?.dispose(); term = null; ready = false; running = false; }
 
 bootBtn.addEventListener('click', () => { void boot(); });
 restartBtn.addEventListener('click', () => { shutdown(); startBox.hidden = true; void boot(); });

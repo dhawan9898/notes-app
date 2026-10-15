@@ -157,4 +157,6 @@ See `docs/release-checklist.md` (device checks the build cannot do).
 - **Lab template**: labs keep their existing `## Exercises` / `## Answers` structure instead of a new "Check yourself" section; the validator only requires Key takeaways.
 - **Header progress ring dropped**: it needed the full lesson manifest on every page. Progress lives on Home, Learn, track and You pages.
 - **Per-page CSS**: `problem.css` and `reading.css` load only on the pages that use them.
+- **A real Linux in the app** was added after the first release: the "no environment to run Linux commands" gap is closed with a WebAssembly PC emulator (v86) running Buildroot Linux 5.6 + BusyBox, started on demand on `/practice/terminal/`; labs say where they run (`env: browser` or `machine`). Its limits (no namespaces, bridges, `tc`, compiler) are stated on the page and in each affected lab.
+- **Lab programs are C**, installed in the VM as static 32-bit executables; outputs in labs come from running them there (`{{vm}}` directive).
 - **jsdom UI tests** were added because no browser is available on the authoring machine; they do not replace the release checklist.

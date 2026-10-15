@@ -7,6 +7,7 @@ authoring/
   templates/<track>/<module>/<note>.md        lesson source with {{include …}} and {{run …}} directives
   templates/<track>/labs/<module>/<lab>.md    lab source (written to src/content/labs)
   examples/<track>/<topic>/*                  the C sources, Makefiles and scripts the notes embed
+  examples/vm/*                               programs and data for the in-browser Linux (/labs): *.c compiled for 32-bit Linux, *.sh and data copied
   examples/<track>/starters/<topic>/*.c       practice starters: stub + tests, with NAME.solution.c and optional NAME.wrong-*.c
   practice/<track>/<module>/<NN-slug>.md      practice problems (code and questions): statement, examples, hints, explanation
   build.py                                    assembles templates into src/content/{notes,labs}
@@ -16,6 +17,7 @@ authoring/
 |---|---|
 | `{{include c/dir/file.c}}` | embeds the file as a fenced code block (`{{include c/dir/file.c 10-30}}` for a line range) |
 | `{{run c/dir :: command}}` | runs `command` in `authoring/examples/c/dir` and embeds `$ command` plus its output |
+| `{{vm :: cmd}}`, `{{vm :: cmd1 ;; cmd2}}` | runs the commands in one session inside the in-browser Linux (programs of `examples/vm` are in `/labs`) and embeds the transcript; `{{vm mem=1024 :: cmd}}` boots it with 1 GiB. Needs `npm run fetch-linux` |
 
 ```bash
 python3 authoring/build.py                  # all templates (needs gcc, g++, make, cmake)

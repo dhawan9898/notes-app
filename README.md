@@ -3,7 +3,7 @@
 Source-backed lessons, practice problems and labs on **C, data structures and algorithms, Linux and networking**, from a first program to the kernel. A static site (Astro) for GitHub Pages that is also an offline Android app (Capacitor). No accounts: progress and saved code stay on your device.
 
 - **Learn**: four tracks (Getting started → Essentials → Core modules) and five goal-based learning paths.
-- **Practice**: code problems run in the browser with a real C compiler (WebAssembly), questions with answers, guided labs and a playground. Your code is saved when you submit.
+- **Practice**: code problems run in the browser with a real C compiler (WebAssembly), questions with answers, guided labs, a playground and a **Linux terminal**: a real Linux that boots inside the page (no install, offline in the app). Your code is saved when you submit.
 - **You**: progress, streak, settings, backup and restore.
 - **Search**: instant and offline over lessons, labs, problems and the glossary.
 
@@ -12,6 +12,7 @@ Source-backed lessons, practice problems and labs on **C, data structures and al
 ```bash
 npm install
 npm run fetch-runner   # downloads the in-browser C compiler (about 58 MB, pinned by SHA-256)
+npm run fetch-linux    # downloads the Linux image for the terminal and builds the lab programs (needs clang, lld, llvm)
 npm run dev            # http://localhost:4321
 npm run build          # validates content, generates data, builds dist/
 ```

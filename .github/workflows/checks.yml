@@ -14,6 +14,11 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run fetch-runner
+      - name: Toolchain for the in-browser Linux (static 32-bit programs: clang, lld, llvm-ar)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq clang lld llvm
+      - uses: actions/cache@v4
+        with: { path: .cache/vm, key: vm-toolchain-v1 }
+      - run: npm run fetch-linux
       - name: Content gate (front matter, lesson template, problems, paths, glossary, references)
         run: npm run validate
       - name: Generate data
@@ -26,6 +31,8 @@ jobs:
         run: npm run starters
       - name: Practice problems in the in-app compiler (starter is not accepted, solution is)
         run: npm run practice:verify
+      - name: Linux terminal (examples, in-app labs and command blocks work in the in-browser Linux)
+        run: npm run terminal:verify
       - name: Build site
         run: npm run build
         env:

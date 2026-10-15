@@ -19,6 +19,7 @@ const label: Record<string, string> = { Up: '↑', Down: '↓', Left: '←', Rig
           <Icon name="practice" size={30} />
           <p><strong>Start a Linux machine</strong></p>
           <p class="muted small">It takes about ten seconds to boot. Files you create disappear when you close or restart it.</p>
+          <p class="term-error" data-t-error hidden role="alert"></p>
           <button class="btn primary" type="button" data-t-boot>Start Linux</button>
         </div>
         <div class="term-host" data-t-term hidden></div>

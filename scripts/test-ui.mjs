@@ -14,7 +14,11 @@ if (!isMainThread) {
   const { build } = await import('esbuild');
   const bundles = {};
   const bundle = async (name, stub = true) => bundles[name + stub] ??= (await build({ entryPoints: [path.join(ROOT, 'src/scripts', name + '.ts')], bundle: true, format: 'iife', write: false, logLevel: 'error', external: ['mermaid'],
-    plugins: stub ? [{ name: 'stub', setup(b) { b.onResolve({ filter: /^\.\/runner$/ }, () => ({ path: path.join(HERE, 'stub-runner.ts') })); } }] : [] })).outputFiles[0].text;
+    plugins: stub ? [{ name: 'stub', setup(b) {
+      b.onResolve({ filter: /^\.\/runner$/ }, () => ({ path: path.join(HERE, 'stub-runner.ts') }));
+      b.onResolve({ filter: /^@xterm\/xterm$|^@xterm\/addon-fit$|terminal-engine$/ }, () => ({ path: path.join(HERE, 'stub-terminal.ts') }));
+      b.onResolve({ filter: /\.css$/ }, () => ({ path: 'empty-css', namespace: 'empty' })); b.onLoad({ filter: /.*/, namespace: 'empty' }, () => ({ contents: '', loader: 'js' }));
+    } }] : [] })).outputFiles[0].text;
   const worker = new Worker(new URL(import.meta.url));
   const hostRun = (code) => new Promise((res, rej) => { worker.once('message', (m) => (m.error ? rej(new Error(m.error)) : res(m.r))); worker.postMessage({ code }); });
   const problems = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/generated/practice.json'), 'utf8'));
@@ -25,7 +29,7 @@ if (!isMainThread) {
   const open = async (p, scripts, storage = {}, url = `http://localhost/${p}/`) => {
     const dom = new JSDOM(page(p), { url, runScripts: 'outside-only', pretendToBeVisual: true });
     const w = dom.window; w.__run = hostRun; w.scrollTo = () => {}; w.matchMedia = (q) => ({ matches: /max-width: 900px/.test(q), addEventListener() {}, removeEventListener() {} });
-    w.fetch = async () => ({ ok: true, json: async () => JSON.parse(searchIndex) }); w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); }; w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); };
+    w.Element.prototype.scrollIntoView = () => {}; w.TextEncoder = TextEncoder; w.TextDecoder = TextDecoder; w.fetch = async () => ({ ok: true, json: async () => JSON.parse(searchIndex) }); w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); }; w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); };
     for (const [k, v] of Object.entries(storage)) w.localStorage.setItem(k, v);
     for (const s of scripts) w.eval(await (s === 'runner!' ? bundle('runner', false) : bundle(s)));
     return w;
@@ -129,6 +133,38 @@ if (!isMainThread) {
   w = await styled('practice/c/swap-ints', ['shell', 'problem']);
   ok(!shown(w, $(w, '.symbols')) && shown(w, $(w, '.ed')), 'symbol row is phone-only; the editor is visible');
   ok(!shown(w, $(w, '.pp-seg')), 'the section switcher is phone-only');
+
+  /* ---- the Linux terminal page (fake xterm and engine) */
+  w = await open('practice/terminal', ['shell', 'terminal']);
+  ok($$(w, '[data-key]').length === 9 && $(w, '[data-t-boot]') && $$(w, '[data-example]').length >= 8, 'terminal page: start button, key row and examples');
+  ok($$(w, '[data-example]').every((b) => { try { const c = JSON.parse(b.dataset.example); return Array.isArray(c) && c.length > 0 && c.every((x) => typeof x === 'string'); } catch { return false; } }), 'every example carries a valid command list');
+  $(w, '[data-t-boot]').click(); await until(w, () => /running/.test($(w, '[data-t-status]').textContent));
+  ok(w.__sent.some((d) => /export PS1/.test(d) && /stty rows 24 cols 80/.test(d) && /cd \/labs/.test(d)), 'after boot the shell gets a clean prompt, the window size and /labs as its directory');
+  w.__sent.length = 0; $(w, '[data-key="Tab"]').click(); $(w, '[data-key="Up"]').click(); $(w, '[data-key="Ctrl-C"]').click();
+  ok(w.__sent.join('|') === '\t|\x1b[A|\x03', 'key row sends Tab, the Up arrow and Ctrl-C');
+  w.__sent.length = 0; $(w, '[data-key="Ctrl"]').click(); w.__onData('d'); w.__onData('x');
+  ok(w.__sent.join('|') === '\x04|x', 'Ctrl then a letter sends the control character once, then typing is normal again');
+  w.__sent.length = 0; $$(w, '[data-example]')[0].click(); await until(w, () => w.__sent.length >= JSON.parse($$(w, '[data-example]')[0].dataset.example).length);
+  ok(JSON.parse($$(w, '[data-example]')[0].dataset.example).every((c, i) => w.__sent[i] === c + '\n'), 'an example types its commands one by one, waiting for the prompt each time');
+  const w3 = await open('practice/terminal', ['shell', 'terminal'], {}, 'http://localhost/practice/terminal/?c=' + encodeURIComponent('echo "a&b"') + '&c=ls');
+  await until(w3, () => (w3.__sent || []).includes('ls\n'));
+  ok(w3.__sent.includes('echo "a&b"\n') && w3.__sent.includes('ls\n') && w3.__sent.indexOf('echo "a&b"\n') < w3.__sent.indexOf('ls\n'), 'commands from a link start Linux and run in order: ' + JSON.stringify(w3.__sent));
+
+  const wf = await open('practice/terminal', ['shell', 'terminal']); wf.__failBoot = true; $(wf, '[data-t-boot]').click();
+  await until(wf, () => /could not start/i.test($(wf, '[data-t-status]').textContent));
+  ok(!$(wf, '[data-t-error]').hidden && /WebAssembly/.test($(wf, '[data-t-error]').textContent) && $(wf, '[data-t-boot]').textContent === 'Try again' && !$(wf, '[data-t-start]').hidden, 'if Linux cannot start the page says why and offers to try again');
+
+  /* ---- labs and lessons hand commands to the terminal */
+  const browserLab = 'practice/labs/networking/' + (fs.readdirSync(path.join(ROOT, 'dist/practice/labs/networking')).find((d) => /^building-and-parsing/.test(d)));
+  w = await styled(browserLab, []);
+  const banner = $(w, '.lab-env.env-browser'); ok(banner && shown(w, banner), 'a browser lab shows the "Runs in the Linux terminal" banner');
+  const lhref = $(w, '.lab-env a').getAttribute('href'); ok(/\/practice\/terminal\/\?c=ip%20link%20set%20lo%20up&c=\.%2Fpacket$/.test(lhref), 'its button opens the terminal with the lab commands queued: ' + lhref.slice(-40));
+  w = await open('practice/labs/networking/' + fs.readdirSync(path.join(ROOT, 'dist/practice/labs/networking')).find((d) => /^shaping-queuing/.test(d)), []);
+  ok($(w, '.lab-env.env-machine') && !$(w, '.lab-env.env-browser'), 'a machine lab says it needs your own Linux machine');
+  const withTerm = manifest.lessons.find((l) => /data-terminal/.test(fs.readFileSync(path.join(ROOT, 'dist', l.u, 'index.html'), 'utf8')));
+  w = await open(withTerm.u.replace(/^\/|\/$/g, ''), ['shell', 'lesson']);
+  const tr = $(w, '.prose pre[data-terminal] .term-run'); ok(tr && /\/practice\/terminal\/\?c=/.test(tr.getAttribute('href')), 'a verified command block in a lesson gets "Run in terminal"');
+  ok($$(w, '.prose pre:not([data-terminal]) .term-run').length === 0, 'other blocks do not');
 
   /* ---- search */
   w = await open('search', ['shell', 'search'], {}, 'http://localhost/search/?q=spanning');

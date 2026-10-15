@@ -12,3 +12,5 @@
 .example-cmds { margin: 0; padding: var(--s3); border-radius: var(--r2); background: var(--code-bg); border: 1px solid var(--code-line); font-size: 0.78rem; line-height: 1.5; white-space: pre; max-height: 11rem; }
 .prose-lite ul { padding-left: 1.2rem; display: grid; gap: var(--s2); } .prose-lite li { line-height: 1.6; }
 @media (max-width: 900px) { .term-screen { height: min(52dvh, 28rem); } .term-card { margin-inline: calc(var(--s2) * -1); border-radius: var(--r3); } .term-keys button { min-height: 2.5rem; } }
+
+.term-error { color: var(--bad) !important; font-size: 0.88rem; max-width: 30rem; }

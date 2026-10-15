@@ -16,12 +16,14 @@
     "snippets": "node scripts/validate-snippets.mjs",
     "starters": "node scripts/verify-starters.mjs",
     "practice:verify": "node scripts/verify-practice.mjs",
-    "app:sync": "node scripts/fetch-runner.mjs && npm run build && cap sync android",
+    "app:sync": "node scripts/fetch-runner.mjs && node scripts/fetch-linux.mjs && npm run build && cap sync android",
     "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug",
     "test:ui": "node scripts/test-ui.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "typecheck": "tsc -p tsconfig.json",
-    "fetch-linux": "node scripts/fetch-linux.mjs"
+    "fetch-linux": "node scripts/fetch-linux.mjs",
+    "terminal:verify": "node scripts/verify-terminal.mjs",
+    "terminal:blocks": "node scripts/verify-terminal.mjs --blocks"
   },
   "keywords": [],
   "author": "",
