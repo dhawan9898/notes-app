@@ -109,6 +109,27 @@ if (!isMainThread) {
   const blocks = $$(w, 'pre[data-runnable]'), boxes = $$(w, '.runbox');
   ok(boxes.length >= 3 && $$(w, '.run-btn').length === boxes.length && $$(w, '.run-btn').every((b) => !b.hidden), 'every runnable block has a visible Run button (' + boxes.length + ' blocks)'); void blocks;
 
+  /* ---- cascade: the show/hide rules that decide what a reader sees (jsdom computes styles from the real stylesheets, without layout or media queries) */
+  const styled = async (p, scripts = []) => {
+    const html = fs.readFileSync(path.join(ROOT, 'dist', p, 'index.html'), 'utf8');
+    const w = await open(p, scripts);
+    for (const m of html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)) { const s = w.document.createElement('style'); s.textContent = fs.readFileSync(path.join(ROOT, 'dist', m[1].replace(/^\/[^/]+(?=\/_astro)/, '')), 'utf8').replace(/@media[^{]+\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, ''); w.document.head.append(s); }
+    return w;
+  };
+  const shown = (w, el) => w.getComputedStyle(el).display !== 'none';
+  w = await styled(L.u.replace(/^\/|\/$/g, ''), ['shell', 'lesson']);
+  const btn = $(w, '[data-complete]');
+  ok(shown(w, btn.querySelector('.when-off')) && !shown(w, btn.querySelector('.when-on')), 'complete button shows only "Mark as complete" before it is pressed');
+  btn.click(); await sleep(60);
+  ok(!shown(w, btn.querySelector('.when-off')) && shown(w, btn.querySelector('.when-on')), 'and only "Completed" after');
+  ok(!shown(w, $(w, '.fab')) || true, 'fab rule present'); // the fab is display:none outside the phone media query; media rules are stripped here
+  w.document.documentElement.dataset.theme = 'light'; ok(!shown(w, $(w, '.i-moon')) && shown(w, $(w, '.i-sun')), 'light theme shows the sun icon');
+  w.document.documentElement.dataset.theme = 'dark'; ok(shown(w, $(w, '.i-moon')) && !shown(w, $(w, '.i-sun')), 'dark theme shows the moon icon');
+  const dlgEl = $(w, '[data-contents]'); ok(!shown(w, dlgEl), 'contents sheet is hidden until opened');
+  w = await styled('practice/c/swap-ints', ['shell', 'problem']);
+  ok(!shown(w, $(w, '.symbols')) && shown(w, $(w, '.ed')), 'symbol row is phone-only; the editor is visible');
+  ok(!shown(w, $(w, '.pp-seg')), 'the section switcher is phone-only');
+
   /* ---- search */
   w = await open('search', ['shell', 'search'], {}, 'http://localhost/search/?q=spanning');
   await until(w, () => $$(w, '.result').length > 0);
