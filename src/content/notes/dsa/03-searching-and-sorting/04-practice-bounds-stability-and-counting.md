@@ -20,13 +20,167 @@ Most sorting and searching bugs are boundary mistakes. Each exercise below has a
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Bounds.** In the sorted array `{1, 3, 3, 3, 5, 8, 8, 13}`, implement `lower_bound(x)` (first index with `a[i] >= x`) and `upper_bound(x)` (first index with `a[i] > x`). Use them to count occurrences of 3, 8, 4, 0 and 20 in O(log n). What does `lower_bound` return for an absent value?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 1: lower_bound and upper_bound by binary search.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* First index i with a[i] >= x, or n if there is none. */
+int lower_bound(const int *a, int n, int x) {
+    (void)a; (void)n; (void)x;
+    return 0;
+}
+
+/* First index i with a[i] > x, or n if there is none. */
+int upper_bound(const int *a, int n, int x) {
+    (void)a; (void)n; (void)x;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int a[] = {1, 3, 3, 3, 5, 8, 8, 13};
+    const int xs[] = {3, 8, 4, 0, 20, 1, 13};
+    const int lo_want[] = {1, 5, 4, 0, 8, 0, 7}, hi_want[] = {4, 7, 4, 0, 8, 1, 8};
+    for (int i = 0; i < 7; i++) {
+        char what[40];
+        snprintf(what, sizeof what, "lower_bound(a, %d)", xs[i]);
+        check_int(what, lower_bound(a, 8, xs[i]), lo_want[i]);
+        snprintf(what, sizeof what, "upper_bound(a, %d)", xs[i]);
+        check_int(what, upper_bound(a, 8, xs[i]), hi_want[i]);
+    }
+    check_int("lower_bound(empty, 5)", lower_bound(a, 0, 5), 0);
+    return summary();
+}
+```
+
+</details>
 
 **2. Stability.** Sort the records `ana:2 bob:2 cy:1 dee:2 eli:1` (already in name order) by grade with selection sort and with insertion sort. Which preserves the name order among equal grades, and why does it matter?
 
 **3. Counting sort.** Sort ten ages in the range 0 to 10 without any comparisons. Give the three steps, the cost, and explain why the final pass runs backwards.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: counting sort of ages 0 to 10, without comparisons, and stable.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct { int age; char name; } Person;
+#define MAXV 10
+
+/* ===== Your code: edit below this line ===== */
+/* Sort in[0..n) by age into out[0..n). People with equal ages must keep their input order. */
+void counting_sort(const Person *in, Person *out, int n) {
+    for (int i = 0; i < n; i++) out[i] = in[i];
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_str(const char *what, const char *got, const char *want) {
+    checks++;
+    if (got && strcmp(got, want) == 0) printf("PASS %s = \"%s\"\n", what, got);
+    else { failed++; printf("FAIL %s: expected \"%s\", got %s%s%s\n", what, want, got ? "\"" : "", got ? got : "NULL", got ? "\"" : ""); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Person in[] = {{7, 'a'}, {3, 'b'}, {10, 'c'}, {3, 'd'}, {0, 'e'}, {7, 'f'}, {7, 'g'}, {1, 'h'}, {10, 'i'}, {3, 'j'}};
+    Person out[10];
+    counting_sort(in, out, 10);
+    char got[64] = "";
+    int k = 0;
+    for (int i = 0; i < 10; i++) k += snprintf(got + k, sizeof got - (size_t)k, i ? " %d%c" : "%d%c", out[i].age, out[i].name);
+    check_str("counting_sort (age and name)", got, "0e 1h 3b 3d 3j 7a 7f 7g 10c 10i");
+    return summary();
+}
+```
+
+</details>
+
 **4. Inversions.** An **inversion** is a pair `i < j` with `a[i] > a[j]`. Count them in `{8, 4, 2, 1, 7, 3, 9, 5}` in O(n log n) by extending merge sort, and verify against the O(n²) definition.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 4: count inversions (i < j with a[i] > a[j]) in O(n log n) by extending merge sort.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* May reorder a. tmp has room for n ints. */
+long long count_inversions(int *a, int *tmp, int n) {
+    (void)a; (void)tmp; (void)n;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int a[] = {8, 4, 2, 1, 7, 3, 9, 5}, tmp[2000];
+    check_int("count_inversions({8,4,2,1,7,3,9,5})", count_inversions(a, tmp, 8), 13);
+    int sorted[] = {1, 2, 3, 4};
+    check_int("count_inversions(sorted)", count_inversions(sorted, tmp, 4), 0);
+    int dup[] = {2, 2, 1};
+    check_int("count_inversions({2,2,1}) (equal keys are not inversions)", count_inversions(dup, tmp, 3), 2);
+    static int big[2000];
+    for (int i = 0; i < 2000; i++) big[i] = 2000 - i;
+    check_int("count_inversions(2000 descending)", count_inversions(big, tmp, 2000), 1999000);
+    return summary();
+}
+```
+
+</details>
 
 ## Answers
 

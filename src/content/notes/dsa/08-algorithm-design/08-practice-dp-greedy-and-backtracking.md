@@ -21,13 +21,202 @@ Algorithm design is mostly choosing a strategy and knowing when it is valid. The
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Coin change.** (a) For coins `{25, 10, 5, 1}` and target 63, how many coins does the "take the biggest coin that fits" strategy use? (b) For coins `{4, 3, 1}` and target 6, does that strategy find the minimum? (c) Write a dynamic-programming solution for the minimum number of coins, then count the number of **different combinations** (order does not matter) that make 10 from `{1, 5, 10}`.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 1: fewest coins for a target (dynamic programming), and the number of ways to make it.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* Fewest coins (unlimited supply of each) adding up to target, or -1 if impossible. */
+int min_coins(const int *coins, int nc, int target) {
+    (void)coins; (void)nc; (void)target;
+    return -1;
+}
+
+/* Number of different multisets of coins adding up to target (order does not matter). */
+long long count_ways(const int *coins, int nc, int target) {
+    (void)coins; (void)nc; (void)target;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    const int us[] = {25, 10, 5, 1}, odd[] = {4, 3, 1}, big[] = {5, 10}, small[] = {1, 5, 10};
+    check_int("min_coins({25,10,5,1}, 63)", min_coins(us, 4, 63), 6);
+    check_int("min_coins({4,3,1}, 6) (greedy would use 3)", min_coins(odd, 3, 6), 2);
+    check_int("min_coins({5,10}, 3) (impossible)", min_coins(big, 2, 3), -1);
+    check_int("min_coins(any, 0)", min_coins(us, 4, 0), 0);
+    check_int("count_ways({1,5,10}, 10)", count_ways(small, 3, 10), 4);
+    check_int("count_ways({25,10,5,1}, 100)", count_ways(us, 4, 100), 242);
+    return summary();
+}
+```
+
+</details>
 
 **2. Edit distance.** Compute the minimum number of insertions, deletions and substitutions needed to turn `kitten` into `sitting`, and `intention` into `execution`. State the meaning of each cell of your table and the recurrence.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: edit distance (insertions, deletions and substitutions).
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+int edit_distance(const char *a, const char *b) {
+    (void)a; (void)b;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    check_int("edit_distance(\"kitten\", \"sitting\")", edit_distance("kitten", "sitting"), 3);
+    check_int("edit_distance(\"intention\", \"execution\")", edit_distance("intention", "execution"), 5);
+    check_int("edit_distance(\"flaw\", \"lawn\")", edit_distance("flaw", "lawn"), 2);
+    check_int("edit_distance(\"\", \"abc\")", edit_distance("", "abc"), 3);
+    check_int("edit_distance(\"same\", \"same\")", edit_distance("same", "same"), 0);
+    return summary();
+}
+```
+
+</details>
+
 **3. Interval scheduling.** Seven jobs have start and end times (`A 0-9, B 1-3, C 2-5, D 4-6, E 6-8, F 5-7, G 8-10`). Choose the maximum number of non-overlapping jobs. Try two greedy rules, "earliest start first" and "earliest finish first". Which is correct and why?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: the largest set of non-overlapping jobs (a job may start when another ends).
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct { int start, end; const char *name; } Job;
+
+/* ===== Your code: edit below this line ===== */
+/* Return the maximum number of jobs that can run one after another. You may reorder jobs. */
+int max_jobs(Job *jobs, int n) {
+    (void)jobs;
+    return n > 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Job jobs[] = {{0, 9, "A"}, {1, 3, "B"}, {2, 5, "C"}, {4, 6, "D"}, {6, 8, "E"}, {5, 7, "F"}, {8, 10, "G"}};
+    check_int("max_jobs(A..G)", max_jobs(jobs, 7), 4);
+    Job chain[] = {{2, 3, "y"}, {0, 1, "w"}, {1, 2, "x"}};
+    check_int("max_jobs(back-to-back jobs)", max_jobs(chain, 3), 3);
+    Job none[1];
+    check_int("max_jobs(no jobs)", max_jobs(none, 0), 0);
+    return summary();
+}
+```
+
+</details>
+
 **4. Backtracking.** Count the ways to place *n* queens on an *n*×*n* board with none attacking another, for *n* = 4 to 8. What pruning makes it fast, and why must the choice be undone after the recursive call?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 4: count the ways to place n non-attacking queens on an n x n board (backtracking).
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+long long count_queens(int n) {
+    (void)n;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    const int ns[] = {1, 2, 3, 4, 5, 6, 8, 10};
+    const long long want[] = {1, 0, 0, 2, 10, 4, 92, 724};
+    for (int i = 0; i < 8; i++) {
+        char what[32];
+        snprintf(what, sizeof what, "count_queens(%d)", ns[i]);
+        check_int(what, count_queens(ns[i]), want[i]);
+    }
+    return summary();
+}
+```
+
+</details>
 
 ## Answers
 

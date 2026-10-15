@@ -19,6 +19,8 @@ Do these in order. For each: try it on paper or in a file first, then compile wi
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Number systems (paper).** Convert `1011 0110` (binary) to decimal and to hexadecimal. Convert decimal `200` to binary and hexadecimal.
 
 **2. Predict the output (paper).** What does each expression evaluate to? `5 / 2`, `5 % 2`, `5 / 2.0`, `10 - 3 * 2`, `7 & 3`, `1 << 4`.
@@ -29,13 +31,259 @@ Do these in order. For each: try it on paper or in a file first, then compile wi
 void swap_ints(int a, int b) { int t = a; a = b; b = t; }
 ```
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: make swap_ints exchange the caller's two variables.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* The tests call swap_ints(&a, &b). This version makes the same mistake as the by-value one in the exercise:
+   it swaps its own copies (here, copies of the two pointers) and leaves the caller's ints alone. */
+void swap_ints(int *a, int *b) {
+    int *t = a;
+    a = b;
+    b = t;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int a = 1, b = 2;
+    swap_ints(&a, &b);
+    check_int("a after swap_ints(&a, &b)", a, 2);
+    check_int("b after swap_ints(&a, &b)", b, 1);
+    int x = -7, y = 7;
+    swap_ints(&x, &y);
+    check_int("x after swap_ints(&x, &y)", x, 7);
+    check_int("y after swap_ints(&x, &y)", y, -7);
+    return summary();
+}
+```
+
+</details>
+
 **4. Maximum.** Write `int max_of(const int *v, int count)` returning the largest element of an array (assume `count > 0`).
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 4: write max_of, the largest element of an array (count > 0).
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+int max_of(const int *v, int count) {
+    (void)v; (void)count;
+    return 0;   /* replace with your loop */
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int a[] = {4, 9, -2, 7};
+    int negatives[] = {-5, -1, -7};
+    int one[] = {42};
+    int last[] = {1, 2, 3, 100};
+    check_int("max_of({4, 9, -2, 7})", max_of(a, 4), 9);
+    check_int("max_of({-5, -1, -7}) (all negative)", max_of(negatives, 3), -1);
+    check_int("max_of({42})", max_of(one, 1), 42);
+    check_int("max_of({1, 2, 3, 100}) (largest is last)", max_of(last, 4), 100);
+    return summary();
+}
+```
+
+</details>
 
 **5. Reverse a string in place.** Write `void reverse(char *s)`; `"stressed"` becomes `"desserts"`. (Hint: a string ends at `'\0'`; use `strlen` and swap pairs from both ends.)
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 5: reverse a string in place.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+void reverse(char *s) {
+    (void)s;    /* swap pairs of characters from both ends */
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_str(const char *what, const char *got, const char *want) {
+    checks++;
+    if (got && strcmp(got, want) == 0) printf("PASS %s = \"%s\"\n", what, got);
+    else { failed++; printf("FAIL %s: expected \"%s\", got %s%s%s\n", what, want, got ? "\"" : "", got ? got : "NULL", got ? "\"" : ""); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    char s1[] = "stressed", s2[] = "ab", s3[] = "a", s4[] = "", s5[] = "racecar", s6[] = "hello world";
+    reverse(s1); check_str("reverse(\"stressed\")", s1, "desserts");
+    reverse(s2); check_str("reverse(\"ab\")", s2, "ba");
+    reverse(s3); check_str("reverse(\"a\")", s3, "a");
+    reverse(s4); check_str("reverse(\"\")", s4, "");
+    reverse(s5); check_str("reverse(\"racecar\")", s5, "racecar");
+    reverse(s6); check_str("reverse(\"hello world\")", s6, "dlrow olleh");
+    return summary();
+}
+```
+
+</details>
+
 **6. Count the one-bits.** Write `int popcount(uint32_t x)` returning how many bits of `x` are 1. `popcount(255)` is 8.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 6: count the 1 bits of a 32-bit number.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+int popcount(uint32_t x) {
+    (void)x;
+    return 0;   /* look at the lowest bit with x & 1, then shift */
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    check_int("popcount(0)", popcount(0), 0);
+    check_int("popcount(1)", popcount(1), 1);
+    check_int("popcount(255)", popcount(255), 8);
+    check_int("popcount(0x80000001)", popcount(0x80000001u), 2);
+    check_int("popcount(0xFFFFFFFF)", popcount(0xFFFFFFFFu), 32);
+    return summary();
+}
+```
+
+</details>
+
 **7. A growable array.** Using `malloc`/`realloc`/`free`, write a small structure holding an `int` array that doubles its capacity when full, with a `vec_push` function. Push ten squares and print the size and capacity. Check that you free the memory.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 7: a growable array of ints that doubles its capacity when full.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int *data;
+    size_t size;    /* elements in use */
+    size_t cap;     /* elements allocated */
+} IntVec;
+
+/* ===== Your code: edit below this line ===== */
+/* Append x; grow data with realloc (doubling cap) when size == cap. Return 1 on success, 0 if memory runs out. */
+int vec_push(IntVec *v, int x) {
+    (void)v; (void)x;
+    return 0;
+}
+
+/* Release the memory and reset the vector to empty. */
+void vec_free(IntVec *v) {
+    (void)v;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    IntVec v = {0};
+    int ok = 1;
+    for (int i = 0; i < 10; i++) ok &= vec_push(&v, i * i);
+    check_int("every vec_push returned 1", ok, 1);
+    check_int("size after 10 pushes", (long long)v.size, 10);
+    check_int("capacity is at least the size", v.cap >= v.size && v.data != NULL, 1);
+    if (v.data && v.size == 10) {
+        check_int("data[0]", v.data[0], 0);
+        check_int("data[9]", v.data[9], 81);
+    }
+    vec_free(&v);
+    check_int("data is NULL after vec_free", v.data == NULL, 1);
+    check_int("size is 0 after vec_free", (long long)v.size, 0);
+    return summary();
+}
+```
+
+</details>
 
 **8. Find the bug.** This function should sum the first `n` elements. It sometimes returns a wrong value or crashes. Find the bug, then run it under AddressSanitizer and read the report.
 
@@ -47,7 +295,98 @@ int sum_first_n(const int *v, int n) {
 }
 ```
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 8: find and fix the bug in sum_first_n.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+int sum_first_n(const int *v, int n) {
+    int total = 0;
+    for (int i = 0; i <= n; i++) total += v[i];
+    return total;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int v[] = {1, 2, 3, 4, 99};     /* the 99 is not part of the first 4 elements */
+    check_int("sum_first_n(v, 4)", sum_first_n(v, 4), 10);
+    check_int("sum_first_n(v, 1)", sum_first_n(v, 1), 1);
+    check_int("sum_first_n(v, 0)", sum_first_n(v, 0), 0);
+    check_int("sum_first_n(v, 5)", sum_first_n(v, 5), 109);
+    return summary();
+}
+```
+
+</details>
+
 **9. Subnetting with a mask.** Given the address `10.20.77.130` and prefix length 21, compute the network address by building the mask and using `&`. (Check against the "do it in your head" method in *IPv4 Addressing, Subnetting, VLSM and CIDR*.)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 9: network address of an IPv4 address and prefix length, using a mask and &.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define IP(a, b, c, d) ((uint32_t)(a) << 24 | (uint32_t)(b) << 16 | (uint32_t)(c) << 8 | (uint32_t)(d))
+
+/* ===== Your code: edit below this line ===== */
+/* Return ip with the host bits (the last 32 - prefix bits) cleared. prefix is 0 to 32. */
+uint32_t network_of(uint32_t ip, int prefix) {
+    (void)prefix;
+    return ip;      /* build the mask, then return ip & mask */
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    check_int("10.20.77.130/21 -> 10.20.72.0", network_of(IP(10, 20, 77, 130), 21), IP(10, 20, 72, 0));
+    check_int("192.168.1.77/24 -> 192.168.1.0", network_of(IP(192, 168, 1, 77), 24), IP(192, 168, 1, 0));
+    check_int("172.16.5.4/12 -> 172.16.0.0", network_of(IP(172, 16, 5, 4), 12), IP(172, 16, 0, 0));
+    check_int("10.1.2.3/32 -> 10.1.2.3", network_of(IP(10, 1, 2, 3), 32), IP(10, 1, 2, 3));
+    check_int("10.1.2.3/0 -> 0.0.0.0", network_of(IP(10, 1, 2, 3), 0), 0);
+    return summary();
+}
+```
+
+</details>
 
 **10. Wrap-around.** What are `(uint8_t)-1`, `(uint8_t)-128`, `(int8_t)200` and `(uint8_t)(255 + 1)`? Explain each in terms of two's complement.
 

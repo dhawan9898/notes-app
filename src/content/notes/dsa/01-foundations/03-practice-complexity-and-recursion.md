@@ -19,6 +19,8 @@ Complexity analysis is learned by classifying many small loops until it is autom
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Classify the loops.** For each loop shape, give the Big-O of the number of times the innermost statement runs, then predict the ratio when `n` doubles from 64 to 128.
 
 - A: `for i in 0..n` (single loop)
@@ -31,9 +33,180 @@ Complexity analysis is learned by classifying many small loops until it is autom
 
 **2. Why is naive Fibonacci slow?** `fib(n) = fib(n-1) + fib(n-2)`. How many calls does `fib(30)` make? Fix it with memoisation and count again. What is the complexity of each version?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: Fibonacci with memoisation. Same answers, far fewer calls.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static long long calls;      /* the tests count calls: keep the calls++ line */
+long long memo[91];         /* memo[n] == 0 means "not computed yet" */
+
+/* ===== Your code: edit below this line ===== */
+long long fib_memo(int n) {
+    calls++;
+    if (n < 2) return n;
+    return fib_memo(n - 1) + fib_memo(n - 2);      /* naive: recomputes the same values again and again */
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    calls = 0;
+    check_int("fib_memo(30)", fib_memo(30), 832040);
+    printf("     fib_memo(30) made %lld calls\n", calls);
+    check_int("fib_memo(30) made at most 2 * 30 calls", calls <= 60, 1);
+    if (calls <= 60) {
+        check_int("fib_memo(90)", fib_memo(90), 2880067194370816120LL);
+    } else {
+        checks++; failed++;
+        printf("FAIL fib_memo(90): skipped, it would take years without memoisation\n");
+    }
+    return summary();
+}
+```
+
+</details>
+
 **3. Tower of Hanoi.** Moving *n* disks from one peg to another (larger disks never on smaller ones) takes how many moves? Write the recurrence and the closed form. If one move takes one second, how long do 20 and 64 disks take?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: Tower of Hanoi. Count the moves, then make them.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* The tests provide move(from, to) and check that every move is legal. Pegs are 0, 1 and 2. */
+void move(int from, int to);
+
+/* ===== Your code: edit below this line ===== */
+/* Number of moves for n disks, from the recurrence. */
+long long hanoi_moves(int n) {
+    (void)n;
+    return 0;
+}
+
+/* Move n disks from peg "from" to peg "to", using "via", by calling move(). */
+void hanoi(int n, int from, int to, int via) {
+    (void)n; (void)from; (void)to; (void)via;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int peg[3][16], height[3], made, illegal;
+
+void move(int from, int to) {
+    made++;
+    if (from < 0 || from > 2 || to < 0 || to > 2 || height[from] == 0) { illegal++; return; }
+    int disk = peg[from][height[from] - 1];
+    if (height[to] > 0 && peg[to][height[to] - 1] < disk) { illegal++; return; }     /* larger on smaller */
+    height[from]--;
+    peg[to][height[to]++] = disk;
+}
+
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    check_int("hanoi_moves(1)", hanoi_moves(1), 1);
+    check_int("hanoi_moves(5)", hanoi_moves(5), 31);
+    check_int("hanoi_moves(20)", hanoi_moves(20), 1048575);
+    check_int("hanoi_moves(63)", hanoi_moves(63), 9223372036854775807LL);
+    for (int d = 0; d < 6; d++) peg[0][d] = 6 - d;          /* six disks on peg 0, largest at the bottom */
+    height[0] = 6;
+    hanoi(6, 0, 2, 1);
+    check_int("hanoi(6): illegal moves", illegal, 0);
+    check_int("hanoi(6): moves made", made, 63);
+    check_int("hanoi(6): disks on peg 2 at the end", height[2], 6);
+    return summary();
+}
+```
+
+</details>
+
 **4. Fast power.** Compute `b^e` with O(log e) multiplications instead of `e`. Why does halving the exponent work?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 4: b^e with O(log e) multiplications instead of e.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* Multiply only through mul(): the tests count the multiplications. */
+static long long mults;
+static long long mul(long long a, long long b) { mults++; return a * b; }
+
+/* ===== Your code: edit below this line ===== */
+long long power_fast(long long b, int e) {
+    long long r = 1;
+    for (int i = 0; i < e; i++) r = mul(r, b);     /* e multiplications: make it O(log e) */
+    return r;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    check_int("power_fast(3, 13)", power_fast(3, 13), 1594323);
+    check_int("power_fast(2, 62)", power_fast(2, 62), 4611686018427387904LL);
+    check_int("power_fast(7, 0)", power_fast(7, 0), 1);
+    check_int("power_fast(-2, 5)", power_fast(-2, 5), -32);
+    mults = 0;
+    check_int("power_fast(1, 1000)", power_fast(1, 1000), 1);
+    printf("     power_fast(1, 1000) used %lld multiplications\n", mults);
+    check_int("power_fast(1, 1000) used at most 20 multiplications", mults <= 20, 1);
+    return summary();
+}
+```
+
+</details>
 
 ## Answers
 

@@ -132,7 +132,8 @@
     poll_oneoff() { throw new Unsupported('poll_oneoff'); }
   }
 
-  const CLANG_ARGS = ['-disable-free', '-isysroot', '/', '-internal-isystem', '/include', '-internal-isystem', '/lib/clang/8.0.1/include', '-ferror-limit', '10', '-fmessage-length', '100'];
+  const CLANG_ARGS = ['-disable-free', '-isysroot', '/', '-internal-isystem', '/include', '-internal-isystem', '/lib/clang/8.0.1/include', '-ferror-limit', '10', '-fmessage-length', '100',
+    '-fno-common'];   // uninitialised globals as common symbols crash this LLVM 8 wasm toolchain ("unreachable")
 
   class CRunner {
     /**

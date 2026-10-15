@@ -22,11 +22,67 @@ Reading about integer promotion is easy; predicting it is a skill. Try each exer
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Predict (paper).** On a typical 64-bit Linux system with 32-bit `int` and signed `char`, what do these print? (a) `uint8_t x = 200, y = 100; printf("%d", x + y);` and the same with `(uint8_t)(x + y)`; (b) `printf("%d", (int)(char)200);` (c) `printf("%d", -1 < 1u);` (d) `-7 / 2`, `-7 % 2`, `7 / -2`; (e) `0.1 + 0.2 == 0.3`.
 
 **2. Ranges.** Without running anything, write the value of `INT_MAX`, `INT_MIN` and `UINT_MAX` for a 32-bit `int`. Then print them and `sizeof` of `char`, `short`, `int`, `long`, `long long` and a pointer on your machine.
 
 **3. Overflow-safe addition.** Write `bool safe_add(int a, int b, int *out)` that stores `a + b` and returns `true` only when the true sum fits in an `int`, **without ever performing an overflowing addition**. Test it with `2000000000 + 2000000000` and `2000000000 + (-5)`.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: overflow-safe addition. Never perform an addition that overflows.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <limits.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* Store a + b in *out and return true if the true sum fits in an int; otherwise return false (leave *out alone). */
+bool safe_add(int a, int b, int *out) {
+    (void)a; (void)b; (void)out;
+    return false;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int r = 0;
+    check_int("safe_add(2000000000, 2000000000) fits?", safe_add(2000000000, 2000000000, &r), 0);
+    r = 0;
+    check_int("safe_add(2000000000, -5) fits?", safe_add(2000000000, -5, &r), 1);
+    check_int("  and stores", r, 1999999995);
+    r = 0;
+    check_int("safe_add(INT_MAX, 0) fits?", safe_add(INT_MAX, 0, &r), 1);
+    check_int("  and stores", r, INT_MAX);
+    check_int("safe_add(INT_MAX, 1) fits?", safe_add(INT_MAX, 1, &r), 0);
+    check_int("safe_add(INT_MIN, -1) fits?", safe_add(INT_MIN, -1, &r), 0);
+    r = 0;
+    check_int("safe_add(INT_MIN, INT_MAX) fits?", safe_add(INT_MIN, INT_MAX, &r), 1);
+    check_int("  and stores", r, -1);
+    return summary();
+}
+```
+
+</details>
 
 **4. Defined or undefined?** For each, say whether the behaviour is defined, implementation-defined or undefined, and why: (a) `unsigned u = UINT_MAX; u++;` (b) `int i = INT_MAX; i++;` (c) `int n = 1 << 31;` (d) `int a[4]; a[4] = 0;` (e) `(int)3.99` (f) `char c = 300;` Run (b) under UBSan and read the report.
 
@@ -35,6 +91,54 @@ Reading about integer promotion is easy; predicting it is a skill. Try each exer
 ```c
 for (size_t i = n - 1; i >= 0 && steps < 5; i--) steps++;
 ```
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// starter-warnings: expected (the compiler warning is part of the exercise)
+// Exercise 5: visit indexes n-1 down to 0 with a size_t counter.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* Record every index visited, from n-1 down to 0, in out[] and return how many were visited.
+   The loop below never ends on its own: steps < 5 is only a safety cap. */
+int countdown(size_t n, size_t out[]) {
+    int steps = 0;
+    for (size_t i = n - 1; i >= 0 && steps < 5; i--) out[steps++] = i;
+    return steps;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    size_t seen[8] = {0};
+    check_int("countdown(3) visits", countdown(3, seen), 3);
+    check_int("  first index", (long long)seen[0], 2);
+    check_int("  last index", (long long)seen[2], 0);
+    check_int("countdown(1) visits", countdown(1, seen), 1);
+    check_int("countdown(0) visits", countdown(0, seen), 0);
+    return summary();
+}
+```
+
+</details>
 
 **6. Which stage complains?** For each problem, name the build stage that reports it (preprocessor, compiler, assembler, linker or run time): (a) `#include <stdoi.h>` (b) calling `square(7)` without a prototype under `-std=c17` (c) calling a function that is declared but defined in no file (d) `int x = "hello";` (e) an off-by-one write past a local array.
 

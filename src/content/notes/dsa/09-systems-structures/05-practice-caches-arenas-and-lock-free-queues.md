@@ -21,9 +21,132 @@ These three structures turn up in operating systems, databases and servers. Pred
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Replacement policies.** For the reference string `1 2 3 4 1 2 5 1 2 3 4 5` count the cache misses (page faults) of **FIFO**, **LRU** and Belady's **OPT** (evict the item used farthest in the future) with 3, 4 and 5 frames. Which policy gets *worse* when you add a frame, and what is that called? Why is OPT not implementable in practice?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 1: count the misses of FIFO, LRU and OPT replacement for a reference string.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* refs[0..n) are page numbers 0..99; the cache holds "frames" pages (at most 16) and starts empty. */
+int misses_fifo(const int *refs, int n, int frames) { (void)refs; (void)frames; return n; }
+int misses_lru(const int *refs, int n, int frames)  { (void)refs; (void)frames; return n; }
+int misses_opt(const int *refs, int n, int frames)  { (void)refs; (void)frames; return n; }
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    const int refs[] = {1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5};
+    const int fifo[] = {9, 10, 5}, lru[] = {10, 8, 5}, opt[] = {7, 6, 5};
+    for (int frames = 3; frames <= 5; frames++) {
+        char what[40];
+        snprintf(what, sizeof what, "FIFO misses with %d frames", frames);
+        check_int(what, misses_fifo(refs, 12, frames), fifo[frames - 3]);
+        snprintf(what, sizeof what, "LRU misses with %d frames", frames);
+        check_int(what, misses_lru(refs, 12, frames), lru[frames - 3]);
+        snprintf(what, sizeof what, "OPT misses with %d frames", frames);
+        check_int(what, misses_opt(refs, 12, frames), opt[frames - 3]);
+    }
+    return summary();
+}
+```
+
+</details>
+
 **2. An arena allocator.** Implement `arena_alloc(arena, size, alignment)` and `arena_reset`. Build a 100-node linked list from the arena without calling `malloc` per node, then release it all. How do you align the returned pointer, and when is an arena the right tool?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: an arena (bump) allocator with alignment and reset.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct { unsigned char *base; size_t cap, used; } Arena;
+
+/* ===== Your code: edit below this line ===== */
+/* Return size bytes aligned to align (a power of two) from the arena, or NULL if it does not fit. */
+void *arena_alloc(Arena *a, size_t size, size_t align) {
+    (void)a; (void)size; (void)align;
+    return NULL;
+}
+
+/* Release everything at once. */
+void arena_reset(Arena *a) {
+    (void)a;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    static _Alignas(16) unsigned char memory[4096];
+    Arena a = {memory, sizeof memory, 0};
+    typedef struct Node { int v; struct Node *next; } Node;
+    Node *head = NULL;
+    int built = 0;
+    for (int i = 1; i <= 100; i++) {
+        Node *n = arena_alloc(&a, sizeof *n, _Alignof(Node));
+        if (!n) break;
+        n->v = i;
+        n->next = head;
+        head = n;
+        built++;
+    }
+    long sum = 0;
+    for (Node *p = head; p; p = p->next) sum += p->v;
+    check_int("nodes allocated from the arena", built, 100);
+    check_int("sum of the list", sum, 5050);
+    check_int("bytes used (no padding between equal-sized nodes)", (long long)a.used, (long long)(100 * sizeof(Node)));
+    arena_reset(&a);
+    check_int("bytes used after arena_reset", (long long)a.used, 0);
+    char *c = arena_alloc(&a, 1, 1);
+    int *x = arena_alloc(&a, sizeof *x, _Alignof(int));
+    check_int("an int after a 1-byte char is aligned", x != NULL && (uintptr_t)x % _Alignof(int) == 0, 1);
+    check_int("  and starts right after the padding", x != NULL && c != NULL && (char *)x - c == (long)_Alignof(int), 1);
+    check_int("a request larger than the arena returns NULL", arena_alloc(&a, 5000, 1) == NULL, 1);
+    return summary();
+}
+```
+
+</details>
 
 **3. A lock-free SPSC queue.** One producer thread and one consumer thread exchange 200,000 integers through a 64-slot ring buffer with no mutex. Which index does each thread own, which memory orders are needed, and how do you check for races?
 

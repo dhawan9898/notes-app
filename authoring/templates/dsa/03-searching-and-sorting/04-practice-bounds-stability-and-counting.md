@@ -20,13 +20,36 @@ Most sorting and searching bugs are boundary mistakes. Each exercise below has a
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Bounds.** In the sorted array `{1, 3, 3, 3, 5, 8, 8, 13}`, implement `lower_bound(x)` (first index with `a[i] >= x`) and `upper_bound(x)` (first index with `a[i] > x`). Use them to count occurrences of 3, 8, 4, 0 and 20 in O(log n). What does `lower_bound` return for an absent value?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/sorting/ex1-bounds.c}}
+
+</details>
 
 **2. Stability.** Sort the records `ana:2 bob:2 cy:1 dee:2 eli:1` (already in name order) by grade with selection sort and with insertion sort. Which preserves the name order among equal grades, and why does it matter?
 
 **3. Counting sort.** Sort ten ages in the range 0 to 10 without any comparisons. Give the three steps, the cost, and explain why the final pass runs backwards.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/sorting/ex3-counting-sort.c}}
+
+</details>
+
 **4. Inversions.** An **inversion** is a pair `i < j` with `a[i] > a[j]`. Count them in `{8, 4, 2, 1, 7, 3, 9, 5}` in O(n log n) by extending merge sort, and verify against the O(n²) definition.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/sorting/ex4-inversions.c}}
+
+</details>
 
 ## Answers
 

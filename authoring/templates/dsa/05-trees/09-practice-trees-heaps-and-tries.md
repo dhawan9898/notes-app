@@ -20,13 +20,43 @@ Tree problems reward getting the *invariant* right. For each exercise, state the
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Validate a BST.** Write `valid(root)`. A common wrong answer checks only that each node is greater than its left child and smaller than its right child. Build a tree that passes that check but is *not* a BST, and explain the correct invariant.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/trees/ex1-valid-bst.c}}
+
+</details>
 
 **2. k-th smallest and balance.** Find the k-th smallest key without copying the tree into an array (stop early). Then write a function that reports whether a tree is height-balanced (subtree heights differ by at most 1 at **every** node) in one pass.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/trees/ex2-kth-balanced.c}}
+
+</details>
+
 **3. Top-k with a heap.** From a stream of *n* integers, report the *k* largest using O(k) memory. Which kind of heap (min or max) do you need, and why? State the time complexity.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/trees/ex3-top-k.c}}
+
+</details>
+
 **4. Prefix counting.** Build a trie over the words `car, card, care, cart, cat, dog, do` and answer "how many words start with this prefix?" in time proportional to the prefix length. Why must a trie node also record whether a word *ends* there?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/trees/ex4-trie.c}}
+
+</details>
 
 ## Answers
 

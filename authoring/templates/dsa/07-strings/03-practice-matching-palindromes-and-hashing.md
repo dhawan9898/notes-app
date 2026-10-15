@@ -20,11 +20,27 @@ String algorithms are mostly about *not repeating work*. These exercises make th
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Naive versus KMP.** Search for the pattern `aaaaaaaaab` in a text of 2,000 letters `a`. How many character comparisons does the naive algorithm make, and why is this input a bad case? Implement Knuth-Morris-Pratt (KMP) and compare. What does the "failure function" store?
 
 **2. Longest palindromic substring.** Find the longest palindrome inside `forgeeksskeegfor`, `babad`, `cbbd`, `a` and `abc`. Explain why there are `2n − 1` centres to try, and the complexity.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/strings/ex2-palindrome.c}}
+
+</details>
+
 **3. Rolling hash.** Implement Rabin-Karp to find every occurrence of `the` in a sentence. How does the hash of the window update in O(1) when the window slides one character? Why must a hash match be verified?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/strings/ex3-rabin-karp.c}}
+
+</details>
 
 ## Answers
 

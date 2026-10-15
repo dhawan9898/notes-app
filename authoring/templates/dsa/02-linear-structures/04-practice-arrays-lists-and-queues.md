@@ -20,13 +20,36 @@ These exercises turn the module's ideas into numbers and pointer code. Write you
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Why doubling?** A dynamic array starts with capacity 1. Count how many element **copies** `N` pushes cost if it grows (a) by doubling and (b) by a fixed +10. Predict the ratio for `N = 1,000,000` before running anything, then state the amortised cost per push for each strategy.
 
 **2. Cycle detection.** Given the head of a singly linked list, decide whether it contains a cycle using O(1) extra memory. (Hint: two pointers moving at different speeds.) Explain why they must meet if a cycle exists.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/lists/ex2-cycle.c}}
+
+</details>
+
 **3. Merge sorted lists.** Merge two sorted singly linked lists into one sorted list **without allocating new nodes**. Keep the merge stable (equal keys from the first list stay first). Hint: a dummy head node removes the special case for the first element.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/lists/ex3-merge-lists.c}}
+
+</details>
+
 **4. Queue from two stacks.** Implement a FIFO queue using only two LIFO stacks. Show that every item is moved between the stacks at most once, so `enqueue` and `dequeue` are amortised O(1).
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/lists/ex4-queue-two-stacks.c}}
+
+</details>
 
 ## Answers
 

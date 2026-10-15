@@ -20,13 +20,43 @@ Many "different" problems are the same graph problem in disguise: a grid is a gr
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Islands.** A 6×8 grid contains `1` (land) and `0` (water). Count the islands (groups of land cells connected up, down, left or right) and the size of the largest. Which traversal do you use, and what happens to your marks if you reuse the grid afterwards?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/graphs/ex1-islands.c}}
+
+</details>
 
 **2. Shortest path in a maze.** `S` is the start, `E` the exit, `#` a wall and `.` a free cell; moves go up, down, left or right at cost 1. Find the number of steps of the shortest path. Why does BFS give the shortest path here and DFS does not?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/graphs/ex2-maze.c}}
+
+</details>
+
 **3. Dependency order.** Six morning tasks have prerequisites (wake before shower before dress before leave, wake before coffee before breakfast before leave). Output a valid order with a topological sort. What does your algorithm do if you add "leave before wake"?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/graphs/ex3-topo.c}}
+
+</details>
+
 **4. Weighted shortest paths.** For the 5-vertex weighted directed graph in the answer program, compute the shortest distance from vertex 0 to every vertex with Dijkstra's algorithm. Why does Dijkstra fail on graphs with negative edge weights?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/graphs/ex4-dijkstra.c}}
+
+</details>
 
 ## Answers
 

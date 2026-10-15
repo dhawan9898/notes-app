@@ -21,9 +21,25 @@ These three structures turn up in operating systems, databases and servers. Pred
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Replacement policies.** For the reference string `1 2 3 4 1 2 5 1 2 3 4 5` count the cache misses (page faults) of **FIFO**, **LRU** and Belady's **OPT** (evict the item used farthest in the future) with 3, 4 and 5 frames. Which policy gets *worse* when you add a frame, and what is that called? Why is OPT not implementable in practice?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/systems/ex1-page-faults.c}}
+
+</details>
+
 **2. An arena allocator.** Implement `arena_alloc(arena, size, alignment)` and `arena_reset`. Build a 100-node linked list from the arena without calling `malloc` per node, then release it all. How do you align the returned pointer, and when is an arena the right tool?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/systems/ex2-arena.c}}
+
+</details>
 
 **3. A lock-free SPSC queue.** One producer thread and one consumer thread exchange 200,000 integers through a 64-slot ring buffer with no mutex. Which index does each thread own, which memory orders are needed, and how do you check for races?
 

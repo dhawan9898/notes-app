@@ -19,6 +19,8 @@ Complexity analysis is learned by classifying many small loops until it is autom
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Classify the loops.** For each loop shape, give the Big-O of the number of times the innermost statement runs, then predict the ratio when `n` doubles from 64 to 128.
 
 - A: `for i in 0..n` (single loop)
@@ -31,9 +33,30 @@ Complexity analysis is learned by classifying many small loops until it is autom
 
 **2. Why is naive Fibonacci slow?** `fib(n) = fib(n-1) + fib(n-2)`. How many calls does `fib(30)` make? Fix it with memoisation and count again. What is the complexity of each version?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/recursion/ex2-fib-memo.c}}
+
+</details>
+
 **3. Tower of Hanoi.** Moving *n* disks from one peg to another (larger disks never on smaller ones) takes how many moves? Write the recurrence and the closed form. If one move takes one second, how long do 20 and 64 disks take?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/recursion/ex3-hanoi.c}}
+
+</details>
+
 **4. Fast power.** Compute `b^e` with O(log e) multiplications instead of `e`. Why does halving the exponent work?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/recursion/ex4-fast-power.c}}
+
+</details>
 
 ## Answers
 

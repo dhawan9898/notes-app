@@ -125,7 +125,7 @@ Practice notes (6-7 graded exercises, answers behind `<details>`, every answer v
 
 A second batch completed the exercises: every module of the C and DSA tracks now ends with a practice note, as does every Linux module and every Networking module except *Linux Networking Labs* (which is itself a set of labs). The new Linux and Networking labs run unprivileged (user, network and mount namespaces, `systemd-run --user`) and use captured output; the few results that vary run to run (loss percentages, timings, MAC-derived addresses) are described as such.
 
-Remaining known gaps: protocol and standards facts are still unverified against the RFCs and IEEE documents; the site has never been viewed in a browser by the authors; the exercises have no automatic answer-checking.
+Remaining known gaps: protocol and standards facts are still unverified against the RFCs and IEEE documents; the site has never been viewed in a browser by the authors; exercises in the C and DSA tracks that ask for a function now have starter programs with tests (52, verified by `npm run starters`); shell, networking and systems exercises (threads, files, pipes) still have no automatic answer-checking.
 
 ## 6. Reading-graph pass (gaps between notes)
 

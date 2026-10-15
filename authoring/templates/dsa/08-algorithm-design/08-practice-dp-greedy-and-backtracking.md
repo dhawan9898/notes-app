@@ -21,13 +21,43 @@ Algorithm design is mostly choosing a strategy and knowing when it is valid. The
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Coin change.** (a) For coins `{25, 10, 5, 1}` and target 63, how many coins does the "take the biggest coin that fits" strategy use? (b) For coins `{4, 3, 1}` and target 6, does that strategy find the minimum? (c) Write a dynamic-programming solution for the minimum number of coins, then count the number of **different combinations** (order does not matter) that make 10 from `{1, 5, 10}`.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/design/ex1-coins.c}}
+
+</details>
 
 **2. Edit distance.** Compute the minimum number of insertions, deletions and substitutions needed to turn `kitten` into `sitting`, and `intention` into `execution`. State the meaning of each cell of your table and the recurrence.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/design/ex2-edit-distance.c}}
+
+</details>
+
 **3. Interval scheduling.** Seven jobs have start and end times (`A 0-9, B 1-3, C 2-5, D 4-6, E 6-8, F 5-7, G 8-10`). Choose the maximum number of non-overlapping jobs. Try two greedy rules, "earliest start first" and "earliest finish first". Which is correct and why?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/design/ex3-intervals.c}}
+
+</details>
+
 **4. Backtracking.** Count the ways to place *n* queens on an *n*×*n* board with none attacking another, for *n* = 4 to 8. What pruning makes it fast, and why must the choice be undone after the recursive call?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/design/ex4-queens.c}}
+
+</details>
 
 ## Answers
 

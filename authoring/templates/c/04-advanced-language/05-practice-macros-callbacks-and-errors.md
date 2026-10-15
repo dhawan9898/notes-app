@@ -22,11 +22,27 @@ Macros and callbacks are where C gives you power and no safety net. Predict firs
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Macro traps.** Given `#define SQUARE_BAD(x) x * x`, what is `SQUARE_BAD(1 + 2)`? Fix the macro. Then, for `#define MAX_BAD(a, b) ((a) > (b) ? (a) : (b))`, what happens with `MAX_BAD(next(), 0)` where `next()` increments a global counter and returns it? Replace the macro with something that evaluates each argument once.
 
 **2. A dispatch table.** Write a table of `{name, function pointer}` entries for `add`, `sub` and `mul` (each `int (*)(int, int)`) and call each through the table with arguments 6 and 3, without a `switch`.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/callbacks/ex2-dispatch.c}}
+
+</details>
+
 **3. Sorting with callbacks.** Sort an array of `struct {const char *name; int age;}` first by age, then by name, using `qsort`. Write both comparators. Why must a comparator never be written as `return a->age - b->age;`?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/callbacks/ex3-comparators.c}}
+
+</details>
 
 **4. One cleanup path.** Write `char *slurp(const char *path, size_t *len)` that reads a whole file into a NUL-terminated buffer. It must return `NULL` with `errno` set on every failure, free everything it allocated and close the file on **every** error path, using a single cleanup label. Why save `errno` before cleaning up?
 

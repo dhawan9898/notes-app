@@ -474,16 +474,6 @@
    "timing.h"
   ]
  },
- "05377fbb2e8c163a": {
-  "ok": false,
-  "where": "dsa/03-searching-and-sorting/02-comparison-sorts.md",
-  "note": "unreachable"
- },
- "b9318dfe20004361": {
-  "ok": false,
-  "where": "dsa/03-searching-and-sorting/02-comparison-sorts.md",
-  "note": "unreachable"
- },
  "caf1f52b0ee32540": {
   "ok": true,
   "where": "dsa/03-searching-and-sorting/03-non-comparison-sorts-and-selection.md",
@@ -1017,11 +1007,6 @@
   "ok": true,
   "where": "c/00-essentials/05-how-a-c-program-runs.md"
  },
- "78feb0d765e99c5e": {
-  "ok": false,
-  "where": "c/00-essentials/05-how-a-c-program-runs.md",
-  "note": "unreachable"
- },
  "67f6b5b811e3aa14": {
   "ok": true,
   "where": "dsa/00-essentials/01-searching-and-sorting-for-beginners.md"
@@ -1335,5 +1320,232 @@
   "ok": false,
   "where": "c/04-advanced-language/01-the-preprocessor-and-macros.md",
   "note": "main.c:17:15: error: expected ')'"
+ },
+ "8b9dd81e4c7a0c6a": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "e34e1fa78be7070b": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "6b1c53cc154ffa88": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "5f0a78cef580abf7": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "3728b1c364e0400e": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "c0035d3f1a8e9172": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "07689873a527727e": {
+  "ok": true,
+  "where": "c/00-start-here/05-practice-c-exercises.md"
+ },
+ "8af0070e64f0b087": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/04-practice-types-conversions-and-ub.md"
+ },
+ "38b24afd2c525a9f": {
+  "ok": true,
+  "where": "c/01-toolchain-and-foundations/04-practice-types-conversions-and-ub.md"
+ },
+ "0024e347537ee69f": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "6a9fe674a279974f": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "fac34a7676a30bea": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/05-practice-pointers-memory-and-strings.md"
+ },
+ "6c4c63bf5705238c": {
+  "ok": true,
+  "where": "c/04-advanced-language/05-practice-macros-callbacks-and-errors.md"
+ },
+ "6a8c0f89996b73d3": {
+  "ok": true,
+  "where": "c/04-advanced-language/05-practice-macros-callbacks-and-errors.md"
+ },
+ "7e11d89463050fa8": {
+  "ok": true,
+  "where": "c/07-systems-level-c/09-practice-bits-io-and-byte-order.md"
+ },
+ "30b196f797e60490": {
+  "ok": true,
+  "where": "c/07-systems-level-c/09-practice-bits-io-and-byte-order.md"
+ },
+ "a526439bb32dd3d6": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "8ed8e2cf572da8c6": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "321b4b836a0e9c95": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "d6e2690831cc9f66": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "ce5a680f89c13c08": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "db9a9ac2bc9541aa": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "1b6be61ecf977617": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "380ae6234e002969": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "abe5e967558c6dd4": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "18f4337a373f0783": {
+  "ok": true,
+  "where": "dsa/00-start-here/03-practice-dsa-exercises.md"
+ },
+ "af0cc1f8c9b13a24": {
+  "ok": true,
+  "where": "dsa/01-foundations/03-practice-complexity-and-recursion.md"
+ },
+ "5c5841feffdd21ba": {
+  "ok": true,
+  "where": "dsa/01-foundations/03-practice-complexity-and-recursion.md"
+ },
+ "3bf226ba5b0981db": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/04-practice-arrays-lists-and-queues.md"
+ },
+ "d64fdd546eb9e5d1": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/04-practice-arrays-lists-and-queues.md"
+ },
+ "e2911b2ad119279b": {
+  "ok": true,
+  "where": "dsa/02-linear-structures/04-practice-arrays-lists-and-queues.md"
+ },
+ "a1cefb3c268f8bdd": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "c0109fa86e07f292": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "660a00d993dae236": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/04-practice-bounds-stability-and-counting.md"
+ },
+ "234372566833b60e": {
+  "ok": true,
+  "where": "dsa/04-hashing/03-practice-hash-functions-probing-and-bloom-filters.md"
+ },
+ "bd81d41d4abadea7": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "3b71df43d52026de": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "f1aba50aebe06649": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "270a6a6eb0869dfc": {
+  "ok": true,
+  "where": "dsa/05-trees/09-practice-trees-heaps-and-tries.md"
+ },
+ "3960ee7992a6ebca": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "804fbbb68f48889a": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "9191173b59f6483f": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "6301655286c544fb": {
+  "ok": true,
+  "where": "dsa/06-graphs/04-practice-graph-algorithms.md"
+ },
+ "56204aee4578aeac": {
+  "ok": true,
+  "where": "dsa/07-strings/03-practice-matching-palindromes-and-hashing.md"
+ },
+ "ebdce152ed9e8e5a": {
+  "ok": true,
+  "where": "dsa/07-strings/03-practice-matching-palindromes-and-hashing.md"
+ },
+ "c1954466abe7ec85": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "be3d8903abe5603b": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "062c3f240e865937": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "4c76b129a39bc6b2": {
+  "ok": true,
+  "where": "dsa/08-algorithm-design/08-practice-dp-greedy-and-backtracking.md"
+ },
+ "6d4dffd17781642c": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/05-practice-caches-arenas-and-lock-free-queues.md"
+ },
+ "697628e35470aaf2": {
+  "ok": true,
+  "where": "dsa/09-systems-structures/05-practice-caches-arenas-and-lock-free-queues.md"
+ },
+ "78feb0d765e99c5e": {
+  "ok": true,
+  "where": "c/00-essentials/05-how-a-c-program-runs.md"
+ },
+ "255d99d952d60460": {
+  "ok": true,
+  "where": "dsa/01-foundations/03-practice-complexity-and-recursion.md"
+ },
+ "05377fbb2e8c163a": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/02-comparison-sorts.md",
+  "files": [
+   "sorts.h"
+  ]
+ },
+ "b9318dfe20004361": {
+  "ok": true,
+  "where": "dsa/03-searching-and-sorting/02-comparison-sorts.md",
+  "files": [
+   "sorts.h",
+   "timing.h"
+  ]
  }
 }

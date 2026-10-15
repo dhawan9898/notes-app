@@ -24,11 +24,27 @@ Low-level C is full of small idioms that are easy to get subtly wrong. Write eac
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Bit toolkit.** Implement `popcount32`, `is_pow2`, `rotl32`, and functions to set, clear and toggle bit *i* of a `uint32_t`, plus `byte_swap` that reverses the four bytes. Constraints: `is_pow2(0)` is false; `rotl32` must be well defined for a rotation of 0 (hint: `x >> 32` is undefined for a 32-bit type). Try to write `popcount32` so it loops once per *set* bit.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/bits/ex1-bit-toolkit.c}}
+
+</details>
 
 **2. Short reads.** `read(fd, buf, 64)` on a pipe may return 3. Write `read_all(fd, buf, cap)` that keeps reading until end of file or the buffer is full, retrying on `EINTR`. Demonstrate it with a child process that writes `abc`, pauses, then writes `defgh`.
 
 **3. Portable serialisation.** Write `put_u16`, `put_u32` and `get_u32` that store and load integers in big-endian (network) order using only shifts, so they work on any host. Check them against `ntohl`.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/bits/ex3-big-endian.c}}
+
+</details>
 
 **4. Short answer.** (a) Why does a program that prints with `printf` and then crashes sometimes lose its last lines, while `write(1, ...)` does not? (b) What does `fsync(fd)` guarantee that `fflush(fp)` does not? (c) When is `read()` returning 0 *not* an error?
 

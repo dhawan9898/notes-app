@@ -20,13 +20,249 @@ Many "different" problems are the same graph problem in disguise: a grid is a gr
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Islands.** A 6×8 grid contains `1` (land) and `0` (water). Count the islands (groups of land cells connected up, down, left or right) and the size of the largest. Which traversal do you use, and what happens to your marks if you reuse the grid afterwards?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 1: count the islands (4-connected groups of 1s) and the size of the largest.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAXR 8
+#define MAXC 8
+
+/* ===== Your code: edit below this line ===== */
+/* grid has rows strings of cols characters '0' or '1'; you may change it (for example to mark visited cells). */
+void islands(char grid[][MAXC + 1], int rows, int cols, int *count, int *largest) {
+    (void)grid; (void)rows; (void)cols;
+    *count = 0;
+    *largest = 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    char g[6][MAXC + 1] = {"11000111", "11000101", "00100000", "00011100", "10011100", "10000001"};
+    int n = -1, big = -1;
+    islands(g, 6, 8, &n, &big);
+    check_int("islands in the 6x8 grid", n, 6);
+    check_int("  largest island", big, 6);
+    char diag[2][MAXC + 1] = {"10", "01"};
+    islands(diag, 2, 2, &n, &big);
+    check_int("islands in {10, 01} (diagonals do not connect)", n, 2);
+    char water[1][MAXC + 1] = {"000"};
+    islands(water, 1, 3, &n, &big);
+    check_int("islands in all water", n, 0);
+    return summary();
+}
+```
+
+</details>
 
 **2. Shortest path in a maze.** `S` is the start, `E` the exit, `#` a wall and `.` a free cell; moves go up, down, left or right at cost 1. Find the number of steps of the shortest path. Why does BFS give the shortest path here and DFS does not?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: the length of the shortest path from S to E in a grid maze (breadth-first search).
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* Moves go up, down, left or right; '#' is a wall. Return the number of steps, or -1 if E cannot be reached. */
+int shortest_path(const char *maze[], int rows, int cols) {
+    (void)maze; (void)rows; (void)cols;
+    return -1;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    const char *maze[] = {"S.#......", ".##.####.", "....#....", ".####.##.", "......#.E"};
+    check_int("shortest_path(5x9 maze)", shortest_path(maze, 5, 9), 16);
+    const char *next_to[] = {"SE"};
+    check_int("shortest_path(\"SE\")", shortest_path(next_to, 1, 2), 1);
+    const char *walled[] = {"S#E"};
+    check_int("shortest_path(\"S#E\") (unreachable)", shortest_path(walled, 1, 3), -1);
+    const char *open[] = {"S...", "....", "...E"};
+    check_int("shortest_path(open 3x4 room)", shortest_path(open, 3, 4), 5);
+    return summary();
+}
+```
+
+</details>
+
 **3. Dependency order.** Six morning tasks have prerequisites (wake before shower before dress before leave, wake before coffee before breakfast before leave). Output a valid order with a topological sort. What does your algorithm do if you add "leave before wake"?
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: a valid order for tasks with prerequisites, or detect that none exists.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define N 6
+static const char *name[N] = {"wake", "shower", "dress", "breakfast", "coffee", "leave"};
+
+/* ===== Your code: edit below this line ===== */
+/* edge[a][b] == 1 means task a must happen before task b. Fill order[0..N) and return 1, or return 0 if there is a cycle. */
+int topo_order(int edge[N][N], int order[N]) {
+    (void)edge;
+    for (int i = 0; i < N; i++) order[i] = i;
+    return 1;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+/* 1 if order is a permutation of 0..N-1 that puts every a before b for each edge a -> b */
+static int respects(int edge[N][N], const int order[N]) {
+    int pos[N], seen[N] = {0};
+    for (int i = 0; i < N; i++) { if (order[i] < 0 || order[i] >= N || seen[order[i]]++) return 0; pos[order[i]] = i; }
+    for (int a = 0; a < N; a++)
+        for (int b = 0; b < N; b++) if (edge[a][b] && pos[a] > pos[b]) return 0;
+    return 1;
+}
+
+int main(void) {
+    int edge[N][N] = {{0}};
+    edge[0][1] = edge[1][2] = edge[2][5] = 1;      /* wake -> shower -> dress -> leave */
+    edge[0][4] = edge[4][3] = edge[3][5] = 1;      /* wake -> coffee -> breakfast -> leave */
+    int order[N] = {0};
+    check_int("topo_order(morning tasks) succeeds", topo_order(edge, order), 1);
+    check_int("  and the order respects every prerequisite", respects(edge, order), 1);
+    printf("     order:");
+    for (int i = 0; i < N; i++) printf(" %s", order[i] >= 0 && order[i] < N ? name[order[i]] : "?");
+    printf("\n");
+    edge[5][0] = 1;                                /* leave before wake: a cycle */
+    check_int("topo_order(with leave -> wake) reports the cycle", topo_order(edge, order), 0);
+    return summary();
+}
+```
+
+</details>
+
 **4. Weighted shortest paths.** For the 5-vertex weighted directed graph in the answer program, compute the shortest distance from vertex 0 to every vertex with Dijkstra's algorithm. Why does Dijkstra fail on graphs with negative edge weights?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 4: shortest distances from one vertex with Dijkstra's algorithm.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define N 5
+#define INF INT_MAX     /* no edge / unreachable */
+
+/* ===== Your code: edit below this line ===== */
+/* w[u][v] is the weight of edge u -> v (>= 0) or INF. Fill dist[v] with the shortest distance from src, INF if unreachable. */
+void dijkstra(int w[N][N], int src, int dist[N]) {
+    for (int v = 0; v < N; v++) dist[v] = w[src][v];    /* direct edges only */
+    dist[src] = 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static void print_arr(const int *v, int n) {
+    printf("{");
+    for (int i = 0; i < n; i++) printf(i ? ", %d" : "%d", v[i]);
+    printf("}");
+}
+
+static void check_arr(const char *what, const int *got, int got_n, const int *want, int want_n) {
+    int same = got_n == want_n;
+    for (int i = 0; same && i < want_n; i++) same = got[i] == want[i];
+    checks++;
+    if (!same) failed++;
+    printf("%s %s", same ? "PASS" : "FAIL", what);
+    if (same) { printf(" = "); print_arr(got, got_n); }
+    else { printf(": expected "); print_arr(want, want_n); printf(", got "); print_arr(got, got_n); }
+    printf("\n");
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    int w[N][N];
+    for (int i = 0; i < N; i++) for (int j = 0; j < N; j++) w[i][j] = INF;
+    w[0][1] = 4; w[0][2] = 1; w[2][1] = 2; w[1][3] = 1; w[2][3] = 5; w[3][4] = 3;
+    int dist[N];
+    dijkstra(w, 0, dist);
+    const int want[N] = {0, 3, 1, 4, 7};
+    check_arr("dist from 0", dist, N, want, N);
+    dijkstra(w, 3, dist);
+    check_int("dist from 3 to 4", dist[4], 3);
+    check_int("dist from 3 to 0 (unreachable) is INF", dist[0] == INF, 1);
+    return summary();
+}
+```
+
+</details>
 
 ## Answers
 

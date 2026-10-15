@@ -11,6 +11,7 @@
     "check": "node scripts/check-notes.mjs",
     "fetch-runner": "node scripts/fetch-runner.mjs",
     "snippets": "node scripts/validate-snippets.mjs",
+    "starters": "node scripts/verify-starters.mjs",
     "app:sync": "node scripts/fetch-runner.mjs && npm run build && cap sync android",
     "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug"
   },

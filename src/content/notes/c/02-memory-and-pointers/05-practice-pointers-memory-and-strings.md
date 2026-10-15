@@ -23,6 +23,8 @@ These exercises ask you to predict, then to find real bugs with sanitizers. Comp
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Predict.** Given `int a[5] = {10, 20, 30, 40, 50}; int *p = a + 1;` what are `*p`, `p[2]`, `*(a + 3)` and `&a[4] - p`? What are `sizeof a` and `sizeof p`, and what does `sizeof arr` give *inside* a function declared `f(int arr[])`? How many bytes separate `(char *)(p + 1)` and `(char *)p`?
 
 **2. Dangling pointer.** The function below returns the address of a local array. Explain what the compiler and the run time do, then fix it **two different ways** (one where the caller provides the buffer, one that allocates).
@@ -35,6 +37,62 @@ char *make_greeting_bad(const char *name) {
 }
 ```
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: two correct replacements for a function that returned the address of a local array.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ===== Your code: edit below this line ===== */
+/* Fix 1: the caller supplies the buffer and its size; write "Hello, <name>" into it (truncate if it does not fit). */
+void make_greeting_buf(const char *name, char *out, size_t cap) {
+    (void)name; (void)out; (void)cap;
+}
+
+/* Fix 2: return a newly allocated "Hello, <name>" that the caller frees, or NULL if memory runs out. */
+char *make_greeting_heap(const char *name) {
+    (void)name;
+    return NULL;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_str(const char *what, const char *got, const char *want) {
+    checks++;
+    if (got && strcmp(got, want) == 0) printf("PASS %s = \"%s\"\n", what, got);
+    else { failed++; printf("FAIL %s: expected \"%s\", got %s%s%s\n", what, want, got ? "\"" : "", got ? got : "NULL", got ? "\"" : ""); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    char mine[32] = "";
+    make_greeting_buf("Ada", mine, sizeof mine);
+    check_str("make_greeting_buf(\"Ada\", 32-byte buffer)", mine, "Hello, Ada");
+    char small[8] = "";
+    make_greeting_buf("Grace", small, sizeof small);
+    check_str("make_greeting_buf(\"Grace\", 8-byte buffer) truncates", small, "Hello, ");
+    char *h = make_greeting_heap("Linus");
+    check_str("make_greeting_heap(\"Linus\")", h, "Hello, Linus");
+    free(h);
+    char *long_name = make_greeting_heap("Margaret Hamilton, Apollo flight software");
+    check_str("make_greeting_heap(long name) is not truncated", long_name, "Hello, Margaret Hamilton, Apollo flight software");
+    free(long_name);
+    return summary();
+}
+```
+
+</details>
+
 **3. Find the leak.** Run the program below under AddressSanitizer (LeakSanitizer is included). Read the report and fix `student_free`.
 
 ```c
@@ -43,9 +101,156 @@ static void student_free(Student *s) { free(s->name); }
 
 (`Student` holds a heap-allocated `name`, a heap-allocated `scores` array and is itself heap-allocated.)
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: student_free must release everything student_new allocated.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* The tests count allocations: malloc, calloc and free below go through these counters. */
+static int live_blocks;
+static void *counted_malloc(size_t n) { void *p = malloc(n); if (p) live_blocks++; return p; }
+static void *counted_calloc(size_t k, size_t n) { void *p = calloc(k, n); if (p) live_blocks++; return p; }
+static void counted_free(void *p) { if (p) live_blocks--; free(p); }
+#define malloc(n) counted_malloc(n)
+#define calloc(k, n) counted_calloc(k, n)
+#define free(p) counted_free(p)
+
+typedef struct { char *name; int *scores; int n; } Student;
+
+static Student *student_new(const char *name, int n) {
+    Student *s = malloc(sizeof *s);
+    s->name = malloc(strlen(name) + 1);
+    strcpy(s->name, name);
+    s->scores = calloc((size_t)n, sizeof(int));
+    s->n = n;
+    return s;
+}
+
+/* ===== Your code: edit below this line ===== */
+void student_free(Student *s) {
+    free(s->name);
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Student *s = student_new("Ada", 3);
+    check_int("blocks allocated by student_new", live_blocks, 3);
+    student_free(s);
+    check_int("blocks still allocated after student_free", live_blocks, 0);
+    Student *t = student_new("Grace", 0);
+    student_free(t);
+    check_int("blocks still allocated after a second student", live_blocks, 0);
+    return summary();
+}
+```
+
+</details>
+
 **4. Measure a stack frame.** Write a recursive function with a 200-byte local array that records the address of that array at each depth, and use the difference between depth 0 and depth 4 to estimate the size of one frame. Which way does the stack grow?
 
 **5. A growable string.** Write `Builder` (`char *data; size_t len, cap;`) with `sb_init` and `sb_append(Builder *, const char *)` that grows by doubling with `realloc`. It must not leak, must not lose the old buffer when `realloc` fails, and must keep the string NUL-terminated.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 5: a growable string that doubles its capacity with realloc.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* The tests can make the next realloc fail, to check that a failed append keeps the old string. */
+static int fail_next_realloc;
+void *test_realloc(void *p, size_t n) {
+    if (fail_next_realloc) { fail_next_realloc = 0; return NULL; }
+    return realloc(p, n);
+}
+#define realloc(p, n) test_realloc(p, n)
+
+typedef struct { char *data; size_t len, cap; } Builder;
+
+/* ===== Your code: edit below this line ===== */
+/* Start with a small buffer holding "" (len 0). Return 1 on success, 0 if memory runs out. */
+int sb_init(Builder *b) {
+    b->data = NULL;
+    b->len = b->cap = 0;
+    return 0;
+}
+
+/* Append s, doubling cap until it fits. On failure return 0 and leave b exactly as it was. */
+int sb_append(Builder *b, const char *s) {
+    (void)b; (void)s;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static void check_str(const char *what, const char *got, const char *want) {
+    checks++;
+    if (got && strcmp(got, want) == 0) printf("PASS %s = \"%s\"\n", what, got);
+    else { failed++; printf("FAIL %s: expected \"%s\", got %s%s%s\n", what, want, got ? "\"" : "", got ? got : "NULL", got ? "\"" : ""); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Builder b;
+    check_int("sb_init succeeds", sb_init(&b), 1);
+    if (b.data) {
+        check_str("empty builder", b.data, "");
+        int ok = 1;
+        for (int i = 1; i <= 5; i++) {
+            char piece[16];
+            snprintf(piece, sizeof piece, "item-%d;", i);
+            ok &= sb_append(&b, piece);
+        }
+        check_int("five appends succeed", ok, 1);
+        check_str("contents", b.data, "item-1;item-2;item-3;item-4;item-5;");
+        check_int("len", (long long)b.len, 35);
+        check_int("cap leaves room for the terminating NUL", b.cap > b.len, 1);
+        fail_next_realloc = 1;
+        check_int("append when realloc fails returns", sb_append(&b, "this one needs to grow the buffer a lot further than it is now"), 0);
+        check_str("  and keeps the old string", b.data, "item-1;item-2;item-3;item-4;item-5;");
+        check_int("  and the old len", (long long)b.len, 35);
+        fail_next_realloc = 0;
+        free(b.data);
+    }
+    return summary();
+}
+```
+
+</details>
 
 **6. Short answer.** (a) Why is `char *s = "abc"; s[0] = 'x';` a bug while `char s[] = "abc"; s[0] = 'x';` is fine? (b) Why does `strncpy(dst, src, sizeof dst)` not guarantee a valid string? (c) What is the difference between `free(p)` followed by `p = NULL` and just `free(p)`?
 

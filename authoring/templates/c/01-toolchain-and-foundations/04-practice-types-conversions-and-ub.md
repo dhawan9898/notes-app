@@ -22,11 +22,20 @@ Reading about integer promotion is easy; predicting it is a skill. Try each exer
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Predict (paper).** On a typical 64-bit Linux system with 32-bit `int` and signed `char`, what do these print? (a) `uint8_t x = 200, y = 100; printf("%d", x + y);` and the same with `(uint8_t)(x + y)`; (b) `printf("%d", (int)(char)200);` (c) `printf("%d", -1 < 1u);` (d) `-7 / 2`, `-7 % 2`, `7 / -2`; (e) `0.1 + 0.2 == 0.3`.
 
 **2. Ranges.** Without running anything, write the value of `INT_MAX`, `INT_MIN` and `UINT_MAX` for a 32-bit `int`. Then print them and `sizeof` of `char`, `short`, `int`, `long`, `long long` and a pointer on your machine.
 
 **3. Overflow-safe addition.** Write `bool safe_add(int a, int b, int *out)` that stores `a + b` and returns `true` only when the true sum fits in an `int`, **without ever performing an overflowing addition**. Test it with `2000000000 + 2000000000` and `2000000000 + (-5)`.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/types/ex3-safe-add.c}}
+
+</details>
 
 **4. Defined or undefined?** For each, say whether the behaviour is defined, implementation-defined or undefined, and why: (a) `unsigned u = UINT_MAX; u++;` (b) `int i = INT_MAX; i++;` (c) `int n = 1 << 31;` (d) `int a[4]; a[4] = 0;` (e) `(int)3.99` (f) `char c = 300;` Run (b) under UBSan and read the report.
 
@@ -35,6 +44,13 @@ Reading about integer promotion is easy; predicting it is a skill. Try each exer
 ```c
 for (size_t i = n - 1; i >= 0 && steps < 5; i--) steps++;
 ```
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/types/ex5-countdown.c}}
+
+</details>
 
 **6. Which stage complains?** For each problem, name the build stage that reports it (preprocessor, compiler, assembler, linker or run time): (a) `#include <stdoi.h>` (b) calling `square(7)` without a prototype under `-std=c17` (c) calling a function that is declared but defined in no file (d) `int x = "hello";` (e) an off-by-one write past a local array.
 

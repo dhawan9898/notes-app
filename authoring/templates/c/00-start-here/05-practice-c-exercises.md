@@ -19,6 +19,8 @@ Do these in order. For each: try it on paper or in a file first, then compile wi
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Number systems (paper).** Convert `1011 0110` (binary) to decimal and to hexadecimal. Convert decimal `200` to binary and hexadecimal.
 
 **2. Predict the output (paper).** What does each expression evaluate to? `5 / 2`, `5 % 2`, `5 / 2.0`, `10 - 3 * 2`, `7 & 3`, `1 << 4`.
@@ -29,13 +31,48 @@ Do these in order. For each: try it on paper or in a file first, then compile wi
 void swap_ints(int a, int b) { int t = a; a = b; b = t; }
 ```
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex3-swap.c}}
+
+</details>
+
 **4. Maximum.** Write `int max_of(const int *v, int count)` returning the largest element of an array (assume `count > 0`).
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex4-max.c}}
+
+</details>
 
 **5. Reverse a string in place.** Write `void reverse(char *s)`; `"stressed"` becomes `"desserts"`. (Hint: a string ends at `'\0'`; use `strlen` and swap pairs from both ends.)
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex5-reverse.c}}
+
+</details>
+
 **6. Count the one-bits.** Write `int popcount(uint32_t x)` returning how many bits of `x` are 1. `popcount(255)` is 8.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex6-popcount.c}}
+
+</details>
+
 **7. A growable array.** Using `malloc`/`realloc`/`free`, write a small structure holding an `int` array that doubles its capacity when full, with a `vec_push` function. Push ten squares and print the size and capacity. Check that you free the memory.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex7-vec.c}}
+
+</details>
 
 **8. Find the bug.** This function should sum the first `n` elements. It sometimes returns a wrong value or crashes. Find the bug, then run it under AddressSanitizer and read the report.
 
@@ -47,7 +84,21 @@ int sum_first_n(const int *v, int n) {
 }
 ```
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex8-sum.c}}
+
+</details>
+
 **9. Subnetting with a mask.** Given the address `10.20.77.130` and prefix length 21, compute the network address by building the mask and using `&`. (Check against the "do it in your head" method in *IPv4 Addressing, Subnetting, VLSM and CIDR*.)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/start-here/ex9-network.c}}
+
+</details>
 
 **10. Wrap-around.** What are `(uint8_t)-1`, `(uint8_t)-128`, `(int8_t)200` and `(uint8_t)(255 + 1)`? Explain each in terms of two's complement.
 

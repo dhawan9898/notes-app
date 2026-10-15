@@ -19,9 +19,18 @@ Hash tables are simple to describe and easy to get subtly wrong. Each exercise i
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Judge a hash function.** Hash 2,000 pseudo-random lowercase words into 256 buckets using (a) the word's length, (b) its first letter, (c) djb2 (`h = h*33 + c`, starting at 5381). For each, count the buckets used and the longest chain. Predict the ranking and say what the *ideal* chain length is.
 
 **2. The deletion bug.** A linear-probing table with 8 slots stores keys 8, 16 and 24, which all hash to slot 0 (`key % 8`). Delete 16 by simply marking its slot empty. What does a lookup of 24 return, and why? Fix it with a **tombstone** marker and show that lookups work and that a later insert can reuse the tombstone.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/hashing/ex2-tombstone.c}}
+
+</details>
 
 **3. Bloom filter arithmetic.** A Bloom filter with `m = 8192` bits and `k = 4` hash functions holds `n = 1000` keys. Use the formula `(1 - e^(-kn/m))^k` to predict the false-positive rate, then build it and measure with 100,000 keys that were never inserted. Can a Bloom filter ever report a stored key as missing?
 

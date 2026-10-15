@@ -22,11 +22,127 @@ Macros and callbacks are where C gives you power and no safety net. Predict firs
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Macro traps.** Given `#define SQUARE_BAD(x) x * x`, what is `SQUARE_BAD(1 + 2)`? Fix the macro. Then, for `#define MAX_BAD(a, b) ((a) > (b) ? (a) : (b))`, what happens with `MAX_BAD(next(), 0)` where `next()` increments a global counter and returns it? Replace the macro with something that evaluates each argument once.
 
 **2. A dispatch table.** Write a table of `{name, function pointer}` entries for `add`, `sub` and `mul` (each `int (*)(int, int)`) and call each through the table with arguments 6 and 3, without a `switch`.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: a dispatch table of {name, function pointer} entries, called without a switch.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct { const char *name; int (*op)(int, int); } Command;
+
+/* ===== Your code: edit below this line ===== */
+int add(int a, int b) { (void)a; (void)b; return 0; }
+int sub(int a, int b) { (void)a; (void)b; return 0; }
+int mul(int a, int b) { (void)a; (void)b; return 0; }
+
+/* Point each entry at its function. */
+const Command table[] = {{"add", NULL}, {"sub", NULL}, {"mul", NULL}};
+const size_t table_len = sizeof table / sizeof table[0];
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    const char *names[] = {"add", "sub", "mul"};
+    const int want[] = {9, 3, 18};
+    for (int k = 0; k < 3; k++) {
+        char what[48];
+        snprintf(what, sizeof what, "%s(6, 3) through the table", names[k]);
+        const Command *c = NULL;
+        for (size_t i = 0; i < table_len; i++)              /* look the name up: no switch */
+            if (strcmp(table[i].name, names[k]) == 0) c = &table[i];
+        if (!c || !c->op) { checks++; failed++; printf("FAIL %s: no function pointer in the table\n", what); continue; }
+        check_int(what, c->op(6, 3), want[k]);
+    }
+    return summary();
+}
+```
+
+</details>
+
 **3. Sorting with callbacks.** Sort an array of `struct {const char *name; int age;}` first by age, then by name, using `qsort`. Write both comparators. Why must a comparator never be written as `return a->age - b->age;`?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: qsort comparators, by age and by name.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct { const char *name; int age; } Person;
+
+/* ===== Your code: edit below this line ===== */
+/* Return a negative number, 0 or a positive number, like strcmp. Never return a->age - b->age: it can overflow. */
+int by_age(const void *x, const void *y) {
+    (void)x; (void)y;
+    return 0;
+}
+
+int by_name(const void *x, const void *y) {
+    (void)x; (void)y;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_str(const char *what, const char *got, const char *want) {
+    checks++;
+    if (got && strcmp(got, want) == 0) printf("PASS %s = \"%s\"\n", what, got);
+    else { failed++; printf("FAIL %s: expected \"%s\", got %s%s%s\n", what, want, got ? "\"" : "", got ? got : "NULL", got ? "\"" : ""); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Person people[] = {{"Linus", 55}, {"Ada", 36}, {"Grace", 85}, {"Dennis", 70}, {"Big", 2000000000}, {"Small", -2000000000}};
+    size_t n = sizeof people / sizeof people[0];
+    char order[96];
+    qsort(people, n, sizeof people[0], by_age);
+    order[0] = '\0';
+    for (size_t i = 0; i < n; i++) { strcat(order, people[i].name); if (i + 1 < n) strcat(order, " "); }
+    check_str("sorted by age", order, "Small Ada Linus Dennis Grace Big");
+    qsort(people, n, sizeof people[0], by_name);
+    order[0] = '\0';
+    for (size_t i = 0; i < n; i++) { strcat(order, people[i].name); if (i + 1 < n) strcat(order, " "); }
+    check_str("sorted by name", order, "Ada Big Dennis Grace Linus Small");
+    Person extremes[] = {{"Big", 2000000000}, {"Small", -2000000000}};      /* 2000000000 - (-2000000000) overflows an int: a subtracting comparator gets the sign wrong */
+    qsort(extremes, 2, sizeof extremes[0], by_age);
+    check_str("two extreme ages sorted by age: first", extremes[0].name, "Small");
+    return summary();
+}
+```
+
+</details>
 
 **4. One cleanup path.** Write `char *slurp(const char *path, size_t *len)` that reads a whole file into a NUL-terminated buffer. It must return `NULL` with `errno` set on every failure, free everything it allocated and close the file on **every** error path, using a single cleanup label. Why save `errno` before cleaning up?
 

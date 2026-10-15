@@ -23,6 +23,8 @@ These exercises ask you to predict, then to find real bugs with sanitizers. Comp
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Predict.** Given `int a[5] = {10, 20, 30, 40, 50}; int *p = a + 1;` what are `*p`, `p[2]`, `*(a + 3)` and `&a[4] - p`? What are `sizeof a` and `sizeof p`, and what does `sizeof arr` give *inside* a function declared `f(int arr[])`? How many bytes separate `(char *)(p + 1)` and `(char *)p`?
 
 **2. Dangling pointer.** The function below returns the address of a local array. Explain what the compiler and the run time do, then fix it **two different ways** (one where the caller provides the buffer, one that allocates).
@@ -35,6 +37,13 @@ char *make_greeting_bad(const char *name) {
 }
 ```
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/pointers/ex2-greeting.c}}
+
+</details>
+
 **3. Find the leak.** Run the program below under AddressSanitizer (LeakSanitizer is included). Read the report and fix `student_free`.
 
 ```c
@@ -43,9 +52,23 @@ static void student_free(Student *s) { free(s->name); }
 
 (`Student` holds a heap-allocated `name`, a heap-allocated `scores` array and is itself heap-allocated.)
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/pointers/ex3-leak.c}}
+
+</details>
+
 **4. Measure a stack frame.** Write a recursive function with a 200-byte local array that records the address of that array at each depth, and use the difference between depth 0 and depth 4 to estimate the size of one frame. Which way does the stack grow?
 
 **5. A growable string.** Write `Builder` (`char *data; size_t len, cap;`) with `sb_init` and `sb_append(Builder *, const char *)` that grows by doubling with `realloc`. It must not leak, must not lose the old buffer when `realloc` fails, and must keep the string NUL-terminated.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include c/starters/pointers/ex5-builder.c}}
+
+</details>
 
 **6. Short answer.** (a) Why is `char *s = "abc"; s[0] = 'x';` a bug while `char s[] = "abc"; s[0] = 'x';` is fine? (b) Why does `strncpy(dst, src, sizeof dst)` not guarantee a valid string? (c) What is the difference between `free(p)` followed by `p = NULL` and just `free(p)`?
 

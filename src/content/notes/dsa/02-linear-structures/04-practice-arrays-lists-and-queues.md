@@ -20,13 +20,215 @@ These exercises turn the module's ideas into numbers and pointer code. Write you
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 **1. Why doubling?** A dynamic array starts with capacity 1. Count how many element **copies** `N` pushes cost if it grows (a) by doubling and (b) by a fixed +10. Predict the ratio for `N = 1,000,000` before running anything, then state the amortised cost per push for each strategy.
 
 **2. Cycle detection.** Given the head of a singly linked list, decide whether it contains a cycle using O(1) extra memory. (Hint: two pointers moving at different speeds.) Explain why they must meet if a cycle exists.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 2: does a singly linked list contain a cycle? Use O(1) extra memory.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node { int v; struct Node *next; } Node;
+
+/* ===== Your code: edit below this line ===== */
+int has_cycle(const Node *head) {
+    (void)head;
+    return 0;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Node n[6];
+    for (int i = 0; i < 6; i++) { n[i].v = i; n[i].next = i < 5 ? &n[i + 1] : NULL; }
+    check_int("has_cycle(0 -> 1 -> 2 -> 3 -> 4 -> 5)", has_cycle(&n[0]), 0);
+    n[5].next = &n[2];
+    check_int("has_cycle(... 5 -> back to 2)", has_cycle(&n[0]), 1);
+    n[5].next = &n[0];
+    check_int("has_cycle(... 5 -> back to the head)", has_cycle(&n[0]), 1);
+    n[5].next = NULL;
+    Node self = {7, NULL};
+    self.next = &self;
+    check_int("has_cycle(a node pointing to itself)", has_cycle(&self), 1);
+    check_int("has_cycle(NULL)", has_cycle(NULL), 0);
+    Node one = {1, NULL};
+    check_int("has_cycle(single node)", has_cycle(&one), 0);
+    return summary();
+}
+```
+
+</details>
+
 **3. Merge sorted lists.** Merge two sorted singly linked lists into one sorted list **without allocating new nodes**. Keep the merge stable (equal keys from the first list stay first). Hint: a dummy head node removes the special case for the first element.
 
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 3: merge two sorted lists by relinking nodes (no allocation), keeping equal keys stable.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node { int key; char tag; struct Node *next; } Node;
+
+/* ===== Your code: edit below this line ===== */
+/* Return the head of the merged list. Equal keys: nodes from a come before nodes from b. */
+Node *merge(Node *a, Node *b) {
+    (void)b;
+    return a;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static void check_str(const char *what, const char *got, const char *want) {
+    checks++;
+    if (got && strcmp(got, want) == 0) printf("PASS %s = \"%s\"\n", what, got);
+    else { failed++; printf("FAIL %s: expected \"%s\", got %s%s%s\n", what, want, got ? "\"" : "", got ? got : "NULL", got ? "\"" : ""); }
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Node a[3] = {{1, 'a', &a[1]}, {5, 'a', &a[2]}, {9, 'a', NULL}};
+    Node b[3] = {{2, 'b', &b[1]}, {5, 'b', &b[2]}, {8, 'b', NULL}};
+    char got[32] = "";
+    int k = 0, foreign = 0;
+    for (Node *p = merge(a, b); p && k < 30; p = p->next) {
+        if (!((p >= a && p < a + 3) || (p >= b && p < b + 3))) foreign++;
+        k += snprintf(got + k, sizeof got - (size_t)k, k ? " %d%c" : "%d%c", p->key, p->tag);
+    }
+    check_str("merge(1 5 9, 2 5 8)", got, "1a 2b 5a 5b 8b 9a");
+    check_int("nodes that were not in the input lists", foreign, 0);
+    Node c = {4, 'c', NULL};
+    Node *m = merge(NULL, &c);
+    check_int("merge(empty, 4) head key", m ? m->key : -1, 4);
+    check_int("merge(empty, empty) is NULL", merge(NULL, NULL) == NULL, 1);
+    return summary();
+}
+```
+
+</details>
+
 **4. Queue from two stacks.** Implement a FIFO queue using only two LIFO stacks. Show that every item is moved between the stacks at most once, so `enqueue` and `dequeue` are amortised O(1).
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+```c
+// Exercise 4: a FIFO queue built from two LIFO stacks, O(1) amortised per operation.
+// Press Run to see which checks fail, then Edit code, change only the marked part, and Run again until every check passes.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define CAP 64
+typedef struct { int a[CAP]; int n; } Stack;
+static long pushes;     /* the tests count every push, to check that items are not shuffled back and forth */
+void spush(Stack *s, int v) { pushes++; s->a[s->n++] = v; }
+int spop(Stack *s) { return s->a[--s->n]; }
+typedef struct { Stack in, out; } Queue;
+
+/* ===== Your code: edit below this line ===== */
+/* Use only spush and spop on q->in and q->out. */
+void enqueue(Queue *q, int v) {
+    (void)q; (void)v;
+}
+
+int dequeue(Queue *q) {
+    (void)q;
+    return -1;
+}
+/* ===== End of your code ===== */
+
+/* ===== Tests: no need to change anything below ===== */
+static int checks, failed;
+
+static void check_int(const char *what, long long got, long long want) {
+    checks++;
+    if (got == want) printf("PASS %s = %lld\n", what, got);
+    else { failed++; printf("FAIL %s: expected %lld, got %lld\n", what, want, got); }
+}
+
+static void print_arr(const int *v, int n) {
+    printf("{");
+    for (int i = 0; i < n; i++) printf(i ? ", %d" : "%d", v[i]);
+    printf("}");
+}
+
+static void check_arr(const char *what, const int *got, int got_n, const int *want, int want_n) {
+    int same = got_n == want_n;
+    for (int i = 0; same && i < want_n; i++) same = got[i] == want[i];
+    checks++;
+    if (!same) failed++;
+    printf("%s %s", same ? "PASS" : "FAIL", what);
+    if (same) { printf(" = "); print_arr(got, got_n); }
+    else { printf(": expected "); print_arr(want, want_n); printf(", got "); print_arr(got, got_n); }
+    printf("\n");
+}
+
+static int summary(void) {
+    printf("%d of %d checks passed%s\n", checks - failed, checks, failed ? "" : ". Well done!");
+    return failed != 0;
+}
+
+int main(void) {
+    Queue q = {0};
+    for (int i = 1; i <= 4; i++) enqueue(&q, i * 10);
+    int got[8], k = 0;
+    got[k++] = dequeue(&q);
+    got[k++] = dequeue(&q);
+    enqueue(&q, 50);
+    enqueue(&q, 60);
+    for (int i = 0; i < 4; i++) got[k++] = dequeue(&q);
+    const int want[] = {10, 20, 30, 40, 50, 60};
+    check_arr("dequeue order", got, k, want, 6);
+    pushes = 0;
+    Queue r = {0};
+    for (int round = 0; round < 10; round++) {
+        for (int i = 0; i < 5; i++) enqueue(&r, i);
+        for (int i = 0; i < 5; i++) (void)dequeue(&r);
+    }
+    printf("     100 operations on 50 items made %ld pushes\n", pushes);
+    check_int("each item pushed at most twice (once per stack)", pushes <= 100, 1);
+    return summary();
+}
+```
+
+</details>
 
 ## Answers
 

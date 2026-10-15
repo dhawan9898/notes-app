@@ -19,16 +19,97 @@ Write each solution in C yourself, test it on small examples (including an empty
 
 ## Exercises
 
+Exercises that ask you to write or fix a function come with a **starter program**: open it, press **Run** to see which tests fail, then **Edit code**, change only the part between the "Your code" markers and run it again until every check passes. The checks print what they expected and what your code returned.
+
 1. **Two-sum (sorted).** Given a sorted array and a target, find two elements that add up to the target, or report none. Try to do better than checking every pair (hint: two indices, one at each end, moving inward).
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex1-two-sum.c}}
+
+</details>
+
 2. **Palindrome.** Is a sentence a palindrome if you ignore case and non-letters? (`"A man, a plan, a canal: Panama"`)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex2-palindrome.c}}
+
+</details>
+
 3. **Binary search.** Return the index of a key in a sorted array, or −1. (Watch the loop condition and the middle calculation.)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex3-binary-search.c}}
+
+</details>
+
 4. **Anagrams.** Are two words made of the same letters? (Hint: count the letters.)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex4-anagram.c}}
+
+</details>
+
 5. **Merge.** Merge two sorted arrays into one sorted array in one pass.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex5-merge.c}}
+
+</details>
+
 6. **Remove duplicates.** Remove duplicates from a sorted array in place and return the new length.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex6-dedupe.c}}
+
+</details>
+
 7. **Balanced brackets.** Is `{[()]}` balanced? `([)]`? `((`? (Hint: a stack.)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex7-brackets.c}}
+
+</details>
+
 8. **Fibonacci.** Write the recursive version and an iterative version; verify that they agree for 0 to 25. Which is faster, and why?
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex8-fibonacci.c}}
+
+</details>
+
 9. **Reverse a linked list.** Reverse a singly linked list in place by changing the `next` pointers.
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex9-reverse-list.c}}
+
+</details>
+
 10. **Most frequent value.** Given values from 0 to 99, find the one that occurs most often. (Hint: a counting array.)
+
+<details class="starter">
+<summary>Starter program with tests</summary>
+
+{{include dsa/starters/start-here/ex10-mode.c}}
+
+</details>
 
 ## Answers
 

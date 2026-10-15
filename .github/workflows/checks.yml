@@ -18,6 +18,8 @@ jobs:
         run: node scripts/check-notes.mjs
       - name: Progress store tests
         run: npm test
+      - name: Exercise starter programs (tests fail as shipped, pass with the reference solutions)
+        run: npm run starters
       - name: Build site
         run: npm run build
   links:
