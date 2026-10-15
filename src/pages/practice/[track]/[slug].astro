@@ -1,0 +1,143 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { problems, practiceHref, noteHrefOf, paragraphs, inline, TRACK_LABEL, type Problem } from '../../../lib/practice';
+import { url } from '../../../lib/tracks';
+
+export function getStaticPaths() {
+  return problems.map((p, i) => {
+    const sameTrack = problems.filter((q) => q.track === p.track), k = sameTrack.indexOf(p);
+    return { params: { track: p.track, slug: p.slug }, props: { p, n: i + 1, prev: sameTrack[k - 1], next: sameTrack[k + 1] } };
+  });
+}
+const { p, n, prev, next } = Astro.props as { p: Problem; n: number; prev?: Problem; next?: Problem };
+// what the script needs; the tests (suffix) and the given code (prefix) are shown or run, never edited
+const payload = { id: p.id, title: p.title, prefix: p.prefix, starter: p.starter, suffix: p.suffix, solution: p.solution, hints: p.hints, runnable: p.runnable,
+  next: next ? practiceHref(next) : '', nextTitle: next?.title ?? '', note: noteHrefOf(p) };
+const given = p.prefix.replace(/^\/\/ .*\n/gm, '').replace(/\/\* ===== Your code.*\*\/\n?$/, '').trim();
+const symbols = ['Tab', '{', '}', '(', ')', '[', ']', ';', '*', '&', '->', '=', '<', '>', '"', '%', '!', '|'];
+---
+<Base title={`${p.title} · Practice · DeepNotes`} description={p.statement.replace(/[`*]/g, '').slice(0, 160)}>
+  <div class="pp" data-problem data-id={p.id}>
+    <div class="pp-bar glass">
+      <a class="pp-back" href={url('/practice/')} aria-label="All problems"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg><span>Problems</span></a>
+      <div class="pp-title-wrap"><h1 class="pp-title"><span class="pp-n">{n}.</span> {p.title}</h1></div>
+      <span class={`diff d-${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+      <span class="pp-solved" data-pp-solved hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>Solved</span>
+      <span class="pp-spacer"></span>
+      {prev ? <a class="pp-nav" href={practiceHref(prev)} title={prev.title} aria-label="Previous problem">←</a> : <span class="pp-nav off">←</span>}
+      {next ? <a class="pp-nav" href={practiceHref(next)} title={next.title} aria-label="Next problem">→</a> : <span class="pp-nav off">→</span>}
+    </div>
+
+    <div class="pp-seg" role="tablist" aria-label="Sections" data-pp-seg>
+      <button role="tab" class="on" data-seg="desc" aria-selected="true">Description</button>
+      <button role="tab" data-seg="code" aria-selected="false">Code</button>
+      <button role="tab" data-seg="result" aria-selected="false">Result<i class="pp-dot" data-pp-dot hidden></i></button>
+    </div>
+
+    <div class="pp-grid" data-active="desc">
+      <!-- ============ left: the problem ============ -->
+      <section class="pp-pane pp-desc glass" data-pane="desc">
+        <div class="pp-tabs" role="tablist" aria-label="Problem">
+          <button role="tab" class="on" data-tab="desc" aria-selected="true">Description</button>
+          <button role="tab" data-tab="hints" aria-selected="false">Hints</button>
+          <button role="tab" data-tab="solution" aria-selected="false">Solution</button>
+          <button role="tab" data-tab="subs" aria-selected="false">Submissions<span class="pp-count" data-pp-subcount hidden></span></button>
+        </div>
+        <div class="pp-scroll">
+          <div class="pp-tabpane" data-tabpane="desc">
+            <div class="pp-meta">
+              <span class="pp-chip">{TRACK_LABEL[p.track]} track</span>
+              {p.tags.map((t) => <span class="pp-chip">{t}</span>)}
+            </div>
+            <div class="pp-statement" set:html={paragraphs(p.statement)} />
+            <h2 class="pp-h">Examples</h2>
+            {p.examples.map((e, i) => (
+              <div class="pp-ex">
+                <p class="pp-ex-h">Example {i + 1}</p>
+                <dl>
+                  <dt>Input</dt><dd><pre>{e.input}</pre></dd>
+                  <dt>Output</dt><dd><pre>{e.output}</pre></dd>
+                  {e.why && <><dt>Why</dt><dd class="pp-why" set:html={inline(e.why)} /></>}
+                </dl>
+              </div>
+            ))}
+            <h2 class="pp-h">Constraints and edge cases</h2>
+            <ul class="pp-cons">{p.constraints.map((c) => <li set:html={inline(c)} />)}</ul>
+            <h2 class="pp-h">How you are tested</h2>
+            <p class="pp-small">Your function runs against a fixed set of test cases that include the examples above and their edge cases. Edit only the function(s) in the editor: the rest of the program (the given code and the tests) is added around it. Run shows each test; Submit also saves your code and records the result.</p>
+            <p class="pp-small">This problem comes from the note <a href={noteHrefOf(p)}>{p.note.title}</a>.</p>
+            {!p.runnable && <p class="pp-warn">The in-app compiler cannot run this problem. Compile it on your computer.</p>}
+          </div>
+
+          <div class="pp-tabpane" data-tabpane="hints" hidden>
+            <p class="pp-small">Try for a while first. Each hint gives away a little more.</p>
+            <ol class="pp-hints" data-pp-hints></ol>
+            <button class="pp-btn ghost" data-pp-hint-btn type="button">Show hint 1 of {p.hints.length}</button>
+          </div>
+
+          <div class="pp-tabpane" data-tabpane="solution" hidden>
+            <div data-pp-sol-gate>
+              <p class="pp-small">A reference solution for the function(s) above. Looking before you have tried takes away most of the learning.</p>
+              <button class="pp-btn ghost" data-pp-sol-btn type="button">Show the solution</button>
+            </div>
+            <div data-pp-sol hidden>
+              <pre class="pp-code-view"><code data-pp-sol-code></code></pre>
+            </div>
+          </div>
+
+          <div class="pp-tabpane" data-tabpane="subs" hidden>
+            <p class="pp-empty" data-pp-subs-empty>No submissions yet. Press Submit to save your code and record the result.</p>
+            <ol class="pp-subs" data-pp-subs></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ right: editor and result ============ -->
+      <section class="pp-right">
+        <div class="pp-pane pp-code glass" data-pane="code">
+          <div class="pp-ed-bar">
+            <span class="pp-lang">C <small>clang · WebAssembly</small></span>
+            <span class="pp-saved" data-pp-saved aria-live="polite"></span>
+            <span class="pp-spacer"></span>
+            <button class="pp-mini" type="button" data-pp-last hidden>Last submission</button>
+            <button class="pp-mini" type="button" data-pp-reset>Reset</button>
+          </div>
+          <div class="ed" data-ed>
+            <div class="ed-gutter" aria-hidden="true"><pre data-ed-gutter></pre></div>
+            <div class="ed-main">
+              <pre class="ed-hl" aria-hidden="true"><code data-ed-hl></code></pre>
+              <textarea class="ed-ta" data-ed-ta spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" wrap="off" aria-label="Your code (C)"></textarea>
+            </div>
+          </div>
+          <div class="pp-sym" data-pp-sym aria-label="Symbols">{symbols.map((s) => <button type="button" data-sym={s}>{s}</button>)}</div>
+          <details class="pp-given">
+            <summary>Given code and tests (read-only)</summary>
+            <pre class="pp-code-view"><code>{given}</code></pre>
+            <p class="pp-small">The tests are appended after your code.</p>
+          </details>
+        </div>
+
+        <div class="pp-pane pp-result glass" data-pane="result" aria-live="polite">
+          <div class="pp-res-empty" data-pp-res-empty>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+            <p><strong>Run your code</strong> to see the test results here.</p>
+            <p class="pp-small"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> runs, <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd> submits.</p>
+          </div>
+          <div class="pp-res" data-pp-res hidden></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="pp-actions glass" data-pp-actions>
+      <span class="pp-status" data-pp-status aria-live="polite"></span>
+      <button class="pp-btn ghost" type="button" data-pp-run><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg><span>Run</span></button>
+      <button class="pp-btn primary" type="button" data-pp-submit><span>Submit</span></button>
+    </div>
+
+    <script is:inline type="application/json" id="pp-data" set:html={JSON.stringify(payload).replace(/</g, '\\u003c')} />
+  </div>
+</Base>
+
+<script>
+  import '../../../scripts/practice';
+</script>

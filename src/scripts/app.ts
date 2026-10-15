@@ -1,3 +1,4 @@
+import { status as practiceStatus } from './practice-store';
 import { load, isDone, setDone, setLast, setScroll, addActive, streak, totalMinutes, exportJson, importJson, reset } from './progress';
 
 type Item = { i: string; t: string; h: string; k: string; m: number; s: number };
@@ -230,5 +231,28 @@ function initVisuals() {
   targets.forEach((t, i) => { t.style.setProperty('--d', `${Math.min(i % 5, 4) * 45}ms`); io.observe(t); });
 }
 
-renderProgress(); bindFilters(); initNote(); initTools(); initVisuals();
+/* ---------- practice: state of the problem cards inside notes and on the home page ---------- */
+function renderPractice() {
+  $('[data-practice-id]').forEach((a) => {
+    const st = practiceStatus(a.dataset.practiceId!);
+    a.dataset.state = st;
+    const label = a.querySelector('.pc-state'); if (label) label.textContent = st === 'solved' ? '✓ Solved' : st === 'attempted' ? 'In progress →' : 'Open →';
+  });
+}
+
+/* ---------- touch: light the glass under the finger ---------- */
+function initTouchLight() {
+  if (reduce || !matchMedia('(hover: none), (pointer: coarse)').matches) return;
+  const SEL = '.track-card, .module-card, .cta-card, .pager-card, .dash, .rm-hero, .rm-list, .philosophy-item, .sources, .practice-card, .pl-list a, .complete-btn';
+  document.addEventListener('pointerdown', (e) => {
+    const el = (e.target as HTMLElement).closest<HTMLElement>(SEL); if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${e.clientX - r.left}px`); el.style.setProperty('--my', `${e.clientY - r.top}px`);
+    el.classList.add('lit'); const off = () => { el.classList.remove('lit'); removeEventListener('pointerup', off); removeEventListener('pointercancel', off); };
+    addEventListener('pointerup', off); addEventListener('pointercancel', off);
+  }, { passive: true });
+}
+
+renderProgress(); bindFilters(); initNote(); initTools(); initVisuals(); renderPractice(); initTouchLight();
 window.addEventListener('dn:change', renderProgress);
+window.addEventListener('dn:practice', renderPractice);

@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node scripts/test-progress.mjs",
+    "test": "node scripts/test-progress.mjs && node scripts/test-practice.mjs",
     "dev": "astro dev",
-    "build": "node scripts/check-notes.mjs --fix && astro build",
+    "build": "node scripts/check-notes.mjs --fix && node scripts/build-practice.mjs && astro build",
     "preview": "astro preview",
     "check": "node scripts/check-notes.mjs",
     "fetch-runner": "node scripts/fetch-runner.mjs",
     "snippets": "node scripts/validate-snippets.mjs",
     "starters": "node scripts/verify-starters.mjs",
+    "practice": "node scripts/build-practice.mjs",
+    "practice:verify": "node scripts/verify-practice.mjs",
     "app:sync": "node scripts/fetch-runner.mjs && npm run build && cap sync android",
     "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug"
   },

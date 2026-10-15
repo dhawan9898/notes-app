@@ -20,6 +20,11 @@ jobs:
         run: npm test
       - name: Exercise starter programs (tests fail as shipped, pass with the reference solutions)
         run: npm run starters
+      - name: Practice problems (generated data is current; starter fails and solution passes in the in-app compiler)
+        run: |
+          npm run practice
+          git diff --exit-code src/data/practice.json
+          npm run practice:verify
       - name: Build site
         run: npm run build
   links:

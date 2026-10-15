@@ -1,0 +1,88 @@
+---
+import Base from '../../layouts/Base.astro';
+import { problems, practiceHref, TRACK_LABEL } from '../../lib/practice';
+import { url } from '../../lib/tracks';
+const counts = { Easy: 0, Medium: 0, Hard: 0 } as Record<string, number>;
+problems.forEach((p) => counts[p.difficulty]++);
+---
+<Base title="Practice problems · DeepNotes" description="Coding problems in C with tests, hints and saved submissions, from the exercises of the C and DSA tracks.">
+  <main class="wrap prl" data-practice-list>
+    <header class="pr-head" data-reveal>
+      <p class="eyebrow">Practice</p>
+      <h1>Solve it in C</h1>
+      <p class="lead">{problems.length} problems from the exercises of the C and DSA tracks. Each has its own page with the task, examples, constraints and a function-only editor. The tests run on your device and your code is saved when you submit.</p>
+      <div class="pr-stats glass" data-reveal>
+        <div class="pr-ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52" /><circle class="ring-fg" data-pl-ring cx="60" cy="60" r="52" transform="rotate(-90 60 60)" /></svg><div class="pr-ring-text"><b data-pl-solved>0</b><small>/ {problems.length}</small></div></div>
+        <ul>
+          <li><b class="d-easy" data-pl-d="Easy">0</b><small>/ {counts.Easy} easy</small></li>
+          <li><b class="d-medium" data-pl-d="Medium">0</b><small>/ {counts.Medium} medium</small></li>
+          <li><b class="d-hard" data-pl-d="Hard">0</b><small>/ {counts.Hard} hard</small></li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="pl-controls glass" data-reveal>
+      <input class="pl-search" type="search" placeholder="Search problems, topics…" aria-label="Search problems" data-pl-q />
+      <div class="pl-chips" role="group" aria-label="Track"><button class="chip on" data-pl-track="">All</button><button class="chip" data-pl-track="c">C</button><button class="chip" data-pl-track="dsa">DSA</button></div>
+      <div class="pl-chips" role="group" aria-label="Difficulty"><button class="chip on" data-pl-diff="">Any level</button><button class="chip" data-pl-diff="Easy">Easy</button><button class="chip" data-pl-diff="Medium">Medium</button><button class="chip" data-pl-diff="Hard">Hard</button></div>
+      <div class="pl-chips" role="group" aria-label="Status"><button class="chip on" data-pl-status="">All</button><button class="chip" data-pl-status="todo">To do</button><button class="chip" data-pl-status="attempted">Attempted</button><button class="chip" data-pl-status="solved">Solved</button></div>
+    </div>
+
+    <ol class="pl-list glass" data-reveal>
+      {problems.map((p, i) => (
+        <li data-pl-row data-id={p.id} data-track={p.track} data-diff={p.difficulty} data-status="todo" data-text={`${p.title} ${p.tags.join(' ')} ${p.topic} ${p.track}`.toLowerCase()}>
+          <a href={practiceHref(p)}>
+            <span class="pl-state" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+            <span class="pl-num">{i + 1}</span>
+            <span class="pl-main"><strong>{p.title}</strong><small>{p.tags.slice(0, 3).join(' · ')}</small></span>
+            <span class="pl-track">{TRACK_LABEL[p.track]}</span>
+            <span class={`diff d-${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <p class="pl-empty" data-pl-empty hidden>No problem matches these filters.</p>
+    <p class="pl-foot">Progress and code stay in this browser (and in the app on your phone). Nothing is uploaded. <a href={url('/playground/')}>Open the playground</a> for free-form C.</p>
+  </main>
+</Base>
+
+<script>
+  import { status, solvedCount } from '../../scripts/practice-store';
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-pl-row]'));
+  const f = { q: '', track: '', diff: '', status: '' };
+  const q = document.querySelector<HTMLInputElement>('[data-pl-q]')!, empty = document.querySelector<HTMLElement>('[data-pl-empty]')!;
+  const FKEY = 'deepnotes:practice-filters:v1';
+  function apply() {
+    let shown = 0;
+    for (const r of rows) {
+      const hit = (!f.q || r.dataset.text!.includes(f.q)) && (!f.track || r.dataset.track === f.track) && (!f.diff || r.dataset.diff === f.diff) && (!f.status || r.dataset.status === f.status);
+      r.hidden = !hit; if (hit) shown++;
+    }
+    empty.hidden = shown > 0;
+  }
+  function statuses() {
+    const ids = rows.map((r) => r.dataset.id!);
+    rows.forEach((r) => (r.dataset.status = status(r.dataset.id!)));
+    const solved = solvedCount(ids);
+    document.querySelector('[data-pl-solved]')!.textContent = String(solved);
+    const ring = document.querySelector<SVGCircleElement>('[data-pl-ring]')!, len = 2 * Math.PI * 52;
+    ring.style.strokeDasharray = String(len); ring.style.strokeDashoffset = String(len * (1 - solved / Math.max(1, ids.length)));
+    for (const d of ['Easy', 'Medium', 'Hard']) document.querySelector(`[data-pl-d="${d}"]`)!.textContent = String(rows.filter((r) => r.dataset.diff === d && r.dataset.status === 'solved').length);
+    apply();
+  }
+  const group = (attr: string, key: 'track' | 'diff' | 'status') => document.querySelectorAll<HTMLElement>(`[${attr}]`).forEach((b) => b.addEventListener('click', () => {
+    f[key] = b.getAttribute(attr)!;
+    document.querySelectorAll(`[${attr}]`).forEach((x) => x.classList.toggle('on', x === b));
+    try { sessionStorage.setItem(FKEY, JSON.stringify(f)); } catch { /* ignore */ }
+    apply();
+  }));
+  group('data-pl-track', 'track'); group('data-pl-diff', 'diff'); group('data-pl-status', 'status');
+  q.addEventListener('input', () => { f.q = q.value.trim().toLowerCase(); apply(); });
+  try {   // coming back from a problem keeps the filters
+    const s = JSON.parse(sessionStorage.getItem(FKEY) || 'null');
+    if (s) for (const [attr, key] of [['data-pl-track', 'track'], ['data-pl-diff', 'diff'], ['data-pl-status', 'status']] as const) {
+      f[key] = s[key] || ''; document.querySelectorAll<HTMLElement>(`[${attr}]`).forEach((b) => b.classList.toggle('on', b.getAttribute(attr) === f[key]));
+    }
+  } catch { /* ignore */ }
+  statuses(); window.addEventListener('dn:practice', statuses);
+</script>

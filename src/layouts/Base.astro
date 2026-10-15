@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/practice.css';
 import '../styles/glass.css';
 import Search from 'astro-pagefind/components/Search';
 import { url } from '../lib/tracks';
@@ -58,6 +59,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
           <a href={url('/networking/')} class="nav-link">Networking</a>
           <a href={url('/dsa/')} class="nav-link">DSA</a>
           <a href={url('/roadmap/')} class="nav-link nav-roadmap">Roadmap</a>
+          <a href={url('/practice/')} class="nav-link">Practice</a>
           <a href={url('/playground/')} class="nav-link">Playground</a>
           <a href={url('/glossary/')} class="nav-link">Glossary</a>
         </nav>

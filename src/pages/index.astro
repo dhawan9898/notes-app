@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import NotesData from '../components/NotesData.astro';
 import { TRACKS, url, learningPath, type TrackId } from '../lib/tracks';
+import { problems } from '../lib/practice';
 
 const all = await getCollection('notes');
 const totalNotes = all.length;
@@ -99,6 +100,27 @@ const steps = await learningPath();
             </a>
           );
         })}
+      </div>
+    </section>
+
+    <section class="tracks-section">
+      <div class="section-header">
+        <h2>Practice</h2>
+        <p>Do the exercises with the real compiler, on your device.</p>
+      </div>
+      <div class="cards-grid">
+        <a class="track-card glass glass-hover" data-reveal href={url('/practice/')}>
+          <div class="track-card-header"><span class="track-icon">🧩</span></div>
+          <h3>Practice problems</h3>
+          <p class="track-blurb">{problems.length} problems with a task, examples, constraints, hints and tests. A function-only editor; your code is saved when you submit.</p>
+          <div class="track-cta"><span>Solve a problem</span><span class="arrow">→</span></div>
+        </a>
+        <a class="track-card glass glass-hover" data-reveal href={url('/playground/')}>
+          <div class="track-card-header"><span class="track-icon">▶️</span></div>
+          <h3>C playground</h3>
+          <p class="track-blurb">Write any C program and run it. A real clang compiler runs in WebAssembly on your device, offline in the app.</p>
+          <div class="track-cta"><span>Open the playground</span><span class="arrow">→</span></div>
+        </a>
       </div>
     </section>
 
