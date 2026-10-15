@@ -1,6 +1,6 @@
 // Pure helpers for the practice pages (no DOM): turning a program run into a verdict and per-test results, mapping compiler
 // messages back to the editor, and a small C syntax highlighter. Tested by scripts/test-practice.mjs.
-import type { Verdict } from './practice-store';
+import type { Verdict } from './practice';
 
 export type Case = { ok: boolean; label: string; expected?: string; got?: string; line: string };
 export type Judged = { verdict: Verdict; passed: number; total: number; cases: Case[]; stdout: string; message: string };
