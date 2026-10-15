@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadAll, problems, url } from '../lib/content';
+import '../styles/reading.css';
+const { lessons, labs } = await loadAll();
+---
+<Base title="About · DeepNotes" description="What DeepNotes is, how the content is built and how to use it." nav="">
+  <div class="page narrow">
+    <header class="page-head"><p class="eyebrow">About</p><h1>How DeepNotes works</h1></header>
+    <div class="prose">
+      <p>DeepNotes is {lessons.length} lessons, {problems.length} practice problems and {labs.length} labs on <strong>C</strong>, <strong>data structures and algorithms</strong>, <strong>Linux</strong> and <strong>networking</strong>. It exists because reaching senior-level depth normally means reading RFCs, IEEE 802 standards, ISO C, POSIX and kernel documentation directly. These notes distil those sources into one consistent, navigable place.</p>
+      <h2>Three kinds of content</h2>
+      <ul>
+        <li><strong>Lessons</strong> explain a concept from the standard or mechanism upward, end with <em>Key takeaways</em> and list their sources.</li>
+        <li><strong>Practice problems</strong> are code (your function runs against tests, in the browser) or questions (think, then check the answer). Your code is saved when you submit.</li>
+        <li><strong>Labs</strong> are guided hands-on sessions with real commands and captured output. Run them in a throw-away environment.</li>
+      </ul>
+      <h2>Where to start</h2>
+      <p>Open <a href={url('/learn/')}>Learn</a> and pick a track, or follow a <a href={url('/paths/')}>learning path</a>. Every track begins with <em>Getting started</em>, which assumes no background. Each lesson shows what to read first and what builds on it.</p>
+      <h2>How the content is verified</h2>
+      <ul>
+        <li>C and DSA listings are compiled (GCC, sanitizers) and run; the output shown is what the program printed.</li>
+        <li>Linux and networking commands were run in sandboxes (namespaces, bridges, <code>tc</code>, nftables, rootless containers) and their output captured. Machine-specific values were replaced with generic ones.</li>
+        <li>Facts from standards (field widths, timers, defaults, clause numbers) come from the sources listed under each lesson; where a standard is paywalled, treat numbers as a pointer and confirm in the document.</li>
+      </ul>
+      <h2>Your data</h2>
+      <p>There are no accounts. Progress, saved code and settings stay on your device. Use <a href={url('/you/')}>You</a> to export a backup or move to another device.</p>
+    </div>
+  </div>
+</Base>

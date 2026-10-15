@@ -4,34 +4,37 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node scripts/test-progress.mjs && node scripts/test-practice.mjs",
-    "dev": "astro dev",
-    "build": "node scripts/check-notes.mjs --fix && node scripts/build-practice.mjs && astro build",
+    "data": "node scripts/build-data.mjs",
+    "validate": "node scripts/validate.mjs",
+    "dev": "npm run data && astro dev",
+    "build": "node scripts/validate.mjs --fix && node scripts/build-data.mjs && astro build",
     "preview": "astro preview",
-    "check": "node scripts/check-notes.mjs",
+    "test": "node scripts/test-lib.mjs",
+    "lint:ui": "node scripts/lint-ui.mjs",
+    "check": "node scripts/validate.mjs && node scripts/build-data.mjs && node scripts/test-lib.mjs && node scripts/lint-ui.mjs",
     "fetch-runner": "node scripts/fetch-runner.mjs",
     "snippets": "node scripts/validate-snippets.mjs",
     "starters": "node scripts/verify-starters.mjs",
-    "practice": "node scripts/build-practice.mjs",
     "practice:verify": "node scripts/verify-practice.mjs",
     "app:sync": "node scripts/fetch-runner.mjs && npm run build && cap sync android",
-    "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug"
+    "app:apk": "npm run app:sync && cd android && ./gradlew assembleDebug",
+    "test:ui": "node scripts/test-ui.mjs",
+    "check:dist": "node scripts/check-dist.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@astrojs/mdx": "^4.3.14",
     "@capacitor/android": "^6.2.2",
     "@capacitor/core": "^6.2.2",
     "astro": "^5.18.2",
-    "astro-pagefind": "^1.8.6",
-    "mermaid": "^12.1.0",
-    "pagefind": "^1.5.2"
+    "mermaid": "^12.1.0"
   },
   "type": "module",
   "devDependencies": {
     "@capacitor/cli": "^6.2.2",
-    "js-yaml": "^5.4.3"
+    "esbuild": "^0.25.12",
+    "js-yaml": "^5.4.3",
+    "jsdom": "^24.1.3"
   }
 }

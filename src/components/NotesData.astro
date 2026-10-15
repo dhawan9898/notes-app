@@ -1,7 +1,0 @@
----
-// Compact ordered list of notes for client-side progress features (read by src/scripts/app.ts).
-import { noteHref, readingMinutes, type PathStep } from '../lib/tracks';
-const { steps } = Astro.props as { steps: PathStep[] };
-const data = steps.map((s) => ({ i: s.note.id, t: s.note.data.title, h: noteHref(s.note), k: s.note.data.track, m: readingMinutes(s.note), s: s.step }));
----
-<script is:inline type="application/json" id="dn-items" set:html={JSON.stringify(data)}></script>

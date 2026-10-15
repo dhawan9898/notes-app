@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Ring from '../components/Ring.astro';
+import { TRACK_IDS, TRACKS, loadAll, problems, url } from '../lib/content';
+const { lessons, labs } = await loadAll();
+---
+<Base title="You · DeepNotes" description="Your progress, streak, saved work and settings. Everything stays on this device." nav="you">
+  <div class="page narrow">
+    <header class="page-head"><p class="eyebrow">You</p><h1>Your progress</h1><p class="lead">Everything here is stored in this browser (or in the app) and nothing is uploaded.</p></header>
+
+    <a class="continue" data-continue="all" href={url('/learn/')} hidden>
+      <span class="continue-text"><span class="continue-label" data-continue-label>Start learning</span><strong class="continue-title" data-continue-title></strong></span><Icon name="arrow" size={20} />
+    </a>
+
+    <section class="card plain overview" data-overall data-meter="lessons">
+      <Ring size={96} />
+      <dl class="stats">
+        <div><dt>Lessons</dt><dd><b data-stat="done">0</b><small> / {lessons.length}</small></dd></div>
+        <div><dt>Problems solved</dt><dd><b data-stat="solved">0</b><small> / {problems.length}</small></dd></div>
+        <div><dt>Labs done</dt><dd><b data-stat="labs-done">0</b><small> / {labs.length}</small></dd></div>
+        <div><dt>Day streak</dt><dd><b data-stat="streak">0</b></dd></div>
+        <div><dt>Time learning</dt><dd><b data-stat="hours">0</b><small> h</small></dd></div>
+        <div><dt>Reading left</dt><dd><b data-stat="left">–</b></dd></div>
+      </dl>
+    </section>
+
+    <section class="block" aria-labelledby="h-by-track">
+      <h2 class="block-title" id="h-by-track">By track</h2>
+      <div class="list">
+        {TRACK_IDS.map((t) => (
+          <a class="row link-row" data-tint={TRACKS[t].tint} href={url(`/${t}/`)} data-meter="lessons" data-prefix={`${t}/`}>
+            <span class="track-ic" aria-hidden="true">{TRACKS[t].icon}</span>
+            <span class="row-text"><strong class="row-title">{TRACKS[t].name}</strong><span class="bar"><i data-fill></i></span></span>
+            <span class="row-meta"><span class="meter-text" data-text>0/0</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-settings">
+      <h2 class="block-title" id="h-settings">Settings</h2>
+      <div class="card plain settings">
+        <div class="setting"><span class="label">Theme</span><div class="seg" role="group" aria-label="Theme"><button type="button" data-set="theme" data-value="system">System</button><button type="button" data-set="theme" data-value="light">Light</button><button type="button" data-set="theme" data-value="dark">Dark</button></div></div>
+        <div class="setting"><span class="label">Text size</span><div class="seg" role="group" aria-label="Text size"><button type="button" data-set="text" data-value="s">Small</button><button type="button" data-set="text" data-value="m">Medium</button><button type="button" data-set="text" data-value="l">Large</button></div></div>
+        <div class="setting"><span class="label">Motion</span><div class="seg" role="group" aria-label="Motion"><button type="button" data-set="motion" data-value="system">System</button><button type="button" data-set="motion" data-value="reduce">Reduce</button></div></div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-data">
+      <h2 class="block-title" id="h-data">Your data</h2>
+      <div class="card plain data-card">
+        <p class="muted">Progress, saved code and settings live only on this device. Export a backup to keep it safe or to move to another browser, then import it there.</p>
+        <div class="btn-row">
+          <button class="btn" type="button" data-export>Export backup</button>
+          <button class="btn" type="button" data-import>Import backup</button>
+          <input type="file" accept="application/json" data-import-file hidden />
+          <button class="btn danger" type="button" data-reset>Erase progress and saved code</button>
+        </div>
+        <p class="muted small" data-storage-note hidden></p>
+      </div>
+    </section>
+
+    <p class="muted foot-note"><a href={url('/about/')}>About DeepNotes</a> · <a href={url('/glossary/')}>Glossary</a> · <a href={url('/paths/')}>Learning paths</a></p>
+  </div>
+</Base>
+<script>import '../scripts/you';</script>

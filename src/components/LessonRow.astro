@@ -1,0 +1,14 @@
+---
+import Icon from './Icon.astro';
+import { lessonHref, minutesOf, type Lesson } from '../lib/content';
+const { lesson, num, showSummary = true } = Astro.props as { lesson: Lesson; num?: string; showSummary?: boolean };
+const d = lesson.data;
+---
+<div class="row" data-filterable data-item={lesson.id} data-search={`${d.title} ${d.module} ${d.summary}`.toLowerCase()}>
+  <button class="check" type="button" data-toggle={lesson.id} aria-label={`Mark "${d.title}" as complete`}><Icon name="check" size={14} /></button>
+  <a class="row-main" href={lessonHref(lesson)}>
+    {num && <span class="row-num">{num}</span>}
+    <span class="row-text"><strong class="row-title">{d.title}</strong>{showSummary && <span class="row-sub">{d.summary}</span>}</span>
+    <span class="row-meta"><span class={`badge lvl-${d.level}`}>{d.level}</span><span class="mins">{minutesOf(lesson)} min</span></span>
+  </a>
+</div>

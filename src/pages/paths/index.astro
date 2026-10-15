@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import PathCard from '../../components/PathCard.astro';
+import { loadPaths } from '../../lib/content';
+const paths = await loadPaths();
+---
+<Base title="Learning paths · DeepNotes" description="Ordered routes through the modules for common goals." nav="learn">
+  <div class="page">
+    <header class="page-head"><p class="eyebrow">Paths</p><h1>Learning paths</h1><p class="lead">A path is a goal and the modules to read for it, in order. Progress is shared with the tracks: finish a lesson once and it counts everywhere.</p></header>
+    <div class="grid grid-2">{paths.map((p) => <PathCard path={p} />)}</div>
+  </div>
+</Base>

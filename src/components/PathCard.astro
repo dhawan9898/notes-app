@@ -1,0 +1,11 @@
+---
+import Ring from './Ring.astro';
+import { pathHref, fmtMinutes, TRACKS, type Path } from '../lib/content';
+const { path } = Astro.props as { path: Path };
+---
+<a class="card" href={pathHref(path)} data-meter="lessons" data-prefix={path.modules.map((m) => m.prefix).join(',')}>
+  <span class="card-top"><span class="path-tracks">{path.tracks.map((t) => <span class="track-dot" data-tint={TRACKS[t].tint} title={TRACKS[t].name}>{TRACKS[t].short}</span>)}</span><Ring size={38} /></span>
+  <h3>{path.title}</h3>
+  <p class="muted">{path.summary}</p>
+  <span class="card-foot"><span>{path.modules.length} modules · {path.lessons.length} lessons</span><span>{fmtMinutes(path.minutes)}</span></span>
+</a>

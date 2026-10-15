@@ -1,100 +1,61 @@
 ---
 import Base from '../../layouts/Base.astro';
-import NotesData from '../../components/NotesData.astro';
-import { TRACKS, notesForTrack, groupByModule, noteHref, readingMinutes, url, learningPath, type TrackId } from '../../lib/tracks';
+import Icon from '../../components/Icon.astro';
+import Ring from '../../components/Ring.astro';
+import LessonRow from '../../components/LessonRow.astro';
+import { TRACK_IDS, TRACKS, STAGES, modulesOf, fmtMinutes, levelRange, labHref, url, type TrackId } from '../../lib/content';
 
-export function getStaticPaths() {
-  return Object.keys(TRACKS).map((track) => ({ params: { track } }));
-}
-
+export function getStaticPaths() { return TRACK_IDS.map((track) => ({ params: { track } })); }
 const track = Astro.params.track as TrackId;
-const trackInfo = TRACKS[track];
-const notes = await notesForTrack(track);
-const mods = groupByModule(notes);
-const steps = (await learningPath()).filter((s) => s.note.data.track === track);
+const t = TRACKS[track];
+const modules = await modulesOf(track);
+const lessonCount = modules.reduce((a, m) => a + m.lessons.length, 0), minutes = modules.reduce((a, m) => a + m.minutes, 0);
+const stages = STAGES.map((s) => ({ ...s, modules: modules.filter((m) => m.stage === s.id) })).filter((s) => s.modules.length);
 ---
-<Base title={`${trackInfo.name} · DeepNotes`}>
-  <NotesData steps={steps} />
-  <main class="wrap track-page" data-progress-group>
-    <div class="back-nav">
-      <a href={url('/')} class="back-link">← All tracks</a>
-    </div>
-
-    <section class="track-header glass" data-reveal>
-      <div class="track-header-top">
-        <span class="track-header-icon">{trackInfo.icon}</span>
-        <div>
-          <div class="track-header-meta">
-            <span class="standards-pill">{trackInfo.standards}</span>
-            <span class="track-stats-pill">{mods.length} modules · {notes.length} notes</span>
-          </div>
-          <h1>{trackInfo.name}</h1>
-        </div>
-      </div>
-      <p class="track-header-blurb">{trackInfo.blurb}</p>
-
-      <div class="track-progress">
-        <span class="bar big"><i data-progress-bar></i></span>
-        <span class="tp-text"><b data-progress-text data-format="pct">0%</b> complete · <span data-progress-text>0/{notes.length}</span> notes</span>
-      </div>
-      <div class="track-actions">
-        <a class="cta-card glass-hover" data-continue={track} hidden>
-          <span class="cta-label" data-continue-label>Start learning</span>
-          <strong class="cta-title" data-continue-title></strong>
-          <span class="cta-arrow">→</span>
+<Base title={`${t.name} · DeepNotes`} description={t.blurb} nav="learn">
+  <div class="page" data-tint={t.tint}>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href={url('/learn/')}>Learn</a><Icon name="next" size={14} /><span>{t.short}</span></nav>
+    <header class="track-head" data-meter="lessons" data-prefix={`${track}/`}>
+      <div>
+        <p class="eyebrow">{t.standards}</p>
+        <h1>{t.name}</h1>
+        <p class="lead">{t.blurb}</p>
+        <p class="facts">{lessonCount} lessons · {modules.length} modules · {fmtMinutes(minutes)} of reading</p>
+        <a class="continue" data-continue={track} href={url(`/${track}/`)} hidden>
+          <span class="continue-text"><span class="continue-label" data-continue-label>Start learning</span><strong class="continue-title" data-continue-title></strong></span>
+          <Icon name="arrow" size={20} />
         </a>
-        <div class="chip-row" role="group" aria-label="Filter notes">
-          <button class="chip on" data-filter-status="all">All</button>
-          <button class="chip" data-filter-status="todo">To do</button>
-          <button class="chip" data-filter-status="done">Done</button>
-        </div>
       </div>
+      <Ring size={84} />
+    </header>
 
-      <div class="track-tags" style="margin-top: 1rem;">
-        {trackInfo.tags.map((tag) => (
-          <span class="tag-pill">{tag}</span>
-        ))}
-      </div>
-    </section>
-
-    {mods.length === 0 && (
-      <div class="empty-state">
-        <p>Notes coming soon for this track.</p>
-        <a href={url('/')} class="btn-primary">Return to Tracks</a>
-      </div>
-    )}
-
-    <div class="modules-container">
-      {mods.map((m, mi) => (
-        <section class="module-card glass" data-reveal data-filter-section data-progress-group>
-          <div class="module-header">
-            <span class="module-index">Module {mi + 1}</span>
-            <h2>{m.title}</h2>
-            <span class="module-count"><span data-progress-text>0/{m.notes.length}</span><span class="bar"><i data-progress-bar></i></span></span>
-          </div>
-          <div class="lesson-list">
-            {m.notes.map((n, i) => (
-              <div class="lesson-item glass-hover" data-filterable data-note-id={n.id} data-track={track}>
-                <button class="check" data-toggle={n.id} aria-label={`Toggle ${n.data.title} complete`} title="Mark complete / not complete">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-                </button>
-                <a class="lesson-link" href={noteHref(n)}>
-                  <span class="lesson-num">{mi + 1}.{i + 1}</span>
-                  <span class="lesson-content">
-                    <strong class="lesson-title">{n.data.title}</strong>
-                    <span class="lesson-summary">{n.data.summary}</span>
-                  </span>
-                  <span class="lesson-meta">
-                    <span class="mins">{readingMinutes(n)} min</span>
-                    <span class={`badge badge-${n.data.level}`}>{n.data.level}</span>
-                  </span>
-                </a>
-              </div>
-            ))}
-          </div>
-        </section>
-      ))}
-      <p class="rm-empty" data-filter-empty hidden>No notes match this filter.</p>
+    <div class="toolbar">
+      <nav class="jump" aria-label="Stages">{stages.map((s) => <a href={`#stage-${s.id}`}>{s.name}</a>)}</nav>
+      <div class="chips" role="group" aria-label="Filter lessons"><button class="chip on" type="button" data-filter-status="all">All</button><button class="chip" type="button" data-filter-status="todo">To do</button><button class="chip" type="button" data-filter-status="done">Done</button></div>
     </div>
-  </main>
+
+    {stages.map((s) => (
+      <section class="stage" id={`stage-${s.id}`} aria-labelledby={`h-${s.id}`} data-filter-group>
+        <header class="stage-head"><h2 id={`h-${s.id}`}>{s.name}</h2><p class="muted">{s.blurb}</p></header>
+        {s.modules.map((m) => (
+          <article class="module" id={m.slug} data-filter-group data-meter="lessons" data-prefix={m.prefix}>
+            <header class="module-head">
+              <span class="module-n">{m.number}</span>
+              <div class="module-title"><h3>{m.title}</h3><p class="muted">{m.lessons.length} lessons · {fmtMinutes(m.minutes)} · {levelRange(m.levels)}</p></div>
+              <span class="module-meter"><span class="bar"><i data-fill></i></span><span class="meter-text" data-text>0/{m.lessons.length}</span></span>
+            </header>
+            <div class="list">{m.lessons.map((l, i) => <LessonRow lesson={l} num={`${m.number}.${i + 1}`} />)}</div>
+            {(m.problems.length > 0 || m.labs.length > 0) && (
+              <footer class="module-practice">
+                <span class="mp-label"><Icon name="practice" size={16} /> Practice</span>
+                {m.problems.length > 0 && <a href={url(`/practice/?track=${track}&module=${encodeURIComponent(m.title)}`)}>{m.problems.length} {m.problems.length === 1 ? 'problem' : 'problems'}</a>}
+                {m.labs.map((lab) => <a href={labHref(lab)}><Icon name="flask" size={14} /> {lab.data.title}</a>)}
+              </footer>
+            )}
+          </article>
+        ))}
+      </section>
+    ))}
+    <p class="empty" data-filter-empty hidden>No lessons match this filter.</p>
+  </div>
 </Base>

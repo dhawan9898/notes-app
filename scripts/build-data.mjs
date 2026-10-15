@@ -46,8 +46,16 @@ for (const p of problems) q.push({ k: 'p', t: p.title, u: `/practice/${p.track}/
 for (const g of loadGlossary()) q.push({ k: 'g', t: g.term, u: `/glossary/#${g.term.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`, s: g.def, r: (g.track || '').toLowerCase() });
 for (const pa of loadPaths()) q.push({ k: 'a', t: pa.title, u: `/paths/${pa.id}/`, s: pa.summary });
 
+// manifest: what the browser needs to count progress and pick "continue" without shipping page data (stale ids in saved progress are ignored)
+const manifest = {
+  lessons: lessons.map((l) => ({ i: l.id, t: l.data.title, u: `/${l.track}/${l.moduleSlug}/${l.slug}/`, m: readingMinutes(l.body), r: l.track, d: l.moduleDir })),
+  labs: labs.map((l) => ({ i: `lab:${l.id}`, t: l.data.title, u: `/practice/labs/${l.track}/${l.slug}/`, m: l.data.minutes, r: l.track })),
+  problems: problems.map((p) => ({ i: p.id, r: p.track, df: p.difficulty, k: p.kind })),
+};
 fs.mkdirSync(P.generated, { recursive: true });
+fs.writeFileSync(path.join(P.generated, 'manifest.json'), JSON.stringify(manifest));
 fs.writeFileSync(path.join(P.generated, 'practice.json'), JSON.stringify(problems));
 fs.writeFileSync(path.join(P.generated, 'search-index.json'), JSON.stringify(q));
+fs.writeFileSync(path.join(ROOT, 'public/search-index.json'), JSON.stringify(q));        // fetched by the search page
 const kb = (n) => (n / 1024).toFixed(0) + ' kB';
 console.log(`data: ${problems.length} problems (${kb(fs.statSync(path.join(P.generated, 'practice.json')).size)}), search index ${q.length} entries (${kb(fs.statSync(path.join(P.generated, 'search-index.json')).size)})`);

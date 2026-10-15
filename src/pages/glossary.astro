@@ -1,36 +1,30 @@
 ---
 import Base from '../layouts/Base.astro';
-import terms from '../data/glossary.json';
-import { getCollection } from 'astro:content';
-import { noteHref } from '../lib/tracks';
-const all = await getCollection('notes');
-const hrefFor = (title: string) => { const n = all.find((x) => x.data.title === title); return n ? noteHref(n) : undefined; };
-const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
-const letters = [...new Set(sorted.map((t) => t.term[0].toUpperCase()))];
+import glossary from '../data/glossary.json';
+import { lessonHref, loadAll, TRACKS } from '../lib/content';
+const { lessons } = await loadAll();
+const byTitle = new Map(lessons.map((l) => [l.data.title, l]));
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const terms = [...glossary].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
+const letters = [...new Set(terms.map((t) => t.term[0].toUpperCase()))];
+const trackName = (t?: string) => Object.values(TRACKS).find((x) => x.short === t)?.short ?? t;
 ---
-<Base title="Glossary · DeepNotes" description="Plain-language definitions of the terms used across the C, DSA, Linux and Networking tracks.">
-  <main class="wrap track-page">
-    <h1>Glossary</h1>
-    <p>Short definitions of terms used across all four tracks. Each entry says where the idea is taught in depth. Use the box to filter.</p>
-    <p><input id="gl-filter" class="glossary-filter" type="search" placeholder="Filter terms…" aria-label="Filter glossary terms" /></p>
-    <p>{letters.map((l) => <a href={`#g-${l}`} style="margin-right:.6rem">{l}</a>)}</p>
-    <dl class="glossary-list" id="gl-list">
-      {sorted.map((t, i) => (
-        <>
-          {(i === 0 || sorted[i - 1].term[0].toUpperCase() !== t.term[0].toUpperCase()) && <h2 id={`g-${t.term[0].toUpperCase()}`}>{t.term[0].toUpperCase()}</h2>}
-          <div class="gl-item" id={t.term.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')} data-term={t.term.toLowerCase() + ' ' + t.def.toLowerCase()}>
-            <dt>{t.term}<span class="gl-track">{t.track}</span></dt>
-            <dd>{t.def}{t.see && <> <em>Learn more: {hrefFor(t.see) ? <a href={hrefFor(t.see)}>{t.see}</a> : t.see}.</em></>}</dd>
-          </div>
-        </>
-      ))}
-    </dl>
-  </main>
-  <script>
-    const f = document.getElementById('gl-filter') as HTMLInputElement | null;
-    f?.addEventListener('input', () => {
-      const q = f.value.trim().toLowerCase();
-      document.querySelectorAll<HTMLElement>('.gl-item').forEach((el) => { el.style.display = !q || (el.dataset.term || '').includes(q) ? '' : 'none'; });
-    });
-  </script>
+<Base title="Glossary · DeepNotes" description="Plain-language definitions of the terms used across the lessons." nav="learn">
+  <div class="page narrow">
+    <header class="page-head"><p class="eyebrow">Reference</p><h1>Glossary</h1><p class="lead">{terms.length} terms in plain language, each with the lesson that explains it properly.</p></header>
+    <nav class="alpha" aria-label="Jump to letter">{letters.map((l) => <a href={`#letter-${l}`}>{l}</a>)}</nav>
+    {letters.map((l) => (
+      <section class="gl-section" id={`letter-${l}`} aria-label={l}>
+        <h2 class="gl-letter">{l}</h2>
+        <dl class="gl-list">
+          {terms.filter((t) => t.term[0].toUpperCase() === l).map((t) => (
+            <div class="gl-item" id={slug(t.term)}>
+              <dt>{t.term}{t.track && <span class="tag">{trackName(t.track)}</span>}</dt>
+              <dd>{t.def}{t.see && byTitle.has(t.see) && <> <a href={lessonHref(byTitle.get(t.see)!)}>Read: {t.see}</a></>}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ))}
+  </div>
 </Base>

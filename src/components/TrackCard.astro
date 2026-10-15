@@ -1,0 +1,13 @@
+---
+import Ring from './Ring.astro';
+import { TRACKS, url, loadAll, problems, type TrackId } from '../lib/content';
+const { track } = Astro.props as { track: TrackId };
+const t = TRACKS[track], { lessons, labs } = await loadAll();
+const n = lessons.filter((l) => l.data.track === track).length, nl = labs.filter((l) => l.data.track === track).length, np = problems.filter((p) => p.track === track).length;
+---
+<a class="card track-card" data-tint={t.tint} href={url(`/${track}/`)} data-meter="lessons" data-prefix={`${track}/`}>
+  <span class="card-top"><span class="track-ic" aria-hidden="true">{t.icon}</span><Ring /></span>
+  <h3>{t.name}</h3>
+  <p class="muted">{t.blurb}</p>
+  <span class="card-foot"><span><b data-n-done>0</b> of {n} lessons</span><span>{np ? `${np} problems · ` : ''}{nl} labs</span></span>
+</a>

@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import TrackCard from '../components/TrackCard.astro';
+import PathCard from '../components/PathCard.astro';
+import { TRACK_IDS, TRACKS, STAGES, loadAll, loadPaths, fmtMinutes, url } from '../lib/content';
+const { modules, lessons } = await loadAll();
+const paths = await loadPaths();
+---
+<Base title="Learn · DeepNotes" description="Four tracks of structured lessons, and learning paths for common goals." nav="learn">
+  <div class="page">
+    <header class="page-head">
+      <p class="eyebrow">Learn</p>
+      <h1>Pick a track or follow a path</h1>
+      <p class="lead">Each track runs from <b>Getting started</b> through <b>Essentials</b> to the <b>Core modules</b>. Paths combine modules from several tracks around one goal.</p>
+    </header>
+
+    <section class="block" aria-labelledby="h-tracks">
+      <h2 id="h-tracks" class="block-title">Tracks</h2>
+      <div class="grid grid-2">{TRACK_IDS.map((t) => <TrackCard track={t} />)}</div>
+    </section>
+
+    <section class="block" aria-labelledby="h-stages">
+      <h2 id="h-stages" class="block-title">How a track is organised</h2>
+      <div class="grid grid-3">
+        {STAGES.map((s) => {
+          const mods = modules.filter((m) => m.stage === s.id);
+          const n = lessons.filter((l) => mods.some((m) => m.title === l.data.module && m.track === l.data.track)).length;
+          return <div class="card plain"><h3>{s.name}</h3><p class="muted">{s.blurb}</p><span class="card-foot"><span>{mods.length} modules · {n} lessons</span><span>{fmtMinutes(mods.reduce((a, m) => a + m.minutes, 0))}</span></span></div>;
+        })}
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-paths">
+      <header class="block-head"><h2 id="h-paths">Learning paths</h2><a class="more" href={url('/paths/')}>Details</a></header>
+      <div class="grid grid-3">{paths.map((p) => <PathCard path={p} />)}</div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import PracticeNav from '../../components/PracticeNav.astro';
+import examples from '../../data/playground.json';
+import '../../styles/problem.css';
+const symbols = ['Tab', '{', '}', '(', ')', '[', ']', ';', '*', '&', '->', '=', '<', '>', '"', '%', '!', '|'];
+---
+<Base title="C playground · DeepNotes" description="Write and run C programs on your device with a real clang compiler running in WebAssembly." nav="practice">
+  <div class="page" data-playground>
+    <header class="page-head"><p class="eyebrow">Practice</p><h1>C playground</h1><p class="lead">Programs are compiled by clang (a WebAssembly build) on your device: no server, and it works offline in the app. Standard C library only: no threads, sockets or system calls.</p></header>
+    <PracticeNav current="playground" />
+    <div class="pg">
+      <aside class="pg-examples" aria-label="Examples">
+        <h2 class="pg-h">Examples</h2>
+        <ul>{examples.map((e, i) => <li><button class="pg-ex" type="button" data-ex={i}><strong>{e.title}</strong><span>{e.blurb}</span></button></li>)}</ul>
+      </aside>
+      <section>
+        <div class="card plain pg-editor">
+          <div class="ed" data-ed>
+            <div class="ed-gutter" aria-hidden="true"><pre data-ed-gutter></pre></div>
+            <div class="ed-main"><pre class="ed-hl" aria-hidden="true"><code data-ed-hl></code></pre><textarea class="ed-ta" data-ed-ta spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" wrap="off" aria-label="C source code"></textarea></div>
+          </div>
+          <div class="symbols" aria-label="Symbols">{symbols.map((s) => <button type="button" data-sym={s}>{s}</button>)}</div>
+          <div class="pg-bar">
+            <button class="btn primary" type="button" data-pg-run><Icon name="play" size={16} /><span>Run</span></button>
+            <span class="pp-status" data-pg-status aria-live="polite"></span>
+            <span class="grow"></span>
+            <button class="mini" type="button" data-pg-reset>Reset example</button>
+          </div>
+        </div>
+        <label class="field"><span class="label">Input (standard input)</span><textarea class="input" data-pg-stdin rows="2" placeholder="Text the program reads with scanf, fgets, getchar…"></textarea></label>
+        <div class="run-out" data-pg-out hidden aria-live="polite"></div>
+      </section>
+    </div>
+    <script is:inline type="application/json" id="pg-data" set:html={JSON.stringify(examples).replace(/</g, '\\u003c')} />
+  </div>
+</Base>
+<script>import '../../scripts/playground';</script>

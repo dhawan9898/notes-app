@@ -1,0 +1,8 @@
+---
+import { url } from '../lib/content';
+const { current } = Astro.props as { current: 'problems' | 'labs' | 'playground' };
+const items = [['problems', 'Problems', '/practice/'], ['labs', 'Labs', '/practice/labs/'], ['playground', 'Playground', '/practice/playground/']] as const;
+---
+<nav class="seg" aria-label="Practice sections">
+  {items.map(([id, label, path]) => <a href={url(path)} aria-current={current === id ? 'page' : undefined}>{label}</a>)}
+</nav>

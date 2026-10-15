@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/content';
+---
+<Base title="Page not found · DeepNotes" nav="">
+  <div class="page narrow center">
+    <p class="eyebrow">404</p>
+    <h1>That page does not exist</h1>
+    <p class="lead">It may have moved. Search for it, or go back to the start.</p>
+    <div class="btn-row center"><a class="btn primary" href={url('/search/')}>Search</a><a class="btn" href={url('/')}>Home</a><a class="btn" href={url('/learn/')}>Learn</a></div>
+  </div>
+</Base>

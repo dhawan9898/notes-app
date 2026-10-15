@@ -1,19 +1,16 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const notes = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/notes' }),
-  schema: z.object({
-    title: z.string(),
-    track: z.enum(['c', 'dsa', 'linux', 'networking']),
-    module: z.string(),          // module title, e.g. "Layer 2"
-    moduleOrder: z.number(),
-    order: z.number(),           // order within module
-    level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']),
-    summary: z.string(),
-    prerequisites: z.array(z.string()).default([]),   // titles of notes (or plain phrases) the reader should know first
-    sources: z.array(z.object({ label: z.string(), url: z.string().optional() })).default([]),
-  }),
-});
+// The authoritative rules live in scripts/validate.mjs (it also checks cross-references); this schema gives the pages their types.
+const track = z.enum(['c', 'dsa', 'linux', 'networking']);
+const level = z.enum(['beginner', 'intermediate', 'advanced', 'expert']);
+const shared = {
+  title: z.string(), track, module: z.string(), moduleOrder: z.number(), order: z.number(), level, summary: z.string(),
+  prerequisites: z.array(z.string()).default([]),
+  sources: z.array(z.object({ label: z.string(), url: z.string().optional() })).default([]),
+};
 
-export const collections = { notes };
+const notes = defineCollection({ loader: glob({ pattern: '**/*.md', base: './src/content/notes' }), schema: z.object(shared) });
+const labs = defineCollection({ loader: glob({ pattern: '**/*.md', base: './src/content/labs' }), schema: z.object({ ...shared, minutes: z.number() }) });
+
+export const collections = { notes, labs };

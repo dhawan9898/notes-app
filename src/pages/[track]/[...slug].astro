@@ -1,292 +1,35 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { render, getCollection } from 'astro:content';
-import { TRACKS, notesForTrack, groupByModule, noteHref, noteSlug, url, learningPath, type TrackId } from '../../lib/tracks';
+import { render } from 'astro:content';
+import ReadingPage from '../../components/ReadingPage.astro';
+import { TRACKS, TRACK_IDS, loadAll, lessonHref, lessonSlug, minutesOf, url, type Lesson } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const out = [];
-  for (const track of Object.keys(TRACKS) as TrackId[]) {
-    const notes = await notesForTrack(track);
-    notes.forEach((note, i) =>
-      out.push({
-        params: { track, slug: noteSlug(note) },
-        props: { note, notes, prev: notes[i - 1], next: notes[i + 1] },
-      })
-    );
-  }
-  return out;
+  const { lessons, modules } = await loadAll();
+  return TRACK_IDS.flatMap((track) => {
+    const inTrack = lessons.filter((l) => l.data.track === track);
+    return inTrack.map((lesson, i) => ({
+      params: { track, slug: lessonSlug(lesson) },
+      props: { lesson, prev: inTrack[i - 1], next: inTrack[i + 1], module: modules.find((m) => m.track === track && m.title === lesson.data.module)! },
+    }));
+  });
 }
-
-const { note, notes, prev, next } = Astro.props;
-const { Content, headings } = await render(note);
-const mods = groupByModule(notes);
-const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
-
-// Calculate reading time
-const rawBody = note.body || '';
-const wordCount = rawBody.split(/\s+/).filter(Boolean).length;
-const readingTime = Math.max(1, Math.ceil(wordCount / 220));
-const trackInfo = TRACKS[note.data.track];
-const pathSteps = await learningPath();
-const step = pathSteps.find((x) => x.note.id === note.id)?.step;
-const trackIndex = notes.findIndex((n) => n.id === note.id) + 1;
-
-// Notes in any track that list this note as a prerequisite ("where to go next"), and cross-track lookup for prerequisites.
-const allNotes = await getCollection('notes');
-const leadsTo = allNotes
-  .filter((n) => n.id !== note.id && n.data.prerequisites.includes(note.data.title))
-  .sort((a, b) => a.data.track.localeCompare(b.data.track) || a.data.moduleOrder - b.data.moduleOrder || a.data.order - b.data.order);
+const { lesson, prev, next, module: mod } = Astro.props;
+const { Content, headings } = await render(lesson);
+const { lessons } = await loadAll();
+const d = lesson.data, byTitle = new Map(lessons.map((l) => [l.data.title, l]));
+const link = (l: Lesson | undefined) => (l ? { title: l.data.title, href: lessonHref(l), hint: l.data.module !== d.module ? l.data.module : undefined } : undefined);
+const leads = lessons.filter((n) => n.id !== lesson.id && n.data.prerequisites.includes(d.title))
+  .map((n) => ({ title: n.data.title, href: lessonHref(n), track: n.data.track !== d.track ? TRACKS[n.data.track].short : undefined }));
+const idx = mod.lessons.findIndex((l) => l.id === lesson.id);
 ---
-<Base 
-  title={`${note.data.title} · ${trackInfo.name} · DeepNotes`} 
-  description={note.data.summary}
->
-  <div class="mobile-nav-bar" data-pagefind-ignore>
-    <div class="mobile-nav-row">
-      <button class="mobile-nav-btn" id="mobileNavBtn" aria-label="Open the index of notes" aria-expanded="false">
-        <span class="icon-burger">☰</span><span class="mnb-label">Index</span>
-      </button>
-      <button class="mobile-nav-btn" id="mobileTocBtn" aria-label="Topics covered on this page" aria-expanded="false" aria-controls="mobileToc">
-        <span class="mnb-label">Outline</span><span class="btn-indicator">▾</span>
-      </button>
-    </div>
-    <nav class="mobile-toc" id="mobileToc" aria-label="Topics on this page" hidden>
-      {toc.length > 0 ? toc.map((h) => (
-        <a href={`#${h.slug}`} class:list={['toc-link', { l3: h.depth === 3 }]}>{h.text}</a>
-      )) : <span class="toc-empty">Overview</span>}
-      {note.data.sources.length > 0 && <a href="#sources-section" class="toc-link">Sources &amp; References</a>}
-    </nav>
-  </div>
-
-  <div class="wrap layout">
-    <aside class="side" id="sideNav" data-pagefind-ignore>
-      <div class="side-top">
-        <a class="side-track-link" href={url(`/${note.data.track}/`)}>
-          <span class="side-icon">{trackInfo.icon}</span>
-          <span class="side-track-name">{trackInfo.name}</span>
-        </a>
-        <div class="side-track-meta">{notes.length} notes across {mods.length} modules</div>
-        <div class="side-progress" data-progress-group data-ids={notes.map((n) => n.id).join(',')}>
-          <span class="bar"><i data-progress-bar></i></span>
-          <span class="sp-text"><b data-progress-text data-format="pct">0%</b> done</span>
-        </div>
-      </div>
-      <div class="side-scroll" data-progress-group>
-        {mods.map((m, mi) => (
-          <div class="side-module">
-            <h4 class="side-module-title">
-              <span class="mod-num">{mi + 1}.</span> {m.title}
-            </h4>
-            <div class="side-module-notes">
-              {m.notes.map((n) => (
-                <a 
-                  href={noteHref(n)} 
-                  class:list={['side-note-link', { cur: n.id === note.id }]}
-                  title={n.data.title}
-                  data-note-id={n.id}
-                >
-                  <span class="side-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
-                  <span class="side-note-title">{n.data.title}</span>
-                  {n.id === note.id && <span class="active-dot"></span>}
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </aside>
-
-    <article data-pagefind-body class="article-content" data-note-page data-note-id={note.id} data-title={note.data.title} data-track={note.data.track} data-next={next ? noteHref(next) : ''}>
-      <nav class="breadcrumbs" aria-label="Breadcrumbs" data-pagefind-ignore>
-        <a href={url('/')}>Home</a>
-        <span class="sep">/</span>
-        <a href={url(`/${note.data.track}/`)}>{trackInfo.name}</a>
-        <span class="sep">/</span>
-        <span class="current-mod">{note.data.module}</span>
-      </nav>
-
-      <header class="article-header">
-        <h1>{note.data.title}</h1>
-        <div class="meta-row">
-          <span class="meta-pill module-pill">{note.data.module}</span>
-          <span class={`badge badge-${note.data.level}`}>{note.data.level}</span>
-          <span class="meta-pill reading-pill">⏱ {readingTime} min read</span>
-          {step && <span class="meta-pill step-pill" title="Position in the recommended learning path">Step {step} of {pathSteps.length}</span>}
-          {note.data.sources.length > 0 && (
-            <a href="#sources-section" class="meta-pill sources-pill">
-              🔗 {note.data.sources.length} {note.data.sources.length === 1 ? 'source' : 'sources'}
-            </a>
-          )}
-        </div>
-        <p class="article-summary-lead">{note.data.summary}</p>
-        <button class="complete-btn glass-hover" data-complete data-note-id={note.id} aria-pressed="false">
-          <span class="cb-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
-          <span class="cb-off">Mark as complete</span><span class="cb-on">Completed</span>
-          <kbd>M</kbd>
-        </button>
-      </header>
-
-      {note.data.prerequisites.length > 0 && (
-        <aside class="prereq-box" data-pagefind-ignore>
-          <strong>Before you read this</strong>
-          <ul>
-            {note.data.prerequisites.map((t) => {
-              const hit = notes.find((n) => n.data.title === t) ?? allNotes.find((n) => n.data.title === t);
-              return <li>{hit ? <a href={noteHref(hit)}>{t}</a> : t}</li>;
-            })}
-          </ul>
-        </aside>
-      )}
-
-      <div class="markdown-body">
-        <Content />
-      </div>
-
-      {leadsTo.length > 0 && (
-        <aside class="leads-box" data-pagefind-ignore>
-          <strong>Continue with</strong> <span class="leads-sub">notes that build on this one</span>
-          <ul>
-            {leadsTo.map((n) => (
-              <li>
-                <a href={noteHref(n)}>{n.data.title}</a>
-                {n.data.track !== note.data.track && <span class="leads-track"> · {TRACKS[n.data.track].name}</span>}
-              </li>
-            ))}
-          </ul>
-        </aside>
-      )}
-
-      {note.data.sources.length > 0 && (
-        <section class="sources" id="sources-section">
-          <div class="sources-header">
-            <h3>Primary Sources &amp; Standards</h3>
-            <span class="sources-sub">Standards specifications and authoritative references cited in this note</span>
-          </div>
-          <ul class="sources-list">
-            {note.data.sources.map((s) => (
-              <li class="source-item">
-                {s.url ? (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" class="source-link">
-                    <span class="source-icon">↗</span>
-                    <span class="source-text">{s.label}</span>
-                  </a>
-                ) : (
-                  <span class="source-plain">
-                    <span class="source-icon">§</span>
-                    <span class="source-text">{s.label}</span>
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <nav class="pager" data-pagefind-ignore aria-label="Note navigation">
-        {prev ? (
-          <a class="pager-card prev" href={noteHref(prev)}>
-            <small class="pager-dir">← Previous Note</small>
-            <span class="pager-title">{prev.data.title}</span>
-            <span class="pager-mod">{prev.data.module}</span>
-          </a>
-        ) : (
-          <div class="pager-empty"></div>
-        )}
-        {next ? (
-          <a class="pager-card next" href={noteHref(next)}>
-            <small class="pager-dir">Next Note →</small>
-            <span class="pager-title">{next.data.title}</span>
-            <span class="pager-mod">{next.data.module}</span>
-          </a>
-        ) : (
-          <div class="pager-empty"></div>
-        )}
-      </nav>
-    </article>
-
-    <div class="dock glass" data-note-id={note.id} data-dock>
-      {prev ? <a class="dock-btn" href={noteHref(prev)} title={prev.data.title} aria-label="Previous note">←</a> : <span class="dock-btn off">←</span>}
-      <button class="dock-complete" data-complete aria-label="Toggle complete">
-        <span class="cb-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
-        <span class="cb-off">Complete</span><span class="cb-on">Done</span>
-      </button>
-      <span class="dock-read"><b data-read-pct>0%</b> read · {trackIndex}/{notes.length}</span>
-      {next ? <a class="dock-btn" href={noteHref(next)} title={next.data.title} aria-label="Next note">→</a> : <span class="dock-btn off">→</span>}
-    </div>
-
-    <aside class="toc" data-pagefind-ignore>
-      <div class="toc-sticky">
-        <p class="toc-heading">On this page</p>
-        <nav class="toc-nav" aria-label="Table of contents">
-          {toc.length > 0 ? (
-            toc.map((h) => (
-              <a 
-                href={`#${h.slug}`} 
-                class:list={['toc-link', { l3: h.depth === 3 }]}
-                data-slug={h.slug}
-              >
-                {h.text}
-              </a>
-            ))
-          ) : (
-            <span class="toc-empty">Overview</span>
-          )}
-          {note.data.sources.length > 0 && (
-            <a href="#sources-section" class="toc-link sources-toc-link">Sources &amp; References</a>
-          )}
-        </nav>
-        <div class="toc-footer">
-          <a href="#" class="back-to-top">↑ Back to top</a>
-        </div>
-      </div>
-    </aside>
-  </div>
-
-  <script>
-    // Mobile Navigation Drawer Toggle
-    const toggleBtn = document.getElementById('mobileNavBtn');
-    const sideNav = document.getElementById('sideNav');
-    if (toggleBtn && sideNav) {
-      toggleBtn.addEventListener('click', () => {
-        const isOpen = sideNav.classList.toggle('open');
-        toggleBtn.setAttribute('aria-expanded', String(isOpen));
-      });
-    }
-
-    // Outline: topics covered on this page
-    const tocBtn = document.getElementById('mobileTocBtn');
-    const mobileToc = document.getElementById('mobileToc');
-    if (tocBtn && mobileToc) {
-      tocBtn.addEventListener('click', () => {
-        mobileToc.hidden = !mobileToc.hidden;
-        tocBtn.setAttribute('aria-expanded', String(!mobileToc.hidden));
-      });
-      mobileToc.addEventListener('click', (e) => {
-        if ((e.target as HTMLElement).closest('a')) { mobileToc.hidden = true; tocBtn?.setAttribute('aria-expanded', 'false'); }
-      });
-    }
-
-    // ScrollSpy for Table of Contents
-    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link[data-slug]');
-    if (tocLinks.length > 0) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            tocLinks.forEach((link) => {
-              if (link.getAttribute('data-slug') === id) {
-                link.classList.add('active');
-              } else {
-                link.classList.remove('active');
-              }
-            });
-          }
-        });
-      }, { rootMargin: '-80px 0px -70% 0px' });
-
-      document.querySelectorAll('article h2[id], article h3[id]').forEach((h) => {
-        observer.observe(h);
-      });
-    }
-  </script>
-</Base>
+<ReadingPage
+  kind="lesson" id={lesson.id} title={d.title} summary={d.summary} level={d.level} minutes={minutesOf(lesson)} track={d.track}
+  crumbs={[{ label: 'Learn', href: url('/learn/') }, { label: TRACKS[d.track].short, href: url(`/${d.track}/`) }, { label: d.module, href: url(`/${d.track}/#${mod.slug}`) }]}
+  sideTitle={d.module} sideHref={url(`/${d.track}/#${mod.slug}`)}
+  side={mod.lessons.map((l) => ({ title: l.data.title, href: lessonHref(l), current: l.id === lesson.id, key: l.id }))}
+  toc={headings.filter((h) => h.depth === 2 || h.depth === 3)}
+  prereqs={d.prerequisites.map((t) => ({ title: t, href: byTitle.has(t) ? lessonHref(byTitle.get(t)!) : undefined }))}
+  prev={link(prev)} next={link(next)}
+  practice={{ problems: mod.problems, labs: mod.labs, moduleTitle: mod.title }}
+  leads={leads} sources={d.sources} position={`Lesson ${idx + 1} of ${mod.lessons.length}`}
+><Content /></ReadingPage>

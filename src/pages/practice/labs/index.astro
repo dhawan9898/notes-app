@@ -1,0 +1,30 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import PracticeNav from '../../../components/PracticeNav.astro';
+import { TRACK_IDS, TRACKS, loadAll, labHref, labKey, fmtMinutes } from '../../../lib/content';
+const { labs, modules } = await loadAll();
+const groups = TRACK_IDS.map((t) => ({ t, mods: modules.filter((m) => m.track === t && m.labs.length) })).filter((g) => g.mods.length);
+---
+<Base title="Labs · Practice · DeepNotes" description="Guided hands-on sessions with real commands and captured output." nav="practice">
+  <div class="page">
+    <header class="page-head"><p class="eyebrow">Practice</p><h1>Labs</h1><p class="lead">{labs.length} guided sessions. Each one runs real commands, shows the output and ends with questions. Run them in a throw-away environment such as a virtual machine, a container or a user namespace.</p></header>
+    <PracticeNav current="labs" />
+    {groups.map((g) => (
+      <section class="block" aria-labelledby={`h-${g.t}`}>
+        <h2 class="block-title" id={`h-${g.t}`}>{TRACKS[g.t].name}</h2>
+        <div class="list">
+          {g.mods.flatMap((m) => m.labs.map((lab) => (
+            <div class="row" data-item={labKey(lab)}>
+              <span class="check static" aria-hidden="true"><Icon name="check" size={14} /></span>
+              <a class="row-main" href={labHref(lab)}>
+                <span class="row-text"><strong class="row-title">{lab.data.title}</strong><span class="row-sub">{m.title} · {lab.data.summary}</span></span>
+                <span class="row-meta"><span class={`badge lvl-${lab.data.level}`}>{lab.data.level}</span><span class="mins">{fmtMinutes(lab.data.minutes)}</span></span>
+              </a>
+            </div>
+          )))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Base>

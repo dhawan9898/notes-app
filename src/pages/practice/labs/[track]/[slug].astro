@@ -1,0 +1,27 @@
+---
+import { render } from 'astro:content';
+import ReadingPage from '../../../../components/ReadingPage.astro';
+import { TRACKS, loadAll, labSlug, labHref, labKey, lessonHref, url, type Lab } from '../../../../lib/content';
+
+export async function getStaticPaths() {
+  const { labs, modules } = await loadAll();
+  return labs.map((lab, i) => ({ params: { track: lab.data.track, slug: labSlug(lab) }, props: { lab, module: modules.find((m) => m.track === lab.data.track && m.title === lab.data.module), prev: labs[i - 1], next: labs[i + 1] } }));
+}
+const { lab, module: mod, prev, next } = Astro.props;
+const { Content, headings } = await render(lab);
+const { lessons, labs } = await loadAll();
+const d = lab.data, byTitle = new Map(lessons.map((l) => [l.data.title, l]));
+const link = (l: Lab | undefined) => (l ? { title: l.data.title, href: labHref(l), hint: TRACKS[l.data.track].short } : undefined);
+const sameTrack = labs.filter((l) => l.data.track === d.track);
+void mod;
+---
+<ReadingPage
+  kind="lab" id={labKey(lab)} title={d.title} summary={d.summary} level={d.level} minutes={d.minutes} track={d.track}
+  crumbs={[{ label: 'Practice', href: url('/practice/') }, { label: 'Labs', href: url('/practice/labs/') }, { label: TRACKS[d.track].short }]}
+  sideTitle={`${TRACKS[d.track].short} labs`} sideHref={url('/practice/labs/')}
+  side={sameTrack.map((l) => ({ title: l.data.title, href: labHref(l), current: l.id === lab.id, key: labKey(l) }))}
+  toc={headings.filter((h) => h.depth === 2 || h.depth === 3)}
+  prereqs={d.prerequisites.map((t) => ({ title: t, href: byTitle.has(t) ? lessonHref(byTitle.get(t)!) : undefined }))}
+  prev={link(prev)} next={link(next)}
+  sources={d.sources} position={d.module}
+><Content /></ReadingPage>

@@ -16,7 +16,6 @@ const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.
 const only = process.argv.slice(2);
 const starters = walk(EX).filter((f) => f.includes('/starters/') && f.endsWith('.c') && !/\.(solution|wrong-[\w-]+)\.c$/.test(f))
   .filter((f) => !only.length || only.some((o) => f.includes(o))).sort();
-const templates = walk(path.join(ROOT, 'authoring/templates')).map((f) => fs.readFileSync(f, 'utf8')).join('\n');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'starters-'));
 
 function build(src, flags) {
@@ -36,7 +35,6 @@ for (const f of starters) {
   if (!BEGIN.test(src) || !END.test(src)) problems.push('missing the "Your code" markers');
   if (!fs.existsSync(sol)) problems.push(`missing ${path.basename(sol)}`);
   const ready = !problems.length;
-  if (!templates.includes(`{{include ${rel}}}`)) problems.push('not included by any template');
   if (ready) {
     const s = build(src, []);
     if (s.error) problems.push(`starter does not compile:\n${s.error}`);

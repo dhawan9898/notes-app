@@ -1,0 +1,48 @@
+/* Design tokens: the only place colours, spacing, radii and motion are defined. Two palettes (light, dark); the theme is always
+   resolved to one of them on <html data-theme> (see Base.astro and src/scripts/lib/settings.ts). */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Roboto Mono', 'Liberation Mono', monospace;
+
+  --s1: 0.25rem; --s2: 0.5rem; --s3: 0.75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem; --s8: 4.5rem;
+  --r1: 0.5rem; --r2: 0.75rem; --r3: 1.125rem; --r4: 1.5rem; --pill: 999px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1); --t1: 0.12s; --t2: 0.2s; --t3: 0.32s;
+  --topbar: 3.5rem; --tabbar: 3.75rem; --w-read: 46rem; --w-page: 72rem;
+  --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+
+  --bg: #f3f5fa; --surface: #ffffff; --surface-2: #eef1f8; --text: #131822; --text-2: #394150; --muted: #657085;
+  --line: rgba(19, 24, 34, 0.1); --line-2: rgba(19, 24, 34, 0.2);
+  --accent: #0a62e6; --accent-2: #0852c0; --accent-soft: rgba(10, 98, 230, 0.1); --accent-line: rgba(10, 98, 230, 0.4); --on-accent: #fff;
+  --ok: #0f7a55; --ok-soft: rgba(15, 122, 85, 0.12); --warn: #94590a; --warn-soft: rgba(148, 89, 10, 0.12); --bad: #c62630; --bad-soft: rgba(198, 38, 48, 0.1);
+  --tint: var(--accent);
+
+  --glass: rgba(255, 255, 255, 0.68); --glass-strong: rgba(255, 255, 255, 0.86); --glass-line: rgba(255, 255, 255, 0.8);
+  --glass-glow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  --shadow-1: 0 1px 2px rgba(20, 30, 60, 0.06), 0 6px 16px -8px rgba(20, 30, 60, 0.14);
+  --shadow-2: 0 2px 6px rgba(20, 30, 60, 0.08), 0 18px 40px -16px rgba(20, 30, 60, 0.26);
+  --orb-1: rgba(70, 130, 255, 0.26); --orb-2: rgba(140, 100, 255, 0.18); --orb-3: rgba(30, 190, 200, 0.16);
+  --code-bg: #f5f7fc; --code-line: rgba(19, 24, 34, 0.08);
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --bg: #070a12; --surface: #121829; --surface-2: #1a2236; --text: #eef1f8; --text-2: #c4cbdc; --muted: #919bb0;
+  --line: rgba(255, 255, 255, 0.09); --line-2: rgba(255, 255, 255, 0.2);
+  --accent: #5aa2ff; --accent-2: #7bb4ff; --accent-soft: rgba(90, 162, 255, 0.15); --accent-line: rgba(90, 162, 255, 0.45); --on-accent: #06101f;
+  --ok: #3ddc97; --ok-soft: rgba(61, 220, 151, 0.14); --warn: #ffb340; --warn-soft: rgba(255, 179, 64, 0.14); --bad: #ff7b72; --bad-soft: rgba(255, 123, 114, 0.15);
+
+  --glass: rgba(26, 33, 52, 0.62); --glass-strong: rgba(22, 28, 44, 0.84); --glass-line: rgba(255, 255, 255, 0.12);
+  --glass-glow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 6px 16px -8px rgba(0, 0, 0, 0.6);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 40px -16px rgba(0, 0, 0, 0.75);
+  --orb-1: rgba(30, 100, 255, 0.5); --orb-2: rgba(120, 70, 255, 0.36); --orb-3: rgba(20, 170, 190, 0.32);
+  --code-bg: #0e1424; --code-line: rgba(255, 255, 255, 0.07);
+  color-scheme: dark;
+}
+/* one tint per track; elements inside [data-tint] use var(--tint) */
+[data-tint='c'] { --tint: #d9650f; } [data-tint='dsa'] { --tint: #7040f0; } [data-tint='linux'] { --tint: #1a8f4e; } [data-tint='net'] { --tint: #0a82c4; }
+:root[data-theme='dark'] [data-tint='c'] { --tint: #ff9a4d; } :root[data-theme='dark'] [data-tint='dsa'] { --tint: #a58bff; }
+:root[data-theme='dark'] [data-tint='linux'] { --tint: #4fd687; } :root[data-theme='dark'] [data-tint='net'] { --tint: #4cc2ff; }
+
+html[data-text='s'] { font-size: 15px; } html[data-text='m'] { font-size: 16px; } html[data-text='l'] { font-size: 18px; }
+html[data-motion='reduce'] *, html[data-motion='reduce'] *::before, html[data-motion='reduce'] *::after { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) { html[data-motion='system'] *, html[data-motion='system'] *::before, html[data-motion='system'] *::after { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }

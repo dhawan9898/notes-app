@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Search · DeepNotes" description="Search lessons, labs, problems and the glossary." nav="search">
+  <div class="page narrow">
+    <header class="page-head"><h1>Search</h1></header>
+    <div class="searchbox"><Icon name="search" size={20} /><input class="search-input" data-search-input type="search" placeholder="Search lessons, labs, problems, terms…" aria-label="Search" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" /></div>
+    <div class="recent" data-recent hidden><div class="recent-head"><span class="label">Recent</span><button class="link" type="button" data-clear-recent>Clear</button></div><ul class="chips"></ul></div>
+    <p class="muted" data-search-hint>Type at least two letters.</p>
+    <ul class="results" data-results></ul>
+    <p class="muted small">Searches titles, summaries, section headings and the glossary, and works offline. Press <kbd>/</kbd> anywhere to jump here.</p>
+  </div>
+</Base>
+<script>import '../scripts/search';</script>

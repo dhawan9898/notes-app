@@ -1,0 +1,8 @@
+---
+// A progress ring. Put it inside an element with data-meter; meters.ts fills [data-ring-fg].
+const { size = 44, label = true } = Astro.props as { size?: number; label?: boolean };
+---
+<span class="ring" style={`--size:${size}px`}>
+  <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="ring-bg" cx="18" cy="18" r="15" /><circle class="ring-fg" data-ring-fg cx="18" cy="18" r="15" transform="rotate(-90 18 18)" /></svg>
+  {label && <b data-text data-format="pct">0%</b>}
+</span>

@@ -1,0 +1,13 @@
+---
+import { problemHref, TRACKS, type Problem } from '../lib/content';
+const { problem, num } = Astro.props as { problem: Problem; num?: number };
+---
+<li class="row prow" data-status={problem.id} data-state="todo" data-pr data-id={problem.id} data-track={problem.track} data-module={problem.module} data-diff={problem.difficulty} data-kind={problem.kind}
+    data-search={`${problem.title} ${problem.tags.join(' ')} ${problem.module} ${TRACKS[problem.track].short}`.toLowerCase()}>
+  <a class="row-main" href={problemHref(problem)}>
+    <span class="state" aria-hidden="true"></span>
+    {num !== undefined && <span class="row-num">{num}</span>}
+    <span class="row-text"><strong class="row-title">{problem.title}</strong><span class="row-sub">{problem.kind === 'question' ? 'Question' : 'Code'} · {problem.module}{problem.tags.length ? ` · ${problem.tags.slice(0, 2).join(', ')}` : ''}</span></span>
+    <span class="row-meta"><span class="chip-track">{TRACKS[problem.track].short}</span><span class={`diff d-${problem.difficulty.toLowerCase()}`}>{problem.difficulty}</span></span>
+  </a>
+</li>

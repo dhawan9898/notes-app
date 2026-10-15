@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Ring from '../../components/Ring.astro';
+import LessonRow from '../../components/LessonRow.astro';
+import { loadPaths, fmtMinutes, TRACKS, url } from '../../lib/content';
+
+export async function getStaticPaths() { return (await loadPaths()).map((p) => ({ params: { id: p.id }, props: { path: p } })); }
+const { path } = Astro.props;
+---
+<Base title={`${path.title} · Paths · DeepNotes`} description={path.summary} nav="learn">
+  <div class="page">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href={url('/paths/')}>Paths</a><Icon name="next" size={14} /><span>{path.title}</span></nav>
+    <header class="track-head" data-meter="lessons" data-prefix={path.modules.map((m) => m.prefix).join(',')}>
+      <div>
+        <p class="eyebrow">For: {path.audience}</p>
+        <h1>{path.title}</h1>
+        <p class="lead">{path.summary}</p>
+        <p class="facts">{path.modules.length} modules · {path.lessons.length} lessons · {fmtMinutes(path.minutes)} of reading</p>
+        <a class="continue" data-continue="path" data-prefix={path.modules.map((m) => m.prefix).join(',')} href={url(`/${path.tracks[0]}/`)} hidden>
+          <span class="continue-text"><span class="continue-label" data-continue-label>Start</span><strong class="continue-title" data-continue-title></strong></span><Icon name="arrow" size={20} />
+        </a>
+      </div>
+      <Ring size={84} />
+    </header>
+    <ol class="steps">
+      {path.modules.map((m, i) => (
+        <li class="module" data-meter="lessons" data-prefix={m.prefix} data-tint={TRACKS[m.track].tint}>
+          <header class="module-head">
+            <span class="module-n">{i + 1}</span>
+            <div class="module-title"><h3>{m.title}</h3><p class="muted">{TRACKS[m.track].name} · {m.lessons.length} lessons · {fmtMinutes(m.minutes)}</p></div>
+            <span class="module-meter"><span class="bar"><i data-fill></i></span><span class="meter-text" data-text>0/{m.lessons.length}</span></span>
+          </header>
+          <div class="list">{m.lessons.map((l, j) => <LessonRow lesson={l} num={`${i + 1}.${j + 1}`} showSummary={false} />)}</div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</Base>

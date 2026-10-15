@@ -1,151 +1,60 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
-import NotesData from '../components/NotesData.astro';
-import { TRACKS, url, learningPath, type TrackId } from '../lib/tracks';
-import { problems } from '../lib/practice';
-
-const all = await getCollection('notes');
-const totalNotes = all.length;
-const steps = await learningPath();
+import Icon from '../components/Icon.astro';
+import Ring from '../components/Ring.astro';
+import TrackCard from '../components/TrackCard.astro';
+import PathCard from '../components/PathCard.astro';
+import { TRACK_IDS, loadAll, loadPaths, problems, url } from '../lib/content';
+const { lessons, labs } = await loadAll();
+const paths = await loadPaths();
 ---
-<Base title="DeepNotes · Senior Systems Engineering Notes">
-  <NotesData steps={steps} />
-  <main class="wrap">
-    <section class="hero-home">
-      <div class="badge-eyebrow">
-        <span class="pulse-dot"></span>
-        <span>Source-Backed Knowledge Base · {totalNotes} Deep Notes</span>
-      </div>
-      <h1 class="hero-title">Senior systems notes,<br /><span class="gradient-text">straight from the standards.</span></h1>
-      <p class="hero-sub">
-        Distilled from primary standards — <strong>ISO C</strong>, <strong>POSIX.1-2017</strong>, <strong>IEEE 802</strong>, <strong>IETF RFCs</strong>, and <strong>Linux kernel internals</strong> — with verified memory layouts, disassembly, and real CLI traces.
-      </p>
-
-      <div class="hero-actions" data-reveal>
-        <a class="cta-card glass-hover" data-continue="all" href={url('/roadmap/')}>
-          <span class="cta-label" data-continue-label>Start learning</span>
-          <strong class="cta-title" data-continue-title>Follow the roadmap from the beginning</strong>
-          <span class="cta-arrow">→</span>
-        </a>
-        <a class="btn ghost" href={url('/roadmap/')}>View roadmap</a>
-      </div>
-
-      <div class="dash glass" data-overall data-reveal>
-        <div class="big-ring small">
-          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52" /><circle class="ring-fg" data-ring-fg cx="60" cy="60" r="52" transform="rotate(-90 60 60)" /></svg>
-          <div class="big-ring-text"><b data-stat="percent">0</b><small>%</small></div>
-        </div>
-        <ul class="stat-list">
-          <li><b><span data-stat="done">0</span><span class="of"> / {totalNotes}</span></b><small>notes completed</small></li>
-          <li><b data-stat="streak">0</b><small>day streak</small></li>
-          <li><b data-stat="hours">0</b><small>hours learned</small></li>
-          <li><b data-stat="remaining">–</b><small>reading left</small></li>
-        </ul>
-      </div>
-
-      <div class="hero-stats">
-        <div class="stat-pill">
-          <span class="stat-num">{totalNotes}+</span>
-          <span class="stat-label">Engineering Notes</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-num">4</span>
-          <span class="stat-label">Core Tracks</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-num">C</span>
-          <span class="stat-label">Compiled &amp; Run Listings</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-num">0</span>
-          <span class="stat-label">Fluff</span>
-        </div>
-      </div>
+<Base title="DeepNotes · Learn systems engineering" nav="home">
+  <div class="page">
+    <section class="hero">
+      <p class="eyebrow">Source-backed learning</p>
+      <h1>Learn systems engineering, from your first program to the kernel.</h1>
+      <p class="lead">{lessons.length} lessons, {problems.length} practice problems and {labs.length} labs on C, data structures and algorithms, Linux and networking. Each claim traces to a standard and each listing was run.</p>
+      <a class="continue" data-continue="all" href={url('/learn/')}>
+        <span class="continue-text"><span class="continue-label" data-continue-label>Start learning</span><strong class="continue-title" data-continue-title>Choose a track</strong></span>
+        <Icon name="arrow" size={20} />
+      </a>
+      <dl class="mini-stats">
+        <div><dt>Lessons done</dt><dd><b data-stat="done">0</b><small> / {lessons.length}</small></dd></div>
+        <div><dt>Problems solved</dt><dd><b data-stat="solved">0</b><small> / {problems.length}</small></dd></div>
+        <div><dt>Day streak</dt><dd><b data-stat="streak">0</b></dd></div>
+      </dl>
     </section>
 
-    <section class="tracks-section">
-      <div class="section-header">
-        <h2>Engineering Tracks</h2>
-        <p>Choose a track to explore structured modules, diagrams, and packet-level deep dives.</p>
-      </div>
-
-      <div class="cards-grid">
-        {(Object.entries(TRACKS) as [TrackId, typeof TRACKS[TrackId]][]).map(([id, t]) => {
-          const trackCount = all.filter((n) => n.data.track === id).length;
-          return (
-            <a class="track-card glass glass-hover" data-reveal data-progress-group data-ids={all.filter((n) => n.data.track === id).map((n) => n.id).join(',')} href={url(`/${id}/`)}>
-              <div class="track-card-header">
-                <span class="track-icon">{t.icon}</span>
-                <span class="track-ring" aria-hidden="true">
-                  <svg viewBox="0 0 36 36" width="44" height="44"><circle class="ring-bg" cx="18" cy="18" r="15" /><circle class="ring-fg" data-ring-fg cx="18" cy="18" r="15" transform="rotate(-90 18 18)" /></svg>
-                  <b data-progress-text data-format="pct">0%</b>
-                </span>
-              </div>
-              <h3>{t.name}</h3>
-              <p class="track-count"><span data-progress-text>0/{trackCount}</span> notes complete</p>
-              <p class="track-blurb">{t.blurb}</p>
-              <div class="track-standards">
-                <span class="standards-label">Standard:</span> {t.standards}
-              </div>
-              <div class="track-tags">
-                {t.tags.map((tag) => (
-                  <span class="tag-pill">{tag}</span>
-                ))}
-              </div>
-              <div class="track-cta">
-                <span>Explore Track</span>
-                <span class="arrow">→</span>
-              </div>
-            </a>
-          );
-        })}
-      </div>
+    <section class="block" aria-labelledby="h-tracks">
+      <header class="block-head"><h2 id="h-tracks">Tracks</h2><a class="more" href={url('/learn/')}>All of Learn <Icon name="next" size={16} /></a></header>
+      <div class="grid grid-4">{TRACK_IDS.map((t) => <TrackCard track={t} />)}</div>
     </section>
 
-    <section class="tracks-section">
-      <div class="section-header">
-        <h2>Practice</h2>
-        <p>Do the exercises with the real compiler, on your device.</p>
-      </div>
-      <div class="cards-grid">
-        <a class="track-card glass glass-hover" data-reveal href={url('/practice/')}>
-          <div class="track-card-header"><span class="track-icon">🧩</span></div>
-          <h3>Practice problems</h3>
-          <p class="track-blurb">{problems.length} problems with a task, examples, constraints, hints and tests. A function-only editor; your code is saved when you submit.</p>
-          <div class="track-cta"><span>Solve a problem</span><span class="arrow">→</span></div>
+    <section class="block" aria-labelledby="h-paths">
+      <header class="block-head"><h2 id="h-paths">Learning paths</h2><a class="more" href={url('/paths/')}>All paths <Icon name="next" size={16} /></a></header>
+      <p class="block-sub">Pick a goal and follow the modules in order.</p>
+      <div class="scroller">{paths.map((p) => <PathCard path={p} />)}</div>
+    </section>
+
+    <section class="block" aria-labelledby="h-practice">
+      <header class="block-head"><h2 id="h-practice">Practice</h2><a class="more" href={url('/practice/')}>All practice <Icon name="next" size={16} /></a></header>
+      <div class="grid grid-3">
+        <a class="card" href={url('/practice/')} data-meter="problems">
+          <span class="card-top"><span class="track-ic"><Icon name="practice" size={22} /></span><Ring /></span>
+          <h3>Problems</h3><p class="muted">Code and questions with examples, hints and tests that run on your device. Your work is saved.</p>
+          <span class="card-foot"><span><b data-n-done>0</b> of {problems.length} solved</span></span>
         </a>
-        <a class="track-card glass glass-hover" data-reveal href={url('/playground/')}>
-          <div class="track-card-header"><span class="track-icon">▶️</span></div>
-          <h3>C playground</h3>
-          <p class="track-blurb">Write any C program and run it. A real clang compiler runs in WebAssembly on your device, offline in the app.</p>
-          <div class="track-cta"><span>Open the playground</span><span class="arrow">→</span></div>
+        <a class="card" href={url('/practice/labs/')}>
+          <span class="card-top"><span class="track-ic"><Icon name="flask" size={22} /></span></span>
+          <h3>Labs</h3><p class="muted">Guided hands-on sessions with real commands and captured output.</p>
+          <span class="card-foot"><span>{labs.length} labs</span></span>
+        </a>
+        <a class="card" href={url('/practice/playground/')}>
+          <span class="card-top"><span class="track-ic"><Icon name="play" size={22} /></span></span>
+          <h3>C playground</h3><p class="muted">Write any C program and run it. A real compiler runs in your browser, offline in the app.</p>
+          <span class="card-foot"><span>No install</span></span>
         </a>
       </div>
     </section>
-
-    <section class="philosophy-section">
-      <div class="section-header">
-        <h2>Built for Systems Engineers</h2>
-        <p>How DeepNotes is authored differently from generic tutorials.</p>
-      </div>
-      <div class="philosophy-grid">
-        <div class="philosophy-item glass" data-reveal>
-          <div class="philosophy-icon">📜</div>
-          <h4>Standards First</h4>
-          <p>Every note cites clauses from ISO C, POSIX, IEEE 802.1/3, and RFCs so you understand the design intent rather than guessing.</p>
-        </div>
-        <div class="philosophy-item glass" data-reveal>
-          <div class="philosophy-icon">⚙️</div>
-          <h4>Compiled &amp; Verified</h4>
-          <p>C and DSA listings are compiled against GCC/Clang with sanitizers; outputs, disassembly, and timings reflect real executions.</p>
-        </div>
-        <div class="philosophy-item glass" data-reveal>
-          <div class="philosophy-icon">🔍</div>
-          <h4>Instant Offline Search</h4>
-          <p>Powered by Pagefind with full-text search indexing over 100 pages. Zero tracking, zero latency, runs entirely client-side.</p>
-        </div>
-      </div>
-    </section>
-  </main>
+  </div>
 </Base>

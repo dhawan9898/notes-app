@@ -1,0 +1,119 @@
+---
+// The page frame shared by lessons and labs, so they look and behave identically.
+import Base from '../layouts/Base.astro';
+import Icon from './Icon.astro';
+import '../styles/reading.css';
+import { TRACKS, url, labHref, lessonHref, problemHref, fmtMinutes, type Problem, type Lesson, type Lab } from '../lib/content';
+
+export interface Props {
+  kind: 'lesson' | 'lab';
+  id: string;                               // progress key
+  title: string; summary: string; level: string; minutes: number;
+  track: keyof typeof TRACKS;
+  crumbs: { label: string; href?: string }[];
+  side: { title: string; href: string; current: boolean; key: string }[]; sideTitle: string; sideHref: string;
+  toc: { depth: number; slug: string; text: string }[];
+  prereqs: { title: string; href?: string }[];
+  prev?: { title: string; href: string; hint?: string }; next?: { title: string; href: string; hint?: string };
+  practice?: { problems: Problem[]; labs: Lab[]; moduleTitle: string };
+  leads?: { title: string; href: string; track?: string }[];
+  sources: { label: string; url?: string }[];
+  position?: string;
+}
+const { kind, id, title, summary, level, minutes, track, crumbs, side, sideTitle, sideHref, toc, prereqs, prev, next, practice, leads = [], sources, position } = Astro.props as Props;
+const t = TRACKS[track];
+const shownProblems = practice?.problems.slice(0, 4) ?? [];
+---
+<Base title={`${title} · ${t.short} · DeepNotes`} description={summary} nav="learn">
+  <div class="readbar" aria-hidden="true"><i data-readbar></i></div>
+  <div class="reading" data-tint={t.tint}>
+    <aside class="side" aria-label={sideTitle}>
+      <a class="side-head" href={sideHref}><Icon name="back" size={16} /><span>{sideTitle}</span></a>
+      <div class="side-list">
+        {side.map((s) => <a class="side-item" href={s.href} aria-current={s.current ? 'page' : undefined} data-item={s.key}><span class="side-check" aria-hidden="true"><Icon name="check" size={12} /></span><span>{s.title}</span></a>)}
+      </div>
+    </aside>
+
+    <article class="article" data-lesson data-id={id} data-title={title} data-track={track} data-next={next?.href ?? ''}>
+      <nav class="crumbs" aria-label="Breadcrumb">
+        {crumbs.map((c, i) => <>{i > 0 && <Icon name="next" size={14} />}{c.href ? <a href={c.href}>{c.label}</a> : <span>{c.label}</span>}</>)}
+      </nav>
+      <header class="article-head">
+        <h1>{title}</h1>
+        <div class="meta">
+          {kind === 'lab' && <span class="badge kind-lab"><Icon name="flask" size={13} /> Lab</span>}
+          <span class={`badge lvl-${level}`}>{level}</span>
+          <span class="meta-item"><Icon name="clock" size={14} /> {fmtMinutes(minutes)}</span>
+          {position && <span class="meta-item">{position}</span>}
+        </div>
+        <p class="lead">{summary}</p>
+      </header>
+
+      {prereqs.length > 0 && (
+        <aside class="callout" aria-label="Before you read this">
+          <strong>{kind === 'lab' ? 'Read these first' : 'Before you read this'}</strong>
+          <ul>{prereqs.map((q) => <li>{q.href ? <a href={q.href}>{q.title}</a> : q.title}</li>)}</ul>
+        </aside>
+      )}
+
+      <div class="prose"><slot /></div>
+
+      {practice && (shownProblems.length > 0 || practice.labs.length > 0) && (
+        <section class="practice-block" aria-labelledby="h-practice">
+          <header><h2 id="h-practice"><Icon name="practice" size={18} /> Practice this module</h2><span class="muted">{practice.moduleTitle}</span></header>
+          <ul class="plist">
+            {shownProblems.map((q) => <li><a href={problemHref(q)} data-status={q.id} data-state="todo"><span class="state" aria-hidden="true"></span><span class="plist-title">{q.title}</span><span class={`diff d-${q.difficulty.toLowerCase()}`}>{q.difficulty}</span></a></li>)}
+            {practice.labs.map((lab) => <li><a href={labHref(lab)} data-item={`lab:${lab.id}`}><span class="state lab" aria-hidden="true"><Icon name="flask" size={12} /></span><span class="plist-title">{lab.data.title}</span><span class="badge kind-lab">Lab · {lab.data.minutes} min</span></a></li>)}
+          </ul>
+          {practice.problems.length > shownProblems.length && <a class="more" href={url(`/practice/?track=${track}&module=${encodeURIComponent(practice.moduleTitle)}`)}>All {practice.problems.length} problems in this module <Icon name="next" size={16} /></a>}
+        </section>
+      )}
+
+      <div class="finish">
+        <button class="btn primary" type="button" data-toggle={id} data-complete aria-pressed="false">
+          <span class="when-off"><Icon name="check" size={18} /> Mark as complete</span><span class="when-on"><Icon name="check" size={18} /> Completed</span>
+        </button>
+        <span class="muted finish-hint"><kbd>M</kbd> toggles</span>
+      </div>
+
+      {leads.length > 0 && (
+        <aside class="callout" aria-label="Continue with">
+          <strong>Continue with</strong> <span class="muted">lessons that build on this one</span>
+          <ul>{leads.map((l) => <li><a href={l.href}>{l.title}</a>{l.track && <span class="muted"> · {l.track}</span>}</li>)}</ul>
+        </aside>
+      )}
+
+      {sources.length > 0 && (
+        <section class="sources" id="sources" aria-labelledby="h-sources">
+          <h2 id="h-sources">Sources</h2>
+          <ul>{sources.map((s) => <li>{s.url ? <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}<Icon name="external" size={13} /></a> : <span>{s.label}</span>}</li>)}</ul>
+        </section>
+      )}
+
+      <nav class="pager" aria-label="Previous and next">
+        {prev ? <a class="pager-card" href={prev.href}><small>Previous{prev.hint ? ` · ${prev.hint}` : ''}</small><strong>{prev.title}</strong></a> : <span></span>}
+        {next ? <a class="pager-card next" href={next.href}><small>Next{next.hint ? ` · ${next.hint}` : ''}</small><strong>{next.title}</strong></a> : <span></span>}
+      </nav>
+    </article>
+
+    <aside class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <nav>
+        {toc.map((h) => <a href={`#${h.slug}`} class:list={[{ sub: h.depth === 3 }]} data-spy={h.slug}>{h.text}</a>)}
+        {sources.length > 0 && <a href="#sources">Sources</a>}
+      </nav>
+    </aside>
+  </div>
+
+  <button class="fab" type="button" data-open-contents aria-haspopup="dialog"><Icon name="list" size={18} /> Contents</button>
+  <dialog class="sheet" data-contents aria-label="Contents">
+    <header class="sheet-head"><strong>Contents</strong><button class="icon-btn" type="button" data-close aria-label="Close"><Icon name="back" size={18} /></button></header>
+    <div class="sheet-body">
+      <p class="toc-title">On this page</p>
+      <nav class="sheet-toc">{toc.map((h) => <a href={`#${h.slug}`} class:list={[{ sub: h.depth === 3 }]}>{h.text}</a>)}{sources.length > 0 && <a href="#sources">Sources</a>}</nav>
+      <p class="toc-title">{sideTitle}</p>
+      <nav class="sheet-list">{side.map((s) => <a href={s.href} aria-current={s.current ? 'page' : undefined} data-item={s.key}><span class="side-check" aria-hidden="true"><Icon name="check" size={12} /></span><span>{s.title}</span></a>)}</nav>
+    </div>
+  </dialog>
+</Base>
+<script>import '../scripts/lesson';</script>
