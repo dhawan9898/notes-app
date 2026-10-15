@@ -11,6 +11,11 @@ prerequisites:
 sources:
   - label: "ISO/IEC 9899:2011 (C11) §6.2.5 Types, §6.3.2.1 Lvalues/arrays/function designators, §6.5.2.1 Array subscripting, §6.5.6 Additive operators, §6.5.8 Relational operators"
   - label: "ISO/IEC 9899:2011 §6.5p7 (effective type and aliasing), §6.7.3.1 (restrict)"
+  - label: "ISO/IEC 9899:2011 §6.3.2.3 (pointers, null pointer constants), §6.5.16.1 (simple assignment constraints and EXAMPLE 3), §6.2.4 (storage durations and lifetime), §7.22.3.5 (realloc)"
+  - label: "CVE-2009-1897 — Linux tun driver: a null check removed by the compiler after a dereference"
+    url: https://nvd.nist.gov/vuln/detail/CVE-2009-1897
+  - label: "C FAQ (Steve Summit) — Q11.10: Why can't I pass a char ** to a function which expects a const char **?"
+    url: https://c-faq.com/ansi/constmismatch.html
   - label: "WG14 N2676 — A Provenance-aware Memory Object Model for C (TS 6010 draft)"
     url: https://www.open-std.org/jtc1/sc22/wg14/www/docs/n2676.pdf
 ---
@@ -109,6 +114,160 @@ int *const p = &x;   // const pointer to int: p fixed, *p writable
 const int *const p;  // both fixed
 ```
 
+### `const` at two levels: why `char **` does not convert to `const char **`
+
+Adding `const` to the pointee is always allowed (`char *` → `const char *`), so it is natural to expect `char **` → `const char **` to work too, for example to pass `argv` to a function that promises not to modify the strings. C forbids it, because that conversion would open a hole in the type system. §6.5.16.1 allows qualifiers to be added only to the type the pointer *directly* points to, and its EXAMPLE 3 shows the hole:
+
+```c
+// Why `char **` does not convert to `const char **`: the conversion would let a program modify a const object
+// without a cast (C11 6.5.16.1, EXAMPLE 3). Compiled only; running it would be undefined behavior.
+#include <stdio.h>
+
+static void print_all(const char **names, int n) {      // "I will not modify the strings"
+    for (int i = 0; i < n; i++) puts(names[i]);
+}
+
+static void print_all_ok(const char *const *names, int n) {   // safe, but C (unlike C++) still requires a cast
+    for (int i = 0; i < n; i++) puts(names[i]);
+}
+
+int main(void) {
+    char a[] = "alpha", b[] = "beta";
+    char *names[] = {a, b};
+    print_all(names, 2);                // diagnostic: nested pointer types differ in qualifiers
+    print_all_ok((const char *const *)names, 2);   // explicit cast: harmless here because every level is const
+
+    const char c = 'A';
+    char *p;
+    const char **cpp = &p;              // the conversion the language forbids ...
+    *cpp = &c;                          // ... because now p points to the const object c
+    *p = 'B';                           // and this writes to it with no cast in sight
+    return c;
+}
+```
+
+```text
+$ cc -std=c11 -Wall -Wextra -c constpp.c -o /dev/null 2>&1 | grep -E "warning|error"
+constpp.c:16:15: warning: passing 'char *[2]' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+constpp.c:21:18: warning: initializing 'const char **' with an expression of type 'char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+2 warnings generated.
+```
+
+Through `cpp` the program stores the address of a `const char` into a plain `char *`, then writes through it: a const object modified with no cast anywhere. If `c` lives in read-only memory the write crashes; otherwise the optimizer may keep using the old value. The two diagnostics are the compiler refusing exactly this pattern. clang warns by default (the output above was captured with clang 21 on 64-bit ARM Linux, as were the other labs added in this revision; the remaining labs used GCC 14.2 on x86-64). GCC 14 and later treat incompatible pointer types as an error by default, and C++ rejects the conversion outright.
+
+`const char *const *` is safe because nothing can be stored through it at any level, and C++ accepts that conversion implicitly. C does not: it still needs the explicit cast shown on line 17. A function that only reads an array of strings should take `const char *const *`, and C callers pass `(const char *const *)argv`.
+
+## Pointers to pointers
+
+A function receives copies of its arguments. To let it change the caller's *pointer* (not just the object the pointer refers to), pass the address of that pointer: a `T **`. Three places this shows up constantly:
+
+- **Out-parameters for allocated results.** `int make_buffer(size_t n, char **out)` returns a status and stores the new buffer through `out`; `getline(char **lineptr, size_t *n, FILE *)`, `asprintf` and `strtol(…, char **endptr, …)` use the same shape.
+- **Editing a linked structure without special cases.** A `struct node **pp` that points at "whichever pointer leads to the current node" (first the head variable, later some node's `next`) lets one loop insert or remove at the head, middle and tail alike.
+- **`argv`**, which is `char **`: a pointer to the first element of an array of `argc + 1` pointers whose last element is a null pointer (§5.1.2.2.1), so it can be walked either by count or until `NULL`.
+
+```c
+// Pointers to pointers: out-parameters, a list edited through `struct node **`, and the shape of argv.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Wrong: `out` is a copy of the caller's pointer, so the caller never sees the new buffer (and it leaks).
+static int make_buffer_wrong(size_t n, char *out) {
+    out = malloc(n);
+    if (!out) return -1;
+    memset(out, 'x', n);
+    return 0;
+}
+
+// Right: receive the address of the caller's pointer and store through it.
+static int make_buffer(size_t n, char **out) {
+    char *p = malloc(n);
+    if (!p) return -1;
+    memset(p, 'x', n - 1);
+    p[n - 1] = '\0';
+    *out = p;                          // the only write the caller observes
+    return 0;
+}
+
+struct node { int value; struct node *next; };
+
+static void push(struct node **head, int v) {
+    struct node *n = malloc(sizeof *n);
+    n->value = v;
+    n->next = *head;
+    *head = n;
+}
+
+// `pp` points at whichever pointer currently leads to the node: the head variable or a previous node's `next`.
+// The head is therefore not a special case.
+static int remove_value(struct node **pp, int v) {
+    for (; *pp; pp = &(*pp)->next) {
+        if ((*pp)->value == v) {
+            struct node *dead = *pp;
+            *pp = dead->next;
+            free(dead);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static void print_list(const char *label, const struct node *n) {
+    printf("%-22s", label);
+    for (; n; n = n->next) printf(" %d", n->value);
+    printf("\n");
+}
+
+int main(int argc, char **argv) {
+    char *buf = NULL;
+    make_buffer_wrong(8, buf);
+    printf("after make_buffer_wrong: buf is %s\n", buf ? "set" : "still NULL (the callee changed its own copy)");
+    if (make_buffer(8, &buf) == 0) printf("after make_buffer:       buf = \"%s\"\n", buf);
+    free(buf);
+
+    struct node *head = NULL;
+    for (int v = 1; v <= 5; v++) push(&head, v);
+    print_list("list:", head);
+    remove_value(&head, 5);            // the head node
+    print_list("removed 5 (the head):", head);
+    remove_value(&head, 3);            // a middle node
+    print_list("removed 3 (middle):", head);
+    remove_value(&head, 1);            // the tail
+    print_list("removed 1 (tail):", head);
+    while (head) remove_value(&head, head->value);
+
+    // argv is a pointer to the first element of an array of argc + 1 pointers; the last one is NULL (C11 5.1.2.2.1).
+    printf("argc = %d, argv[argc] is %s\n", argc, argv[argc] == NULL ? "NULL" : "not NULL");
+    for (char **p = argv + 1; *p; p++) printf("  arg %td: \"%s\" (%zu chars)\n", p - argv, *p, strlen(*p));
+    return 0;
+}
+```
+
+```text
+$ cc -O2 -Wall -Wextra outparam.c -o outparam && ./outparam red green
+after make_buffer_wrong: buf is still NULL (the callee changed its own copy)
+after make_buffer:       buf = "xxxxxxx"
+list:                  5 4 3 2 1
+removed 5 (the head):  4 3 2 1
+removed 3 (middle):    4 2 1
+removed 1 (tail):      4 2
+argc = 3, argv[argc] is NULL
+  arg 1: "red" (3 chars)
+  arg 2: "green" (5 chars)
+```
+
+- `make_buffer_wrong` assigns to its own parameter. The caller's `buf` is untouched (still `NULL`) and the allocation leaks; `-Wall` does not catch this, but LeakSanitizer and a review question ("who sees this assignment?") do.
+- `remove_value` handles the head, a middle node and the tail with the same three lines, because it rewrites `*pp`, the pointer that led to the node, instead of tracking a separate `prev`.
+- `argv[argc]` is guaranteed to be `NULL`, which is why `for (char **p = argv + 1; *p; p++)` is a correct loop.
+
+## Null pointers
+
+An integer constant expression with value 0, or such an expression cast to `void *`, is a **null pointer constant** (§6.3.2.3); converting it to a pointer type gives a **null pointer**, which compares unequal to a pointer to any object or function. `NULL` is a macro for a null pointer constant (`((void *)0)` in the `<stddef.h>` that GCC and clang ship for C). Three facts are easy to get wrong:
+
+- **The representation is not promised to be all-bits-zero.** It is on every mainstream platform, but portable code writes `p = NULL` instead of relying on `memset` or `calloc` to produce null pointers inside structs.
+- **Dereferencing a null pointer is undefined behavior, not "a guaranteed crash".** On Linux the first page is unmapped (`vm.mmap_min_addr`), so the typical result is `SIGSEGV`. But `p->field` with a large field offset, or `p[i]` with a large `i`, can land in mapped memory.
+- **The optimizer uses the dereference as proof.** After `int v = p->x;` the compiler may assume `p != NULL` and delete a later `if (!p) return`. This is CVE-2009-1897: the Linux tun driver read `tun->sk` before checking `tun`, GCC removed the check, and a mapped page zero turned the bug into a privilege escalation. The kernel has built with `-fno-delete-null-pointer-checks` ever since. Check before you dereference, never after.
+
 ## Void pointers, alignment and casts
 
 `void *` converts to and from any object-pointer type without a cast in C (unlike C++), and cannot be dereferenced or used in arithmetic. GCC allows `void *` arithmetic as an extension (treating the size as 1); don't rely on it.
@@ -133,11 +292,117 @@ uint32_t bits = *(uint32_t *)&f;   // UB: violates strict aliasing
 uint32_t ok; memcpy(&ok, &f, 4);   // defined
 ```
 
+The rule is not academic. Here the same 4 bytes are reached through an `int *` and a `float *` (union members passed to separate pointer parameters are still two lvalues of different types, so this is undefined behavior). At `-O0` the function reloads `*ip` after the `float` store and returns the float's bit pattern; at `-O2` the compiler concludes the `float` store cannot have changed an `int` and returns the constant it stored a line earlier:
+
+```c
+// Strict aliasing in action: the optimizer assumes an int * and a float * never refer to the same object.
+#include <stdio.h>
+#include <string.h>
+
+__attribute__((noinline)) int store_and_read(int *ip, float *fp) {
+    *ip = 1;
+    *fp = 2.0f;          // may this store change *ip? Under C11 6.5p7 it may not, so ...
+    return *ip;          // ... the compiler is allowed to return the constant 1 without reloading
+}
+
+// Defined alternative: reinterpret bytes with memcpy (compilers turn it into a register move).
+static unsigned bits_of(float f) {
+    unsigned u;
+    memcpy(&u, &f, sizeof u);
+    return u;
+}
+
+int main(void) {
+    union { int i; float f; } u;
+    int r = store_and_read(&u.i, &u.f);    // both pointers refer to the same 4 bytes: undefined behavior
+    printf("store_and_read returned %d (0x%08x)\n", r, (unsigned)r);
+    printf("memory holds            0x%08x (bit pattern of 2.0f)\n", bits_of(u.f));
+    return 0;
+}
+```
+
+```text
+$ for o in -O0 -O2 "-O2 -fno-strict-aliasing"; do echo "[$o]"; cc $o -Wall alias.c -o alias && ./alias; done
+[-O0]
+store_and_read returned 1073741824 (0x40000000)
+memory holds            0x40000000 (bit pattern of 2.0f)
+[-O2]
+store_and_read returned 1 (0x00000001)
+memory holds            0x40000000 (bit pattern of 2.0f)
+[-O2 -fno-strict-aliasing]
+store_and_read returned 1073741824 (0x40000000)
+memory holds            0x40000000 (bit pattern of 2.0f)
+```
+
+Neither answer is "wrong" from the compiler's point of view: the program has no defined meaning, so the result depends on the optimization level. That is the signature of an aliasing bug: tests pass in debug builds and fail in release builds. GCC enables `-fstrict-aliasing` at `-O2` and above in the same way. `-fno-strict-aliasing` restores the "memory is just bytes" reading at some cost in optimization; the `memcpy` in `bits_of` is the defined way to reinterpret bytes, and optimizing compilers turn it into a plain register move.
+
 Unions can also be used for type punning in C (but not C++), per the footnote in §6.5.2.3. Build with `-fno-strict-aliasing` only as a last resort; the Linux kernel does so deliberately, which is one reason kernel C is not "standard C".
 
 ### `restrict`
 
 `restrict` is a **promise by the programmer** that, during the lifetime of the pointer, the object it accesses is accessed only through that pointer (or pointers derived from it). It lets the compiler vectorize and reorder loads and stores. Breaking the promise is UB; `memcpy` is declared with `restrict` while `memmove` is not, and that is the whole difference.
+
+## Lifetime: when a valid pointer stops being valid
+
+A pointer is valid only while the object it points to is alive (§6.2.4). Afterwards its value is *indeterminate*: even comparing or printing it is undefined, not just dereferencing it. The cases that cause real bugs:
+
+| Situation | When the pointer dies |
+|---|---|
+| Address of a local variable | when the function returns (or the block ends) |
+| Pointer from `malloc` | at `free`, including the free that `realloc` does internally when it moves the block |
+| Pointer into a growable array (vector, string builder, hash table) | at the next operation that may reallocate |
+| `getenv`, `strerror`, `localtime`, `readdir` results | at the next call to the same function (or as documented) |
+| Pointer into a `FILE` buffer or `mmap` region | at `fclose` / `munmap` |
+
+The third row is the one that surprises people, because the code that saved the pointer and the code that grew the array are often far apart. The program keeps both a pointer and an index to the first element of a vector, then appends 99 more elements:
+
+```c
+// A pointer into a growable array goes stale when realloc moves the block.
+#include <stdio.h>
+#include <stdlib.h>
+
+struct vec { int *data; size_t len, cap; };
+
+static int push(struct vec *v, int x) {
+    if (v->len == v->cap) {
+        size_t cap = v->cap ? 2 * v->cap : 4;
+        int *d = realloc(v->data, cap * sizeof *d);   // may return a different address; the old block is freed
+        if (!d) return -1;
+        v->data = d;
+        v->cap = cap;
+    }
+    v->data[v->len++] = x;
+    return 0;
+}
+
+int main(int argc, char **argv) {
+    struct vec v = {0};
+    push(&v, 10);
+    int *first = &v.data[0];      // pointer to an element: valid only until the next reallocation
+    size_t index = 0;             // an index stays valid across reallocations
+    for (int i = 1; i < 100; i++) push(&v, 10 + i);
+    printf("by index:   v.data[%zu] = %d\n", index, v.data[index]);
+    if (argc > 1) printf("by pointer: *first = %d\n", *first);   // use after free if the block moved
+    free(v.data);
+    return 0;
+}
+```
+
+```text
+$ cc -g -O0 -fsanitize=address stale.c -o stale && ./stale && ./stale x 2>&1 | grep -E "ERROR|READ of|freed by|previously allocated|in (main|push) " | sed -E "s/^==[0-9]+==//; s/ on address.*//; s/ *#[0-9]+ 0x[0-9a-f]+ in /    in /; s/ at 0x[0-9a-f]+//" | sed "s#$PWD/##"
+by index:   v.data[0] = 10
+ERROR: AddressSanitizer: heap-use-after-free
+READ of size 4 thread T0
+    in main stale.c:26:55
+freed by thread T0 here:
+    in push stale.c:10:18
+    in main stale.c:24:35
+previously allocated by thread T0 here:
+    in push stale.c:10:18
+    in main stale.c:21:5
+```
+
+The index survives because it is relative to whatever `data` currently is; the pointer refers to the old block, which `realloc` freed when it moved the data (the "freed by" stack points at the `realloc` in `push`). Without AddressSanitizer this program usually prints the right number, because the freed memory still holds the old value. That is why such bugs survive testing. The rules: store indices or handles, not element pointers, in anything that grows; re-derive pointers after any call that may reallocate; and document in an API which operations invalidate which pointers (C++ calls this *iterator invalidation*; C libraries must spell it out).
 
 ## Common bugs, and how to catch them
 
@@ -149,8 +414,20 @@ Unions can also be used for type punning in C (but not C++), per the footnote in
 | Misaligned access | `*(int *)(buf + 1)` | `-fsanitize=alignment` |
 | Strict aliasing | `*(int *)&f` | `-Wstrict-aliasing=2`, `-fsanitize=undefined` (partial) |
 | Use after free | read after `free(p)` | ASan, Valgrind |
+| Stale pointer after growth | element pointer kept across `realloc` | ASan (heap-use-after-free, "freed by … realloc") |
+| Null check after dereference | `v = p->x; if (!p) …` | `-Wnull-dereference` (GCC, partial), static analysis (`-fanalyzer`, clang-tidy) |
+| Lost out-parameter | assigning to a `T *` parameter instead of through a `T **` | LeakSanitizer, code review |
+| Qualifier hole | `const char **cpp = &p` | the default warning; treat it as an error (`-Werror=incompatible-pointer-types`) |
 
 A good default for development builds: `-std=c11 -Wall -Wextra -Wpedantic -fsanitize=address,undefined -g`.
+
+### Troubleshooting a pointer bug
+
+1. **Reproduce under the sanitizers first** (`-g -O0 -fsanitize=address,undefined`). ASan names the kind of access (heap-buffer-overflow, stack-use-after-return, heap-use-after-free) and gives three stacks: the bad access, where the memory was freed, and where it was allocated. That usually identifies the bug class without a debugger.
+2. **If the bug only appears at `-O2`**, suspect undefined behavior the optimizer exploited: strict aliasing (try `-fno-strict-aliasing`; if the symptom disappears, find the punning), a null check after a dereference, signed overflow, or an out-of-range pointer computation. Build with `-fsanitize=undefined` at `-O2` as well.
+3. **Ask "whose copy is this?"** for every assignment to a pointer parameter, and "who owns this, and until when?" for every stored pointer. Most lost updates and leaks are answered by the first question, most use-after-frees by the second.
+4. **Print the types, not just the values.** A `sizeof` that is 8 where you expected 40 means the array decayed; `p + 1` moving 16 bytes instead of 4 means `p` is a pointer to an array.
+5. **Watch the memory.** In `gdb`, `watch -l *ptr` stops at the instruction that changes a location, which finds stray writes through the wrong pointer.
 
 ## Lab: two-dimensional arrays and pointer-to-array types
 
@@ -301,7 +578,7 @@ SUMMARY: AddressSanitizer: heap-buffer-overflow provenance.c:19 in main
 
 - The legal loop ends at the one-past-the-end pointer and the difference `end - a` is 4 **elements**, because pointer subtraction is scaled by the element size.
 - Case 1 (reading `a[4]`) is caught by UBSan as an out-of-bounds index; case 3 (use after free) and case 4 (one element past a heap block) are caught by AddressSanitizer with an exact classification and the source line. Case 2 (forming `a + 100`) is not shown because it is silent in practice, but it is still undefined, and the optimizer may use that fact (for example, to assume a loop bound).
-- The sanitizers check actual accesses, so they only find what the test inputs exercise; combine with a fuzzer or broad test inputs (see the testing note).
+- The sanitizers check actual accesses, so they only find what the test inputs exercise; combine with a fuzzer or broad test inputs (see *Static Analysis, Fuzzing and Testing C Code*).
 
 ## Key takeaways
 
@@ -309,4 +586,8 @@ SUMMARY: AddressSanitizer: heap-buffer-overflow provenance.c:19 in main
 - Arrays decay to a pointer to the first element, except under `sizeof`, `&` and string-literal initializers.
 - Array parameters are really pointers.
 - Pointer arithmetic is scaled and valid only within one array plus one-past-the-end; the same bounds apply to subtraction and ordering.
-- Use `memcpy` for unaligned or type-punned reads; know `restrict` and strict aliasing before touching optimized code.
+- Use `memcpy` for unaligned or type-punned reads; know `restrict` and strict aliasing before touching optimized code. Aliasing bugs are the ones that pass at `-O0` and fail at `-O2`.
+- Pass a `T **` when the callee must change the caller's pointer; a `struct node **` removes the head-of-list special case.
+- `char **` does not convert to `const char **` (that would let you modify a const object); C needs a cast even for the safe `const char *const *`.
+- Null is checked *before* the dereference; after it, the compiler may delete the check.
+- A pointer dies with its object, and `realloc` kills every pointer into the old block: keep indices into anything that grows.
