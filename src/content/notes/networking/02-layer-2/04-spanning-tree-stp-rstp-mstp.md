@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 4
 level: advanced
 summary: How bridges elect a root and prune loops, the BPDU format and timers, why RSTP converges in under a second, MSTP regions, and the protection features that keep it safe.
+prerequisites:
+  - Ethernet Frames and MAC Learning
+  - VLANs, Trunking, Private VLANs and QinQ
 sources:
   - label: "IEEE 802.1D-2004 — Media Access Control (MAC) Bridges (STP, RSTP; Clauses 8, 9, 17)"
   - label: "IEEE 802.1Q-2022 — Clause 13 \"Spanning tree protocols\" (RSTP and MSTP, consolidated)"

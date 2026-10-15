@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 1
 level: intermediate
 summary: The simplified fixed header, how extension headers chain, every address type and scope, interface identifiers, multicast formation and sensible prefix planning.
+prerequisites:
+  - IPv4 Header, Fragmentation and MTU
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
 sources:
   - label: "RFC 8200 — Internet Protocol, Version 6 (IPv6) Specification (STD 86)"
     url: https://www.rfc-editor.org/rfc/rfc8200

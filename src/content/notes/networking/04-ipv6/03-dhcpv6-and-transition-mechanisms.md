@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 3
 level: advanced
 summary: Stateful and stateless DHCPv6, prefix delegation, and the toolbox for living between two protocols — dual-stack, tunnels, NAT64/DNS64, 464XLAT and IPv6-mostly networks.
+prerequisites:
+  - DHCP — Messages, Leases, Relay and Options
+  - ICMPv6, Neighbor Discovery, SLAAC and DAD
 sources:
   - label: "RFC 8415 — Dynamic Host Configuration Protocol for IPv6 (DHCPv6)"
     url: https://www.rfc-editor.org/rfc/rfc8415

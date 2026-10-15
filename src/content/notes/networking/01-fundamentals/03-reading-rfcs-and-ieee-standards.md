@@ -6,6 +6,8 @@ moduleOrder: 1
 order: 3
 level: advanced
 summary: How the documents are organized, the vocabulary (MUST/SHOULD), how to find the normative parts fast, and the specs worth knowing by number.
+prerequisites:
+  - Network Models, Encapsulation and Device Roles
 sources:
   - label: "RFC 2119 / RFC 8174 — Key words for use in RFCs to indicate requirement levels"
     url: https://www.rfc-editor.org/rfc/rfc8174

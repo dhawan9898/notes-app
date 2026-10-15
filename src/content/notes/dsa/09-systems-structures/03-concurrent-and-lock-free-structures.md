@@ -6,6 +6,10 @@ moduleOrder: 9
 order: 3
 level: expert
 summary: "The ABA problem replayed deterministically, a tagged Treiber stack and a Michael-Scott queue stress-tested under ThreadSanitizer (including the recycling bug the FIFO check caught), and an honest comparison with a mutex queue: lock-free buys progress guarantees, not necessarily speed."
+prerequisites:
+  - Stacks, Queues, Deques and Ring Buffers
+  - Threads and Synchronization
+  - Threads, Atomics and the C11 Memory Model
 sources:
   - label: "Treiber — Systems Programming, Coping with Parallelism (IBM Research Report RJ 5118, 1986)"
   - label: "Michael & Scott — Simple, Fast, and Practical Non-Blocking and Blocking Concurrent Queue Algorithms (PODC 1996)"

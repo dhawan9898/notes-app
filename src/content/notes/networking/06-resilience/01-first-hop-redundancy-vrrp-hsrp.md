@@ -6,6 +6,9 @@ moduleOrder: 6
 order: 1
 level: intermediate
 summary: How hosts keep a working default gateway when a router dies — VRRPv3 election and timers, virtual MACs, HSRP differences, load sharing, tracking and modern anycast-gateway designs.
+prerequisites:
+  - ARP and IPv4 Address Conflict Detection
+  - "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
 sources:
   - label: "RFC 5798 — Virtual Router Redundancy Protocol (VRRP) Version 3 for IPv4 and IPv6"
     url: https://www.rfc-editor.org/rfc/rfc5798

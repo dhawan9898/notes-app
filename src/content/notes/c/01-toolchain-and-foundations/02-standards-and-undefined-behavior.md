@@ -6,6 +6,9 @@ moduleOrder: 1
 order: 2
 level: advanced
 summary: The behavior categories the C standard defines, why undefined behavior lets compilers delete your checks, a gallery of real UB with the code GCC generates, and how to catch it with sanitizers and warnings.
+prerequisites:
+  - "From Source to Running Process: A Bridge to Systems C"
+  - Pointers for Beginners
 sources:
   - label: "ISO/IEC 9899:2018 (C17) §3.4 Behavior, §4 Conformance, §5.1.2.3 Program execution, Annex J.2 Undefined behavior"
   - label: "ISO/IEC 9899:2024 (C23) and WG14 N3220 working draft"

@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 3
 level: advanced
 summary: What happens between `docker run` and a running process — the OCI image and runtime specs, the Docker/containerd/runc stack, a real runc container run by hand, overlayfs copy-up and whiteouts, and networking and storage choices.
+prerequisites:
+  - Linux Namespaces — The Isolation Primitive Behind Containers
+  - Container Resource Limits, Seccomp, Capabilities and Hardening
 sources:
   - label: "Open Container Initiative — Runtime Specification, Image Specification, Distribution Specification"
     url: https://github.com/opencontainers/runtime-spec

@@ -6,6 +6,10 @@ moduleOrder: 2
 order: 8
 level: advanced
 summary: The attacks that work on a switched LAN and the layered controls that stop them — from port security and storm control to 802.1X and MACsec encryption.
+prerequisites:
+  - "Home and Office Networks: Switch, Router, Wi-Fi, NAT and Firewall"
+  - VLANs, Trunking, Private VLANs and QinQ
+  - ARP and IPv4 Address Conflict Detection
 sources:
   - label: "IEEE 802.1X-2020 — Port-Based Network Access Control"
   - label: "IEEE 802.1AE-2018 — MAC Security (MACsec); IEEE 802.1AEbw (extended packet numbering)"

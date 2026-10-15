@@ -36,6 +36,11 @@ for (const f of walk('src/content/notes').filter((f) => f.endsWith('.md') || f.e
 // Learning order: a prerequisite that is a note of the same track must come earlier in that track's order.
 const key = (d) => d.moduleOrder * 1000 + d.order;
 for (const [title, { f, data }] of notes) {
+  // Every note above beginner level must be linked into the reading graph (drives "Before you read this", "Continue with" and the roadmap).
+  if (data.level !== 'beginner' && !(data.prerequisites ?? []).some((p) => notes.has(p))) {
+    bad++;
+    console.error(`${f}: a ${data.level} note needs at least one prerequisite that is the exact title of another note`);
+  }
   for (const p of data.prerequisites ?? []) {
     const q = notes.get(p);
     if (q && q.data.track === data.track && key(q.data) > key(data)) {

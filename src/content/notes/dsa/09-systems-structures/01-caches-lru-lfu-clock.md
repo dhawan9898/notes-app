@@ -6,6 +6,9 @@ moduleOrder: 9
 order: 1
 level: advanced
 summary: "Replacement policies simulated on Zipf, scan-polluted and looping workloads against the offline optimum, plus an O(1) hash-plus-list LRU cache with a pooled allocator, invariant checks and a throughput measurement."
+prerequisites:
+  - "Hash Tables: Open Addressing, Deletion, Cuckoo and Hash Flooding"
+  - Linked Lists
 sources:
   - label: "Belady — A Study of Replacement Algorithms for a Virtual-Storage Computer (IBM Systems Journal 5(2), 1966)"
   - label: "Corbató — A Paging Experiment with the Multics System (1968) (origin of the CLOCK algorithm)"

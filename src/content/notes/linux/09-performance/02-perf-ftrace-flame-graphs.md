@@ -6,6 +6,9 @@ moduleOrder: 9
 order: 2
 level: expert
 summary: How to find where CPU time goes and why threads wait — sampling vs tracing, perf stat/record/report, flame graphs (on-CPU, off-CPU), symbol and stack-unwinding problems, ftrace, language profilers and hardware counter interpretation.
+prerequisites:
+  - System Calls, the vDSO, strace, /proc, /sys and Netlink
+  - "Performance Methodology: USE, Load, CPU and Memory Analysis"
 sources:
   - label: "perf wiki and man perf-stat(1), perf-record(1), perf-report(1), perf-top(1), perf-sched(1), perf-trace(1), perf-c2c(1)"
     url: https://perfwiki.github.io/main/

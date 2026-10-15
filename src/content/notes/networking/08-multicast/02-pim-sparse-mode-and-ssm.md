@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 2
 level: advanced
 summary: How multicast trees are built across routers — RPF, shared and source trees, the RP and register process, SPT switchover, SSM, Anycast-RP and troubleshooting mroutes.
+prerequisites:
+  - "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
+  - IP Multicast Basics — Addressing, IGMP, MLD and Snooping
 sources:
   - label: "RFC 7761 — Protocol Independent Multicast – Sparse Mode (PIM-SM): Protocol Specification (Revised)"
     url: https://www.rfc-editor.org/rfc/rfc7761

@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 3
 level: expert
 summary: Label switching from first principles — the shim header, LSP operations and PHP, LDP and Segment Routing, and the L3VPN architecture with VRFs, route distinguishers, route targets and two-label forwarding.
+prerequisites:
+  - "BGP at Scale: Route Reflectors, Communities, Policy, Security and Convergence"
+  - Tunneling Fundamentals — GRE, IP-in-IP and GRE-in-UDP
 sources:
   - label: "RFC 3031 / RFC 3032 — MPLS Architecture; MPLS Label Stack Encoding"
     url: https://www.rfc-editor.org/rfc/rfc3032

@@ -6,6 +6,10 @@ moduleOrder: 4
 order: 2
 level: advanced
 summary: The five NDP messages and their options, how a host builds an address from a Router Advertisement, duplicate address detection, neighbor unreachability detection, and securing the link.
+prerequisites:
+  - IPv6 Header, Extension Headers and Addressing
+  - ARP and IPv4 Address Conflict Detection
+  - ICMP, Ping, Traceroute and Diagnostics
 sources:
   - label: "RFC 4443 — Internet Control Message Protocol (ICMPv6) for IPv6"
     url: https://www.rfc-editor.org/rfc/rfc4443

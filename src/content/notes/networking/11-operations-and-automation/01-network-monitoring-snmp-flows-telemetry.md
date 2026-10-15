@@ -262,7 +262,7 @@ $ python3 flowsample.py
 Polling has fundamental limits: it is request/response, per-device CPU-heavy, coarse in time, and the data models are inconsistent. **Streaming telemetry** inverts it: the device *pushes* selected data to a collector at a configured interval or whenever it changes, over a modern transport.
 
 - **gNMI** (gRPC Network Management Interface) uses gRPC over HTTP/2 with TLS and Protobuf encoding. A client **subscribes** to paths: `STREAM` mode with `SAMPLE` (every N seconds, down to 1 s or less) or `ON_CHANGE` (only when the value changes, ideal for interface state and BGP session state), or `ONCE`/`POLL`. Efficient binary encoding and a single long-lived connection replace thousands of SNMP requests.
-- **YANG data models** describe the structure, and **OpenConfig** provides vendor-neutral models (`/interfaces/interface[name=eth0]/state/counters/in-octets`), so the same query works across vendors. The same models are used for configuration over NETCONF, RESTCONF and gNMI Set (see the *Network Automation* note).
+- **YANG data models** describe the structure, and **OpenConfig** provides vendor-neutral models (`/interfaces/interface[name=eth0]/state/counters/in-octets`), so the same query works across vendors. The same models are used for configuration over NETCONF, RESTCONF and gNMI Set (see the *Network Automation: Declarative State, NETCONF/YANG, gNMI and Safe Changes* note).
 - **Counters are 64-bit** and timestamps come from the device, which solves the wrap and jitter problems.
 - Transport, models and exporter support vary: many deployments still use SNMP for legacy devices and gNMI for newer ones, with an adapter (such as an SNMP exporter feeding a time-series database like Prometheus) in between.
 

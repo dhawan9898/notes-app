@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 2
 level: advanced
 summary: "When making the locally best choice is provably globally optimal — exchange arguments, interval scheduling, fractional knapsack, job sequencing and Huffman coding (with a canonical bit-level encoder) — tested against brute force, with the plausible greedy rules that fail."
+prerequisites:
+  - Heaps and Priority Queues
+  - Dynamic Programming
 sources:
   - label: Kleinberg & Tardos — Algorithm Design, Ch. 4 (Greedy Algorithms)
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 15 (Greedy Algorithms)

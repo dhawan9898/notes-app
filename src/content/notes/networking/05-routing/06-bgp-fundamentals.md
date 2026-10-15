@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 6
 level: advanced
 summary: How BGP peers establish sessions, the four message types and the finite-state machine, every important path attribute, iBGP vs eBGP rules, and the decision process that picks a best path.
+prerequisites:
+  - "TCP and UDP: The Transport Layer"
+  - "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
 sources:
   - label: "RFC 4271 — A Border Gateway Protocol 4 (BGP-4)"
     url: https://www.rfc-editor.org/rfc/rfc4271

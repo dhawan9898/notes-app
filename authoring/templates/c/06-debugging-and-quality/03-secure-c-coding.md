@@ -6,6 +6,10 @@ moduleOrder: 6
 order: 3
 level: expert
 summary: The vulnerability classes that dominate C code and the concrete defenses against each — input validation, safe arithmetic and buffers, command and path injection (with demos), TOCTOU races, privilege dropping, randomness and constant-time comparison, plus the process and tooling around them.
+prerequisites:
+  - Strings and Buffer Safety
+  - Build Systems, Compiler Flags and Hardening Options
+  - Static Analysis, Fuzzing and Testing C Code
 sources:
   - label: SEI CERT C Coding Standard
     url: https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard

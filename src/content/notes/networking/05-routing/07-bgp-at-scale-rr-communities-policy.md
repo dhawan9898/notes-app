@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 7
 level: expert
 summary: Scaling iBGP with route reflectors and confederations, communities and traffic engineering, business-relationship policy, RPKI and filtering, data-center eBGP and convergence behavior.
+prerequisites:
+  - "BGP-4 Fundamentals: Sessions, Messages, Attributes and Best-Path Selection"
 sources:
   - label: "RFC 4456 — BGP Route Reflection"
     url: https://www.rfc-editor.org/rfc/rfc4456

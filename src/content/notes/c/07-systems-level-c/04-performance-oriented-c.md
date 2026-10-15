@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 4
 level: expert
 summary: How to reason about and measure C performance on modern CPUs — the memory hierarchy, branch prediction, data layout (AoS vs SoA), false sharing and vectorization — each demonstrated with a benchmark whose results span 5× to 50×.
+prerequisites:
+  - Structs, Alignment, Padding, Unions, Bit-fields and Endianness
+  - Bit Manipulation
 sources:
   - label: "Drepper — What Every Programmer Should Know About Memory (2007)"
     url: https://people.freebsd.org/~lstewart/articles/cpumemory.pdf

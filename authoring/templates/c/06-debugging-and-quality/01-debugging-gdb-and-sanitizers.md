@@ -6,6 +6,9 @@ moduleOrder: 6
 order: 1
 level: intermediate
 summary: A practical debugging workflow — compile for debuggability, read ASan/UBSan/TSan/LSan reports, use gdb (breakpoints, watchpoints, core dumps, reverse debugging) and complementary tools to turn crashes and corruption into root causes.
+prerequisites:
+  - Stack Frames and the x86-64 System V Calling Convention
+  - "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
 sources:
   - label: GDB manual (Debugging with GDB)
     url: https://sourceware.org/gdb/current/onlinedocs/gdb/

@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 4
 level: advanced
 summary: "Prefix trees from the 26-way trie to compressed radix trees, then the structure that justifies them in networking — IPv4 longest-prefix match with binary, multibit and DIR-24-8 tables, checked against a linear scan and measured."
+prerequisites:
+  - Binary Trees and Binary Search Trees
 sources:
   - label: Fredkin — Trie Memory (CACM 3(9), 1960)
   - label: Morrison — PATRICIA, Practical Algorithm To Retrieve Information Coded in Alphanumeric (J. ACM 15(4), 1968)

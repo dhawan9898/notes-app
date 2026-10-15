@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 8
 level: advanced
 summary: Moving routes between protocols safely — metrics, tags, loops with two-point redistribution, route-maps and prefix-lists, and how BGP and IGPs should (and should not) be combined.
+prerequisites:
+  - OSPF Areas, LSA Types, Stub/NSSA and Summarization
+  - "BGP-4 Fundamentals: Sessions, Messages, Attributes and Best-Path Selection"
 sources:
   - label: "RFC 1812 §5.2.4 — Routing table; RFC 2328 §16.4 — External route calculation"
     url: https://www.rfc-editor.org/rfc/rfc2328

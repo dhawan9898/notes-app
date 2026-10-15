@@ -6,6 +6,9 @@ moduleOrder: 9
 order: 3
 level: advanced
 summary: A structured approach and concrete command sequences for the failures seen most often in production — sick servers, hung and zombie processes, full disks (and inodes), resource-limit errors, network failures, kernel messages and boot problems — with what each error really means.
+prerequisites:
+  - Reading Logs and Finding What Went Wrong
+  - "Performance Methodology: USE, Load, CPU and Memory Analysis"
 sources:
   - label: "man 3 errno, Linux kernel docs — Documentation/admin-guide (hung task, softlockup, sysctl)"
     url: https://docs.kernel.org/admin-guide/sysctl/kernel.html

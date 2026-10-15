@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 5
 level: advanced
 summary: "Search trees built for block storage — why wide nodes win, a tested B+ tree measured across node sizes, page-size arithmetic for billions of keys, and a counting LSM tree that shows write, read and space amplification and what Bloom filters buy."
+prerequisites:
+  - "Self-Balancing Trees: AVL, Red-Black, Treaps and Skip Lists"
+  - Binary Search and Its Variants
 sources:
   - label: "Bayer & McCreight — Organization and Maintenance of Large Ordered Indexes (Acta Informatica 1(3), 1972)"
   - label: "Comer — The Ubiquitous B-Tree (ACM Computing Surveys 11(2), 1979)"

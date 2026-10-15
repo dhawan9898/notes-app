@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 2
 level: advanced
 summary: The IPsec architecture — SAs, SPD/SAD, ESP vs AH, tunnel vs transport mode — the IKEv2 exchanges, NAT traversal, overhead and MTU, and operating route-based VPNs on Linux.
+prerequisites:
+  - TLS, Certificates and QUIC
+  - Tunneling Fundamentals — GRE, IP-in-IP and GRE-in-UDP
 sources:
   - label: "RFC 4301 — Security Architecture for the Internet Protocol"
     url: https://www.rfc-editor.org/rfc/rfc4301

@@ -6,6 +6,9 @@ moduleOrder: 11
 order: 2
 level: expert
 summary: Mandatory access control with Linux Security Modules — SELinux types and troubleshooting, AppArmor profiles, Landlock and Yama — plus a prioritized, evidence-based hardening checklist covering kernel sysctls, mounts, services, integrity, logging and boot.
+prerequisites:
+  - Users, Permissions, ACLs and Capabilities
+  - SSH, PAM, sudo and auditd — Authentication, Authorization and Accountability
 sources:
   - label: "Linux kernel docs — Linux Security Module Usage; SELinux; AppArmor; Yama; Landlock; Lockdown"
     url: https://docs.kernel.org/admin-guide/LSM/index.html

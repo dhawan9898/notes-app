@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 5
 level: advanced
 summary: How Linux implements threads, the pthread synchronization primitives and when to use each, the C11 memory model, data races and deadlocks with runnable examples, and tools that find concurrency bugs.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
+  - "Inter-Process Communication: Pipes, FIFOs, Unix Sockets, Shared Memory and Futexes"
 sources:
   - label: "POSIX.1-2017 — Threads (pthread_create, mutexes, condition variables, rwlocks, barriers)"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html

@@ -6,6 +6,9 @@ moduleOrder: 2
 order: 3
 level: intermediate
 summary: Design and operate VLANs — access and trunk ports, native VLAN, inter-VLAN routing, PVLANs, provider bridging with QinQ, and VLAN-based attacks.
+prerequisites:
+  - "Planning a Small Office Network: VLANs and an Addressing Plan"
+  - Ethernet Frames and MAC Learning
 sources:
   - label: "IEEE 802.1Q-2022 — Bridges and Bridged Networks (VLAN-aware bridges, ingress/egress rules, Clause 5, 8, 9)"
   - label: "IEEE 802.1ad (now in 802.1Q) — Provider Bridges, S-VLAN"

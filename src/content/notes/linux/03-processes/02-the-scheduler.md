@@ -6,6 +6,8 @@ moduleOrder: 3
 order: 2
 level: advanced
 summary: How the kernel decides which task runs where and for how long — scheduling classes and policies, fair scheduling with virtual runtime, nice and weights, real-time and deadline tasks, load balancing, affinity, cgroup CPU control and what load average really means.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
 sources:
   - label: "Linux kernel docs — Scheduler (CFS, EEVDF, sched-design-CFS, sched-rt-group, sched-deadline)"
     url: https://docs.kernel.org/scheduler/index.html

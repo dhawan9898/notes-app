@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 3
 level: advanced
 summary: "Systematic search with pruning — N-Queens with bitmasks, subset-sum bounds, a Sudoku solver with the fewest-candidates heuristic, permutation and subset enumeration (Gosper's hack), and the Held-Karp bitmask DP for the travelling salesman problem — with node counts and timings."
+prerequisites:
+  - Dynamic Programming
+  - Bit Manipulation
 sources:
   - label: Knuth — The Art of Computer Programming, Vol. 4A, §7.2.2 (Backtrack programming) and §7.1.3 (Bitwise tricks and techniques)
   - label: Knuth — Dancing Links (in Millennial Perspectives in Computer Science, 2000)

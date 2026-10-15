@@ -6,6 +6,8 @@ moduleOrder: 3
 order: 3
 level: advanced
 summary: Beating the n log n bound by exploiting key structure (counting, radix, bucket sort — 7–10× faster than qsort on 32-bit keys), and not sorting at all when you only need the k-th element or the top k (quickselect, median of medians, bounded heaps), with external sorting for data larger than memory.
+prerequisites:
+  - Comparison Sorts — Insertion, Merge, Quick, Heap and Introsort
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 8 (Sorting in Linear Time) and Ch. 9 (Medians and Order Statistics)"
   - label: "Blum, Floyd, Pratt, Rivest, Tarjan — Time Bounds for Selection (JCSS, 1973)"

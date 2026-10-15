@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 1
 level: intermediate
 summary: How encapsulation tunnels work, GRE header options, MTU/MSS and recursive-routing pitfalls, mGRE/DMVPN, and Linux tunnel configuration.
+prerequisites:
+  - IPv4 Header, Fragmentation and MTU
+  - "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
 sources:
   - label: "RFC 2784 / RFC 2890 — Generic Routing Encapsulation (GRE); Key and Sequence Number Extensions"
     url: https://www.rfc-editor.org/rfc/rfc2890

@@ -6,6 +6,8 @@ moduleOrder: 6
 order: 2
 level: advanced
 summary: Finding bugs before users do — compiler warnings and GCC's static analyzer, a unit-test harness with line and branch coverage, and coverage-guided fuzzing explained through a working mutation fuzzer that finds a stack overflow in seconds.
+prerequisites:
+  - Debugging with gdb and the Sanitizers
 sources:
   - label: GCC manual — Static Analyzer Options (-fanalyzer); Instrumentation Options (--coverage); gcov
     url: https://gcc.gnu.org/onlinedocs/gcc/Static-Analyzer-Options.html

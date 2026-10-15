@@ -6,6 +6,9 @@ moduleOrder: 9
 order: 2
 level: expert
 summary: "Free lists, boundary tags and coalescing, first/next/best fit compared on a random workload with a heap checker, the buddy allocator behind the Linux page allocator, and arena and pool allocators that beat malloc by 10x — all tested for overlap and corruption."
+prerequisites:
+  - "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
+  - Linked Lists
 sources:
   - label: Knuth — The Art of Computer Programming, Vol. 1, §2.5 (Dynamic Storage Allocation)
   - label: Wilson, Johnstone, Neely, Boles — Dynamic Storage Allocation, A Survey and Critical Review (IWMM 1995)

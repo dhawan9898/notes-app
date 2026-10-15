@@ -6,6 +6,10 @@ moduleOrder: 8
 order: 2
 level: advanced
 summary: How Docker/Kubernetes limits translate to cgroup files, what OOMKilled and CPU throttling really mean, and how capabilities, seccomp, no-new-privileges, LSMs and user namespaces shrink the blast radius — with a real container's security state.
+prerequisites:
+  - Users, Permissions, ACLs and Capabilities
+  - systemd Timers, cgroups v2 and Resource Control
+  - Linux Namespaces — The Isolation Primitive Behind Containers
 sources:
   - label: "Docker — Resource constraints; Runtime privilege and Linux capabilities; Seccomp security profiles"
     url: https://docs.docker.com/engine/security/seccomp/

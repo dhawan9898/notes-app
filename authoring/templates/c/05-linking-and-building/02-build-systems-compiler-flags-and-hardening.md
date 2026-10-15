@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 2
 level: intermediate
 summary: A correct, incremental Makefile with automatic header dependencies, the equivalent CMake project, the warning and optimization flags worth using, and a measured comparison of default versus hardened builds (PIE, RELRO, canaries, FORTIFY, NX).
+prerequisites:
+  - Functions, Headers and Multi-File Programs
+  - Static and Shared Libraries, Symbols, Dynamic Loading
 sources:
   - label: GNU Make Manual
     url: https://www.gnu.org/software/make/manual/make.html

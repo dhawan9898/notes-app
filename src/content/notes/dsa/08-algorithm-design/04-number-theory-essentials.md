@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 4
 level: advanced
 summary: "Euclid's algorithm and Bezout coefficients, modular exponentiation and inverses, overflow-safe 128-bit mulmod, bit-array and segmented sieves, deterministic Miller-Rabin for all 64-bit integers, fast-doubling Fibonacci, CRT, binomials mod p and a toy RSA — each checked, with the two overflow bugs the tests caught."
+prerequisites:
+  - Recursion, Divide and Conquer, and Loop Invariants
+  - Types, Integer Promotion, Conversions and Overflow
 sources:
   - label: "Knuth — The Art of Computer Programming, Vol. 2, §4.5 (Rational arithmetic, Euclid's algorithm) and §4.5.4 (Factoring into primes; primality tests)"
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 31 (Number-Theoretic Algorithms)"
@@ -190,7 +193,7 @@ The checks run thousands of random cases against naive implementations: `gcd` ag
 - **Overflow demonstration.** For a modulus around 2⁶² the product `(m−3)·(m−5)` is `15` modulo `m`. With plain 64-bit arithmetic the answer is wrong; with the 128-bit intermediate it is `15`.
 - **Fermat fooled, Miller–Rabin not.** 561 passes the Fermat test for all 319 coprime bases yet Miller–Rabin correctly reports composite.
 - **Known values.** `F(90) = 2 880 067 194 370 816 120` fits in 64 bits, and `F(10¹⁸) mod (10⁹+7) = 209 783 453` takes about sixty squarings.
-- **A toy RSA round trip.** Two 32-bit primes found with Miller–Rabin give a 63-bit modulus; `e = 65537`, `d = e⁻¹ mod φ(n)`, and encrypting then decrypting recovers the message. This is **not secure** — a 63-bit modulus is factored instantly — and it uses no padding; real RSA uses ≥ 2048-bit moduli, OAEP/PSS padding and constant-time big-integer arithmetic. It is here to show where the pieces (primality testing, extended Euclid, modular exponentiation) fit; see the *IPsec and IKEv2* and *SSH, PAM, sudo and auditd* notes for how deployed protocols use Diffie–Hellman, RSA and elliptic-curve variants.
+- **A toy RSA round trip.** Two 32-bit primes found with Miller–Rabin give a 63-bit modulus; `e = 65537`, `d = e⁻¹ mod φ(n)`, and encrypting then decrypting recovers the message. This is **not secure** — a 63-bit modulus is factored instantly — and it uses no padding; real RSA uses ≥ 2048-bit moduli, OAEP/PSS padding and constant-time big-integer arithmetic. It is here to show where the pieces (primality testing, extended Euclid, modular exponentiation) fit; see the *TLS, Certificates and QUIC*, *IPsec and IKEv2* and *SSH, PAM, sudo and auditd — Authentication, Authorization and Accountability* notes for how deployed protocols use Diffie–Hellman, RSA and elliptic-curve variants.
 
 ### Two bugs the tests caught
 

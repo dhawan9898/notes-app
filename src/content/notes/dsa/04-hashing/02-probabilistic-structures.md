@@ -6,6 +6,8 @@ moduleOrder: 4
 order: 2
 level: advanced
 summary: "Trading exactness for orders of magnitude less memory — hash quality and avalanche, Bloom filters sized from the formulas, Count-Min sketches, HyperLogLog and consistent hashing, each measured against its theory."
+prerequisites:
+  - "Hash Tables: Open Addressing, Deletion, Cuckoo and Hash Flooding"
 sources:
   - label: "Bloom — Space/Time Trade-offs in Hash Coding with Allowable Errors (CACM 13(7), 1970)"
   - label: "Cormode & Muthukrishnan — An Improved Data Stream Summary, the Count-Min Sketch and its Applications (J. Algorithms 55(1), 2005)"

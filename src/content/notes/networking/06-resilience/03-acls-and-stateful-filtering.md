@@ -6,6 +6,10 @@ moduleOrder: 6
 order: 3
 level: intermediate
 summary: How ordered packet filters are evaluated and placed, why stateful tracking exists, practical nftables/ACL patterns, and how to protect routers and the control plane.
+prerequisites:
+  - IPv4 Header, Fragmentation and MTU
+  - NAT — Static, NAPT, Port Forwarding, Hairpinning and CGNAT
+  - "TCP and UDP: The Transport Layer"
 sources:
   - label: "RFC 2827 / BCP 38 and RFC 3704 / BCP 84 — Ingress filtering against spoofed sources"
     url: https://www.rfc-editor.org/rfc/rfc2827

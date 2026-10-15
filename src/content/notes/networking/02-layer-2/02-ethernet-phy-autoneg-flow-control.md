@@ -6,6 +6,8 @@ moduleOrder: 2
 order: 2
 level: intermediate
 summary: What happens below the MAC — link speeds and media, autonegotiation, duplex mismatches, PAUSE and PFC, jumbo frames and the error counters that reveal physical problems.
+prerequisites:
+  - Ethernet Frames and MAC Learning
 sources:
   - label: "IEEE 802.3-2022, Clause 28 (autonegotiation for twisted pair), Clause 37 (1000BASE-X), Clause 40 (1000BASE-T), Annex 31B (MAC Control PAUSE)"
   - label: "IEEE 802.1Q-2022, Clause 36 (Priority-based Flow Control, formerly 802.1Qbb)"

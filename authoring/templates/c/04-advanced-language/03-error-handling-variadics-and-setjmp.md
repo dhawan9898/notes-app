@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 3
 level: advanced
 summary: Conventions for reporting and propagating errors in a language without exceptions — errno, return codes, the goto-cleanup idiom — plus how variadic functions work and fail, and what setjmp/longjmp really do.
+prerequisites:
+  - Stack Frames and the x86-64 System V Calling Convention
+  - "Dynamic Memory: malloc Internals, Classic Bugs and Custom Allocators"
 sources:
   - label: ISO/IEC 9899:2018 (C17) §7.5 errno.h; §7.16 stdarg.h; §7.13 setjmp.h; §7.22.4 Communication with the environment; §7.2 assert.h
   - label: man 3 errno, man 3 strerror, man 3 perror, man 3 va_start, man 3 setjmp, man 3 atexit, man 3 exit, man 2 _exit

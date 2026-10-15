@@ -216,6 +216,7 @@ Progress tracking (per-note done state, module/track progress rings, "continue w
 - **Always build and check before declaring done:** `node scripts/check-notes.mjs --fix` and `npm run build` must pass. For C/DSA templates also run `python3 authoring/build.py <note>` and read the generated output blocks.
 - **Be honest about verification:** say what was run and what was not; never invent command output. If a tool is missing, label the block as a reference/illustrative.
 - **Don't expose personal data or machine-specific values** in notes (hostnames, UIDs, home paths, key material, IPs of the authoring VM).
+- **Every note above beginner level needs at least one prerequisite** that is the exact title of another note (enforced by `scripts/check-notes.mjs`); choose the notes it actually builds on, cross-track where that fits.
 - **Prefer extending existing notes' conventions** (module names/orders, level badges, sources format) so the site structure stays coherent. When adding a note to an existing module, set `order` correctly and update the outline `[x]`.
 - **Commit/push policy:** commit only when asked (the owner asked for a commit after the C track; pushes need credentials the remote session lacks). Never force-push or rewrite the owner's history. If asked to raise a PR and credentials are missing, say so and offer the bundle.
 - **Before a long writing run, state the plan** (module list), write notes in batches of 2–4, build after each batch, and keep the outline files current so work can resume after context loss.

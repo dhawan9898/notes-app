@@ -6,6 +6,9 @@ moduleOrder: 1
 order: 2
 level: intermediate
 summary: The Unix text toolbox applied to a real log, plus a hardened script template and the practices that keep production scripts safe, idempotent and debuggable.
+prerequisites:
+  - The Shell — Parsing, Expansion, Redirection, Pipes and Job Control
+  - Your First Shell Scripts
 sources:
   - label: "POSIX.1-2017 Utilities — grep, sed, awk, sort, cut, xargs, find"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html

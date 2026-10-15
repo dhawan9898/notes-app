@@ -6,6 +6,9 @@ moduleOrder: 1
 order: 3
 level: intermediate
 summary: The C type system as it behaves on real machines — fixed-width and size types, the integer promotion and usual arithmetic conversion rules (with the bugs they cause), IEEE 754 floating point, and safe checked arithmetic.
+prerequisites:
+  - Binary, Hexadecimal and Bits
+  - C Standards, the Abstract Machine and Undefined Behavior
 sources:
   - label: ISO/IEC 9899:2018 (C17) §6.2.5 Types, §6.3 Conversions, §6.5 Expressions, §7.20 Integer types, §7.22 General utilities; Annex F (IEEE 754)
   - label: IEEE 754-2019 — Standard for Floating-Point Arithmetic

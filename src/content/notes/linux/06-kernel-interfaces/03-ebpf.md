@@ -6,6 +6,9 @@ moduleOrder: 6
 order: 3
 level: expert
 summary: How eBPF safely runs sandboxed programs inside the kernel — the verifier and JIT, program types and attach points, maps, CO-RE and BTF, the tooling (bpftrace, bcc, libbpf), XDP and tc networking, and the security considerations.
+prerequisites:
+  - System Calls, the vDSO, strace, /proc, /sys and Netlink
+  - Kernel Modules, Device Drivers and udev
 sources:
   - label: "Linux kernel docs — BPF Documentation (verifier, maps, helpers, BTF)"
     url: https://docs.kernel.org/bpf/index.html

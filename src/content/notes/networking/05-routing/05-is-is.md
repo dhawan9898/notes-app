@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 5
 level: advanced
 summary: The ISO link-state IGP — NET addressing, L1/L2 hierarchy, PDU types, DIS election, TLV-based extensibility, wide metrics, and how it differs from OSPF.
+prerequisites:
+  - "OSPFv2 Operation: Neighbors, DR/BDR, Flooding and SPF"
+  - OSPF Areas, LSA Types, Stub/NSSA and Summarization
 sources:
   - label: "ISO/IEC 10589:2002 — Intermediate System to Intermediate System intra-domain routing information exchange protocol"
   - label: "RFC 1195 — Use of OSI IS-IS for Routing in TCP/IP and Dual Environments"

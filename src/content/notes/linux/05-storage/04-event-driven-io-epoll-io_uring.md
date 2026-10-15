@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 4
 level: expert
 summary: How servers handle thousands of connections with one thread — readiness notification (select/poll/epoll, level vs edge triggering) versus completion-based I/O (io_uring), with a working epoll echo server and the pitfalls of each model.
+prerequisites:
+  - Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
+  - "Inter-Process Communication: Pipes, FIFOs, Unix Sockets, Shared Memory and Futexes"
 sources:
   - label: "man 7 epoll, man 2 epoll_ctl, man 2 select, man 2 poll, man 7 aio"
     url: https://man7.org/linux/man-pages/man7/epoll.7.html

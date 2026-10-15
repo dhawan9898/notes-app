@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 4
 level: advanced
 summary: The Linux IPC toolbox compared — capacities and atomicity of pipes, Unix domain socket features (fd passing, credentials), POSIX vs SysV shared memory, message queues, the *fd family (eventfd, timerfd, pidfd, memfd) and how futexes underpin userspace locks.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
+  - Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
 sources:
   - label: "man 7 pipe, man 7 fifo, man 7 unix, man 7 shm_overview, man 7 mq_overview, man 7 sem_overview"
     url: https://man7.org/linux/man-pages/man7/pipe.7.html

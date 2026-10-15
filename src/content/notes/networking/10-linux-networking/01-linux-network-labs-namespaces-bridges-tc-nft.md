@@ -6,6 +6,10 @@ moduleOrder: 10
 order: 1
 level: intermediate
 summary: Build routers, switches, VLANs and impairments from Linux primitives in seconds, with scripts and the real output they produce, so you can reproduce every concept in this track on a laptop.
+prerequisites:
+  - Network Commands and SSH for Beginners
+  - VLANs, Trunking, Private VLANs and QinQ
+  - ACLs, Stateless vs Stateful Filtering and Infrastructure Protection
 sources:
   - label: "Linux man-pages — ip-netns(8), ip-link(8), bridge(8), tc(8), nft(8)"
     url: https://man7.org/linux/man-pages/

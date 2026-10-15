@@ -6,6 +6,10 @@ moduleOrder: 10
 order: 2
 level: expert
 summary: How TCP connections behave on Linux — accept and SYN queues, state machine and TIME_WAIT, congestion control, windows and buffer autotuning, Nagle and delayed ACK, keepalive — with the sysctls that matter, how to read ss -ti, and tuning recipes by workload.
+prerequisites:
+  - "TCP and UDP: The Transport Layer"
+  - Sockets Programming in C
+  - "The Linux Packet Path: NIC, NAPI, Softirqs, Netfilter and Qdisc"
 sources:
   - label: "RFC 9293 — Transmission Control Protocol (TCP); RFC 5681 — TCP Congestion Control; RFC 6298 — RTO; RFC 7323 — Window Scaling and Timestamps"
     url: https://www.rfc-editor.org/rfc/rfc9293

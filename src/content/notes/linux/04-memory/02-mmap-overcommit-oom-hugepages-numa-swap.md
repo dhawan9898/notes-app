@@ -6,6 +6,8 @@ moduleOrder: 4
 order: 2
 level: expert
 summary: Allocation behind malloc, why the kernel promises more memory than exists, how the OOM killer chooses victims and how to control it, transparent and explicit huge pages, NUMA placement, and swap design including zram.
+prerequisites:
+  - Virtual Memory, Paging and the Page Cache
 sources:
   - label: "man 2 mmap, man 2 madvise, man 3 malloc, man 3 mallopt, man 5 proc (overcommit_memory, oom_score_adj)"
     url: https://man7.org/linux/man-pages/man2/mmap.2.html
@@ -90,7 +92,7 @@ Before this line the kernel prints the allocation that failed (`gfp_mask`, `orde
 
 ### Better than the global OOM killer
 
-- **cgroup limits**: `memory.max` is a hard limit inside which the OOM killer acts (killing only in that group; `memory.oom.group=1` kills the whole group); `memory.high` throttles allocation via reclaim before the limit (soft); `memory.low`/`min` protect from reclaim; `memory.events` counts `high`, `max`, `oom`, `oom_kill`. Containers/Kubernetes use these (`OOMKilled`, exit code 137).
+- **cgroup limits**: a cgroup is a kernel-managed group of processes with resource limits (systemd puts every service in one, container runtimes every container; *systemd Timers, cgroups v2 and Resource Control* covers them in depth). In its memory controller, `memory.max` is a hard limit inside which the OOM killer acts (killing only in that group; `memory.oom.group=1` kills the whole group); `memory.high` throttles allocation via reclaim before the limit (soft); `memory.low`/`min` protect from reclaim; `memory.events` counts `high`, `max`, `oom`, `oom_kill`. Containers/Kubernetes use these (`OOMKilled`, exit code 137).
 - **Userspace OOM daemons** act earlier using PSI and pressure, killing deliberately before the kernel thrashes: `systemd-oomd`, `earlyoom`, Facebook's `oomd`. Global OOM can take minutes of thrashing to trigger on a swapping box; PSI-based killers react in seconds.
 - Right-size memory limits, avoid unbounded caches, set JVM `-Xmx` below the container limit (heap + metaspace + threads + direct buffers).
 

@@ -6,6 +6,9 @@ moduleOrder: 6
 order: 1
 level: advanced
 summary: How user programs call the kernel and what that costs, the vDSO fast path, tracing syscalls with strace, and the virtual filesystems and sockets (/proc, /sys, sysctl, netlink) through which Linux exposes its internals.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
+  - Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
 sources:
   - label: "man 2 syscalls, man 2 syscall, man 7 vdso, man 1 strace, man 7 errno"
     url: https://man7.org/linux/man-pages/man2/syscalls.2.html

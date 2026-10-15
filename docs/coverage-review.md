@@ -126,3 +126,19 @@ Practice notes (6-7 graded exercises, answers behind `<details>`, every answer v
 A second batch completed the exercises: every module of the C and DSA tracks now ends with a practice note, as does every Linux module and every Networking module except *Linux Networking Labs* (which is itself a set of labs). The new Linux and Networking labs run unprivileged (user, network and mount namespaces, `systemd-run --user`) and use captured output; the few results that vary run to run (loss percentages, timings, MAC-derived addresses) are described as such.
 
 Remaining known gaps: protocol and standards facts are still unverified against the RFCs and IEEE documents; the site has never been viewed in a browser by the authors; the exercises have no automatic answer-checking.
+
+## 6. Reading-graph pass (gaps between notes)
+
+The prerequisite graph drives the "Before you read this" box, the "Continue with" box and the order of `/roadmap/`. An analysis of all 227 notes found that the original core notes were almost never connected to it.
+
+| Finding | Fix |
+|---|---|
+| 82 intermediate/advanced/expert notes had no prerequisites (21 of them were not connected to any other note at all), so they had no "Before you read this" box, fed no "Continue with" box and could appear in the roadmap before the notes they rely on | Added 1-3 prerequisites to each (note and authoring template), chosen from what the note actually uses, including cross-track links (e.g. OSPF ← DSA *Shortest Paths*; C *Sockets* ← Networking *TCP and UDP*; DSA *Concurrent and Lock-Free Structures* ← Linux *Threads* and C *Threads, Atomics and the C11 Memory Model*). Pages with a prerequisites box: 141 → 223; with a "Continue with" box: 132 → 145. The graph has no cycles; only the four *Start here* notes are entry points |
+| *Segment Routing and SRv6* relied on MPLS, which is taught later (*MPLS, LDP and MPLS L3VPN*) | One-paragraph MPLS primer added where SR-MPLS is introduced |
+| *mmap, Overcommit, the OOM Killer…* used cgroup memory limits three modules before cgroups are taught | Inline definition of a cgroup with a pointer to the cgroups note |
+| *Layer 2 Security* teaches DHCP snooping before the DHCP note | *Home and Office Networks* (which explains DHCP) is now a prerequisite |
+| Two prose references named notes by a shortened title (*Network Automation*, *SSH, PAM, sudo and auditd*) | Full titles; the number-theory note now also points to *TLS, Certificates and QUIC* |
+
+`scripts/check-notes.mjs` now fails the build when a note above beginner level has no prerequisite that is the exact title of another note, so new notes cannot drop out of the graph again.
+
+Remaining continuity observations (not changed): beginner Essentials notes introduce terms (router, DHCP, process, heap) informally before the deep note defines them, which is intended; *Signals in Depth* discusses per-thread signal masks before *Threads and Synchronization*, but explains what it needs.

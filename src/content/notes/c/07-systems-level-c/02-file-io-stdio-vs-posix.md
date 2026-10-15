@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 2
 level: intermediate
 summary: The two I/O layers (FILE* streams and file descriptors), how buffering changes syscall counts by 500×, robust read/write loops for short transfers and EINTR, atomic file replacement, mmap and directory traversal, with measured numbers.
+prerequisites:
+  - Arrays, Strings, Command-Line Arguments and Files
+  - Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
 sources:
   - label: "ISO/IEC 9899:2018 (C17) §7.21 Input/output <stdio.h>"
   - label: "POSIX.1-2017 — open(), read(), write(), pread(), close(), fsync(), rename(), opendir(), stat(), mmap()"

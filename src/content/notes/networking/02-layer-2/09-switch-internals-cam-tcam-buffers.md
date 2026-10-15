@@ -6,6 +6,10 @@ moduleOrder: 2
 order: 9
 level: expert
 summary: What actually happens inside a switch ASIC — table memories, forwarding pipeline, buffering architectures, head-of-line blocking, and how to size and reason about oversubscription.
+prerequisites:
+  - Ethernet Frames and MAC Learning
+  - VLANs, Trunking, Private VLANs and QinQ
+  - Tries, Radix Trees and Longest-Prefix Match
 sources:
   - label: "Merchant-silicon documentation and white papers (Broadcom Trident/Tomahawk, Marvell Prestera, NVIDIA Spectrum) — vendor publications"
   - label: "Appenzeller, Keslassy, McKeown — Sizing Router Buffers (SIGCOMM 2004)"

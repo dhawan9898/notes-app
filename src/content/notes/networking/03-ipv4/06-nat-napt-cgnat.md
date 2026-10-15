@@ -6,6 +6,10 @@ moduleOrder: 3
 order: 6
 level: advanced
 summary: How address and port translation works on the wire, the RFC 4787 behavior classes that decide whether peer-to-peer works, conntrack mechanics, timers, CGNAT and what breaks.
+prerequisites:
+  - IP Addresses, Subnets and Ports in Plain Language
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
+  - "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"
 sources:
   - label: "RFC 3022 — Traditional IP Network Address Translator"
     url: https://www.rfc-editor.org/rfc/rfc3022

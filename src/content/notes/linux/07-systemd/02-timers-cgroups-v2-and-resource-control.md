@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 2
 level: advanced
 summary: Scheduling with timers (calendar syntax, Persistent, accuracy), the unified cgroup v2 hierarchy and how systemd maps units to it, controlling CPU, memory, I/O and task counts per service, delegation, and diagnosing throttling and OOM.
+prerequisites:
+  - Processes, Monitoring and Scheduled Jobs
+  - systemd — Units, Dependencies, Targets, Hardening and the Journal
 sources:
   - label: "systemd.timer(5), systemd.time(7), systemd-analyze(1) calendar/timespan"
     url: https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html

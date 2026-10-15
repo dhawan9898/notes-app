@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 5
 level: intermediate
 summary: The DORA exchange on the wire, lease timers, relay agents and giaddr, the options that matter in practice, failover and troubleshooting.
+prerequisites:
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
+  - ARP and IPv4 Address Conflict Detection
 sources:
   - label: "RFC 2131 — Dynamic Host Configuration Protocol"
     url: https://www.rfc-editor.org/rfc/rfc2131

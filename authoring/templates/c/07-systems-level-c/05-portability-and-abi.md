@@ -6,6 +6,10 @@ moduleOrder: 7
 order: 5
 level: advanced
 summary: Writing C that survives different compilers, operating systems and architectures — data models, feature-test macros, endianness and alignment, and how the C ABI lets C++, Python and Rust call your library, with verified examples.
+prerequisites:
+  - Stack Frames and the x86-64 System V Calling Convention
+  - Structs, Alignment, Padding, Unions, Bit-fields and Endianness
+  - Static and Shared Libraries, Symbols, Dynamic Loading
 sources:
   - label: ISO/IEC 9899:2018 §4 Conformance; §5.2.4.2 Numerical limits; Annex J.3 Implementation-defined behavior
   - label: man 7 feature_test_macros; POSIX.1-2017 Rationale (Portability)

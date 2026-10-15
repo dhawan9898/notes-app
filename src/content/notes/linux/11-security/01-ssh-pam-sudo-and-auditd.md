@@ -6,6 +6,9 @@ moduleOrder: 11
 order: 1
 level: advanced
 summary: Securing remote access and privilege on Linux — how SSH authenticates hosts and users (keys, certificates, FIDO2), a hardened sshd configuration, the PAM stack model, sudoers design, and kernel auditing with auditd, with verified examples.
+prerequisites:
+  - Network Commands and SSH for Beginners
+  - Users, Permissions, ACLs and Capabilities
 sources:
   - label: "RFC 4251 / 4252 / 4253 / 4254 — The Secure Shell (SSH) Protocol Architecture, Authentication, Transport, Connection"
     url: https://www.rfc-editor.org/rfc/rfc4251

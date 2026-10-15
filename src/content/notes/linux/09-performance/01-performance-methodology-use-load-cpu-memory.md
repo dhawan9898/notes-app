@@ -6,6 +6,9 @@ moduleOrder: 9
 order: 1
 level: advanced
 summary: A systematic way to find bottlenecks instead of guessing — the USE and RED methods, a 60-second checklist, how to read CPU, load, memory and I/O metrics correctly, benchmarking pitfalls and capacity laws.
+prerequisites:
+  - "The Linux Scheduler: Classes, EEVDF/CFS, Priorities, Affinity and CPU Limits"
+  - Virtual Memory, Paging and the Page Cache
 sources:
   - label: "Gregg — Systems Performance - Enterprise and the Cloud, 2nd ed. (Addison-Wesley, 2020)"
     url: https://www.brendangregg.com/systems-performance-2nd-edition-book.html

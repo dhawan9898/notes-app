@@ -6,6 +6,10 @@ moduleOrder: 9
 order: 4
 level: advanced
 summary: "Seven reusable patterns (two pointers, sliding window, monotonic stack, prefix sums with hashing, interval merging, binary search on the answer, top-k) verified against brute force, a decision guide for choosing a data structure, a complexity table for everything built in this track, and a latency reality check."
+prerequisites:
+  - Dynamic Programming
+  - Greedy Algorithms
+  - Graph Representations and Traversals
 sources:
   - label: "Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed. (appendices on summations and the complexity of each structure)"
   - label: "Skiena — The Algorithm Design Manual, 3rd ed., Part I (Practical Algorithm Design) and the Hitchhiker's Guide to algorithms"

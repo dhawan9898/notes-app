@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 3
 level: intermediate
 summary: Writing correct TCP and UDP clients and servers — the socket call sequence, getaddrinfo, partial sends and receives, message framing, SIGPIPE, SO_REUSEADDR, concurrency models, and a measured 1,500× latency difference from Nagle's algorithm.
+prerequisites:
+  - "File I/O in C: stdio vs POSIX, Buffering, Short Reads and Durability"
+  - "TCP and UDP: The Transport Layer"
 sources:
   - label: "POSIX.1-2017 — sys/socket.h, netdb.h: socket(), bind(), listen(), accept(), connect(), send(), recv(), getaddrinfo()"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/

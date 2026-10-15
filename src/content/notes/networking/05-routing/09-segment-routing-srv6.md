@@ -32,7 +32,7 @@ Ordinary IP routing is **destination-based and hop-by-hop**: every router looks 
 
 **Segment Routing (SR)**, built on **source routing**, takes a different approach: the *ingress* router writes the path into the packet as an ordered list of **segments**, and the network just follows the list. A **segment** is an instruction ("go to router X by the shortest path", "leave through this link", "decapsulate and deliver in VRF Y"). Intermediate routers keep **no per-path state**: the state is in the packet. Only the ingress node needs to know the path, usually computed by a controller or by the IGP itself.
 
-SR has two data planes. **SR-MPLS** (RFC 8660) encodes segments as a stack of MPLS labels (see the MPLS note). **SRv6** encodes segments as **IPv6 addresses** carried in a new IPv6 extension header, the **Segment Routing Header (SRH)**, and is what this note builds.
+SR has two data planes. **SR-MPLS** (RFC 8660) encodes segments as a stack of MPLS labels. If MPLS is new to you: an MPLS router forwards on a 20-bit **label** pushed in front of the IP header instead of on the destination address, and each hop swaps or pops the top label; SR-MPLS simply uses one label per segment (the *MPLS, LDP and MPLS L3VPN* note, later in the track, covers label distribution and VPNs). **SRv6** encodes segments as **IPv6 addresses** carried in a new IPv6 extension header, the **Segment Routing Header (SRH)**, and is what this note builds.
 
 ## Segment identifiers and behaviors
 

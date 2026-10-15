@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 2
 level: intermediate
 summary: The Bellman-Ford idea behind distance-vector protocols, count-to-infinity and its mitigations, RIPv2/RIPng on the wire, and when to prefer link-state.
+prerequisites:
+  - "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
 sources:
   - label: "RFC 2453 — RIP Version 2 (STD 56)"
     url: https://www.rfc-editor.org/rfc/rfc2453

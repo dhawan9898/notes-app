@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 1
 level: advanced
 summary: How every process gets a private address space, how page tables and the TLB translate addresses, what page faults really are, how the kernel caches files and reclaims memory, and how to read free, meminfo and smaps correctly.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
+  - "From Source to Running Process: A Bridge to Systems C"
 sources:
   - label: "Linux kernel docs — Memory Management (Documentation/admin-guide/mm, Documentation/mm)"
     url: https://docs.kernel.org/admin-guide/mm/index.html

@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 6
 level: advanced
 summary: "Answering 'what is the sum or minimum over positions l..r?' fast — prefix sums, difference arrays, Fenwick trees, lazy segment trees, sparse tables and sqrt decomposition, all fuzz-tested against a naive scan and measured."
+prerequisites:
+  - Binary Trees and Binary Search Trees
+  - Recursion, Divide and Conquer, and Loop Invariants
 sources:
   - label: Fenwick — A New Data Structure for Cumulative Frequency Tables (Software, Practice and Experience 24(3), 1994)
   - label: Cormen, Leiserson, Rivest, Stein — Introduction to Algorithms, 4th ed., Ch. 14 (Augmenting Data Structures, interval trees and order statistics)

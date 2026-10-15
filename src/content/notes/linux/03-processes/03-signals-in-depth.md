@@ -6,6 +6,8 @@ moduleOrder: 3
 order: 3
 level: advanced
 summary: Signal semantics from generation to delivery — the standard and real-time signals, masks and pending sets, safe handlers, EINTR, threads, signalfd and the practical patterns for graceful shutdown and core dumps.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
 sources:
   - label: "POSIX.1-2017 — Signal Concepts (XSH 2.4), sigaction(), pthread_sigmask()"
     url: https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html

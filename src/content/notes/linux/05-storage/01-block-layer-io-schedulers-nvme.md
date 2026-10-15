@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 1
 level: advanced
 summary: The path of an I/O request from the page cache to the device, the multi-queue block layer and its schedulers, the latency and queue-depth arithmetic that governs performance, SSD/NVMe specifics, and how to read iostat and queue settings.
+prerequisites:
+  - Disks, Mounts, Archives and Backups
+  - Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
 sources:
   - label: "Linux kernel docs — Block layer (blk-mq, I/O schedulers, bfq, kyber, mq-deadline)"
     url: https://docs.kernel.org/block/index.html

@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 1
 level: advanced
 summary: What each of the eight namespace types isolates, how they are created and joined, user-namespace UID mapping and rootless containers, with real unshare experiments and the limits of namespace isolation.
+prerequisites:
+  - Process Lifecycle — fork, exec, wait
+  - Users, Permissions, ACLs and Capabilities
 sources:
   - label: "man 7 namespaces, man 7 user_namespaces, man 7 pid_namespaces, man 7 network_namespaces, man 7 mount_namespaces, man 7 cgroup_namespaces, man 7 time_namespaces"
     url: https://man7.org/linux/man-pages/man7/namespaces.7.html

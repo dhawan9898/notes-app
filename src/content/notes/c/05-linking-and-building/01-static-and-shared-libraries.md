@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 1
 level: advanced
 summary: Building and using .a and .so libraries, sonames and version scripts, visibility and exported symbols, how the PLT/GOT and ld.so bind symbols, RPATH/RUNPATH, LD_PRELOAD interposition and dlopen plugins — all demonstrated with real commands.
+prerequisites:
+  - The Compilation Pipeline and the ELF Object Model
+  - Qualifiers, Storage Classes, Scope and Linkage
 sources:
   - label: "Drepper — How To Write Shared Libraries (2011)"
     url: https://www.akkadia.org/drepper/dsohowto.pdf

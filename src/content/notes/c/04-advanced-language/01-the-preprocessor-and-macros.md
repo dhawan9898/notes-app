@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 1
 level: intermediate
 summary: What the C preprocessor does and doesn't understand, the classic macro bugs with measurements, safe macro idioms (do-while(0), statement expressions, _Generic), X-macros, conditional compilation, and when to prefer inline functions and enums.
+prerequisites:
+  - Functions, Headers and Multi-File Programs
+  - The Compilation Pipeline and the ELF Object Model
 sources:
   - label: "ISO/IEC 9899:2018 (C17) §6.10 Preprocessing directives; §6.10.3 Macro replacement; §6.10.8 Predefined macro names"
   - label: "GNU CPP manual (The C Preprocessor)"

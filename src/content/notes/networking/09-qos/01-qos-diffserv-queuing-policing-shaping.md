@@ -6,6 +6,9 @@ moduleOrder: 9
 order: 1
 level: advanced
 summary: The end-to-end QoS toolkit — DSCP/PCP marking and PHBs, token-bucket policing vs shaping, queue schedulers, AQM and ECN (bufferbloat), and a practical class model with Linux tc examples.
+prerequisites:
+  - IPv4 Header, Fragmentation and MTU
+  - "TCP and UDP: The Transport Layer"
 sources:
   - label: "RFC 2474 / RFC 2475 — Definition of the Differentiated Services Field; An Architecture for Differentiated Services"
     url: https://www.rfc-editor.org/rfc/rfc2474

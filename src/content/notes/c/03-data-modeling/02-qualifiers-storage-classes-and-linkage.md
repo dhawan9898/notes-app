@@ -6,6 +6,9 @@ moduleOrder: 3
 order: 2
 level: advanced
 summary: What const, volatile, restrict and _Atomic promise (and the optimizer does with them), the difference between scope, lifetime and linkage, tentative definitions, the three meanings of static, and C99 inline semantics, each demonstrated.
+prerequisites:
+  - Functions, Headers and Multi-File Programs
+  - The Compilation Pipeline and the ELF Object Model
 sources:
   - label: "ISO/IEC 9899:2018 (C17) §6.2.1 Scopes of identifiers; §6.2.2 Linkages; §6.2.4 Storage durations; §6.7.3 Type qualifiers; §6.7.4 Function specifiers; §6.9.2 External object definitions"
   - label: "GCC manual — An Inline Function is As Fast As a Macro; Common Variable Attributes; -fcommon"

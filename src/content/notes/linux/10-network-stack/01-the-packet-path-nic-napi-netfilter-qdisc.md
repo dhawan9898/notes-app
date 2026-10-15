@@ -6,6 +6,9 @@ moduleOrder: 10
 order: 1
 level: expert
 summary: Follow a packet through the Linux kernel on receive and transmit — DMA rings, interrupts and NAPI polling, GRO/TSO offloads, RSS/RPS scaling, netfilter hooks and conntrack, routing, sockets and queueing disciplines — and the counters that reveal where packets are lost.
+prerequisites:
+  - "A Packet's Journey: Host to Gateway to Host"
+  - "Linux Network Labs: Namespaces, veth, Bridges, VLANs, tc and nftables"
 sources:
   - label: "Linux kernel docs — Networking (Documentation/networking: scaling.rst, napi.rst, netdev-FAQ, segmentation-offloads.rst)"
     url: https://docs.kernel.org/networking/index.html

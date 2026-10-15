@@ -6,6 +6,10 @@ moduleOrder: 7
 order: 4
 level: expert
 summary: How data-center overlays extend L2 and L3 over an IP underlay — VXLAN encapsulation, VTEPs, flood-and-learn vs EVPN, route types, multihoming, symmetric IRB and anycast gateways.
+prerequisites:
+  - VLANs, Trunking, Private VLANs and QinQ
+  - Tunneling Fundamentals — GRE, IP-in-IP and GRE-in-UDP
+  - MPLS, LDP and MPLS L3VPN
 sources:
   - label: "RFC 7348 — Virtual eXtensible Local Area Network (VXLAN)"
     url: https://www.rfc-editor.org/rfc/rfc7348

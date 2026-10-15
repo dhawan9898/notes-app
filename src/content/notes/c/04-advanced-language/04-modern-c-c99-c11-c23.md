@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 4
 level: intermediate
 summary: The language and library features added since C89 that change how you write C — designated initializers, compound literals, flexible arrays, atomics and threads, _Generic, and C23's nullptr, constexpr, typeof, auto, checked arithmetic and attributes — all compiled with GCC 14.
+prerequisites:
+  - C Standards, the Abstract Machine and Undefined Behavior
+  - The Preprocessor and Macros
 sources:
   - label: "ISO/IEC 9899:1999 (C99), ISO/IEC 9899:2011 (C11), ISO/IEC 9899:2018 (C17), ISO/IEC 9899:2024 (C23)"
   - label: "WG14 N3220 — C2x/C23 working draft; Jens Gustedt's blog 'Modern C and what we can expect from C23'"

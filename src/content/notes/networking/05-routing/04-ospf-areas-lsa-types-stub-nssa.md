@@ -6,6 +6,8 @@ moduleOrder: 5
 order: 4
 level: advanced
 summary: Hierarchical OSPF design — what each LSA type carries and where it floods, area types and their trade-offs, external route handling (E1/E2/N1/N2), summarization and virtual links.
+prerequisites:
+  - "OSPFv2 Operation: Neighbors, DR/BDR, Flooding and SPF"
 sources:
   - label: "RFC 2328 — OSPF Version 2 (Appendix A: LSA formats; §3 areas; §12 LSAs)"
     url: https://www.rfc-editor.org/rfc/rfc2328

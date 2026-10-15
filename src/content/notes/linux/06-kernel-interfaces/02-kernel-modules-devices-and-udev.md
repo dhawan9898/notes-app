@@ -6,6 +6,9 @@ moduleOrder: 6
 order: 2
 level: advanced
 summary: How loadable modules extend the kernel, how devices and drivers find each other (the driver model, modaliases), how /dev nodes and permissions are created by udev, and the practical commands for loading, tuning, signing and debugging.
+prerequisites:
+  - The Boot Process — Firmware, Bootloader, Kernel, initramfs and init
+  - System Calls, the vDSO, strace, /proc, /sys and Netlink
 sources:
   - label: "Linux kernel docs — The Linux driver implementer's API guide; Driver model (Documentation/driver-api/driver-model)"
     url: https://docs.kernel.org/driver-api/driver-model/overview.html

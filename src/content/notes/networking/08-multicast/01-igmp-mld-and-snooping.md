@@ -6,6 +6,9 @@ moduleOrder: 8
 order: 1
 level: intermediate
 summary: How one-to-many delivery is addressed and signalled on a LAN — multicast ranges and MAC mapping, IGMPv2/v3 and MLD operation, and how switches use snooping to avoid flooding.
+prerequisites:
+  - Ethernet Frames and MAC Learning
+  - IPv4 Addressing, Subnetting, VLSM and CIDR
 sources:
   - label: "RFC 1112 — Host Extensions for IP Multicasting (STD 5)"
     url: https://www.rfc-editor.org/rfc/rfc1112

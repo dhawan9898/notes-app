@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 3
 level: advanced
 summary: The five packet types, neighbor state machine and adjacency requirements, DR/BDR election, LSDB synchronization and flooding, and how SPF turns the LSDB into routes.
+prerequisites:
+  - "Routing Fundamentals: Static Routes, Protocol Families and Convergence"
+  - "Shortest Paths: Dijkstra, Bellman-Ford, Floyd-Warshall and A*"
 sources:
   - label: "RFC 2328 — OSPF Version 2 (STD 54)"
     url: https://www.rfc-editor.org/rfc/rfc2328

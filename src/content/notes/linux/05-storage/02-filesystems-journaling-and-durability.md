@@ -6,6 +6,10 @@ moduleOrder: 5
 order: 2
 level: expert
 summary: How the major Linux filesystems differ, what journaling and copy-on-write actually guarantee, why fsync is slow and necessary (with measurements), safe file-update patterns, and mount options and maintenance that matter.
+prerequisites:
+  - Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors
+  - The Block Layer, I/O Schedulers, SSDs and NVMe
+  - Virtual Memory, Paging and the Page Cache
 sources:
   - label: "Linux kernel docs — ext4 (Documentation/filesystems/ext4), XFS, Btrfs"
     url: https://docs.kernel.org/filesystems/ext4/index.html

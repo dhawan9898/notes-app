@@ -6,6 +6,9 @@ moduleOrder: 7
 order: 1
 level: advanced
 summary: "Naive, KMP, Z, Rabin-Karp, Horspool, glibc memmem and Aho-Corasick on 32 MB of text (measured, including the adversarial case), then Levenshtein distance, LCS, banded DP, and the byte-versus-code-point trap."
+prerequisites:
+  - Recursion, Divide and Conquer, and Loop Invariants
+  - "Hash Tables: Open Addressing, Deletion, Cuckoo and Hash Flooding"
 sources:
   - label: "Knuth, Morris, Pratt — Fast Pattern Matching in Strings (SIAM J. Computing 6(2), 1977)"
   - label: "Boyer & Moore — A Fast String Searching Algorithm (CACM 20(10), 1977)"

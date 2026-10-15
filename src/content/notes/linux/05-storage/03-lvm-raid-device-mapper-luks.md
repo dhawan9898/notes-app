@@ -6,6 +6,9 @@ moduleOrder: 5
 order: 3
 level: advanced
 summary: Flexible volumes with LVM and thin provisioning, md RAID levels and their failure math, the device-mapper framework underneath, full-disk encryption with LUKS2, and safe resize and recovery procedures.
+prerequisites:
+  - Disks, Mounts, Archives and Backups
+  - The Block Layer, I/O Schedulers, SSDs and NVMe
 sources:
   - label: "Linux kernel docs — Device Mapper (dm-crypt, dm-thin, dm-verity, dm-integrity, dm-cache)"
     url: https://docs.kernel.org/admin-guide/device-mapper/index.html

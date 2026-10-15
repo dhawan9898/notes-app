@@ -6,6 +6,9 @@ moduleOrder: 4
 order: 2
 level: advanced
 summary: Polymorphism and abstraction in C — function pointer syntax, dispatch tables and vtables, qsort-style callbacks with context pointers, opaque handles for encapsulation, and the kernel-style intrusive list with container_of, all compiled and run.
+prerequisites:
+  - Pointers, Arrays and Decay
+  - Structs, Alignment, Padding, Unions, Bit-fields and Endianness
 sources:
   - label: "ISO/IEC 9899:2018 (C17) §6.7.6.3 Function declarators; §6.3.2.3 Pointers; §7.22.5 Searching and sorting utilities"
   - label: "Linux kernel docs — Linked List API (include/linux/list.h) and container_of"
