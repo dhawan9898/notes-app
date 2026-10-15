@@ -102,7 +102,7 @@ Reading the plan:
 - **Staff** needs 90 addresses with growth, so a `/25` (126 usable). **Phones** need 68, also a `/25`. **Servers** (24) and **Printers and IoT** (28) each fit a `/27` (30 usable). **Guests** need 60, so a `/26` (62 usable). **Management** needs 16, so a `/27`.
 - The two `/25`, one `/26` and three `/27` blocks pack together with **no overlap**, and the whole design uses 416 of the 1,024 addresses, leaving the block starting at `10.20.1.160` free for new VLANs. That spare room is deliberate.
 - Every subnet's **gateway is its first usable address** (`.1`, `.65`, ...): the convention means anyone can guess it and a mistake is easy to spot. The router (or Layer 3 switch) has one interface or VLAN interface per subnet with that address.
-- The whole office summarises to **one route**, `10.20.0.0/22`, which is all the upstream router or VPN peer needs (see *Practice: VLSM, Summarisation, Longest-Prefix Match and Fragmentation*).
+- The whole office summarises to **one route**, `10.20.0.0/22`, which is all the upstream router or VPN peer needs (see the *VLSM, Summarisation, Longest-Prefix Match and Fragmentation* lab).
 - Within each subnet, keep addresses **static** for servers, printers and infrastructure (outside any DHCP pool) and use **DHCP** for client VLANs such as Staff, Guests and Phones. Reserve the first few addresses for gateways and redundancy protocols such as VRRP, and use DHCP reservations for devices that must keep an address but are configured automatically.
 
 ## Step 4: decide who may talk to whom

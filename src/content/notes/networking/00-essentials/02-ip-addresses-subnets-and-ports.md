@@ -22,7 +22,7 @@ sources:
     url: https://docs.python.org/3/library/ipaddress.html
 ---
 
-Every device on an IP network needs an **address**, and the network needs a way to know which addresses are "close by" (reachable directly) and which are "far away" (reachable through a router). That second job is what the **subnet mask** does. This note explains both in plain language, step by step, and gives you a short script to check your answers. It is the gentle foundation for *IPv4 Addressing, Subnetting, VLSM and CIDR*, and it prepares you for *Practice: Networking Exercises*.
+Every device on an IP network needs an **address**, and the network needs a way to know which addresses are "close by" (reachable directly) and which are "far away" (reachable through a router). That second job is what the **subnet mask** does. This note explains both in plain language, step by step, and gives you a short script to check your answers. It is the gentle foundation for *IPv4 Addressing, Subnetting, VLSM and CIDR*, and it prepares you for the *Networking Exercises* lab.
 
 ## An address is just 32 bits
 

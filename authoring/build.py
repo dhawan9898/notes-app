@@ -5,13 +5,15 @@ Directives (each on its own line in authoring/templates/<track>/<module>/<note>.
   {{include c/dir/file.c}}              -> fenced code block (language from extension)
   {{include path/to/file.c 10-30}}        -> only lines 10-30
   {{run c/dir :: command}}       -> "$ command" + its stdout/stderr (run in that dir, 300 s timeout)
-Output goes to src/content/notes/<track>/<module>/<note>.md
+Output goes to src/content/notes/<track>/<module>/<note>.md, or to src/content/labs/<track>/<module>/<note>.md for
+templates under authoring/templates/<track>/labs/.
 """
 import re, subprocess, sys, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TPL = ROOT / "authoring" / "templates"
 OUT = ROOT / "src" / "content" / "notes"
+LABS = ROOT / "src" / "content" / "labs"
 LANG = {".c": "c", ".h": "c", ".py": "python", ".sh": "bash", ".mk": "make", ".txt": "text", ".S": "asm", ".s": "asm", ".ld": "text"}
 
 def include(arg):
@@ -42,7 +44,8 @@ def main():
         rel = tpl.relative_to(TPL)
         if only and not any(o in str(rel) for o in only):
             continue
-        dst = OUT / rel
+        parts = rel.parts
+        dst = LABS / parts[0] / pathlib.Path(*parts[2:]) if len(parts) > 2 and parts[1] == "labs" else OUT / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_text(render(tpl.read_text()))
         n += 1
