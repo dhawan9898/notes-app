@@ -1310,5 +1310,30 @@
  "9d6a32674fa44c4b": {
   "ok": true,
   "where": "linux/09-performance/05-practice-measuring-before-tuning.md"
+ },
+ "d52211984ae678c2": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "16397aeb1f8e7d3c": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "1caca26c2769cc25": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "3debde29c31c224e": {
+  "ok": true,
+  "where": "c/02-memory-and-pointers/01-pointers-arrays-and-decay.md"
+ },
+ "6b9b2ad4bc97b923": {
+  "ok": true,
+  "where": "c/04-advanced-language/01-the-preprocessor-and-macros.md"
+ },
+ "814a0b163aa40f23": {
+  "ok": false,
+  "where": "c/04-advanced-language/01-the-preprocessor-and-macros.md",
+  "note": "main.c:17:15: error: expected ')'"
  }
 }
