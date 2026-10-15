@@ -6,6 +6,7 @@ moduleOrder: 8
 order: 1
 level: advanced
 minutes: 40
+env: machine
 summary: "Six exercises that build the two halves of a container without any container runtime: separate hostname, process IDs, network and user ID mappings with unshare, and resource limits with cgroup v2 through systemd, including reading the limit files and measuring a CPU quota, all with captured output."
 prerequisites:
   - "Linux Namespaces — The Isolation Primitive Behind Containers"

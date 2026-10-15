@@ -6,6 +6,7 @@ moduleOrder: 7
 order: 1
 level: advanced
 minutes: 50
+env: machine
 summary: "A lab that builds a GRE tunnel and a VXLAN tunnel between two virtual hosts, shows what each carries (an IP network versus an Ethernet segment), and measures the MTU cost of encapsulation with ping and the don't-fragment bit, with the full script and captured output."
 prerequisites:
   - "Tunneling Fundamentals — GRE, IP-in-IP and GRE-in-UDP"

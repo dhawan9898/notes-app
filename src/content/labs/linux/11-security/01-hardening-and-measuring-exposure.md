@@ -6,6 +6,7 @@ moduleOrder: 11
 order: 1
 level: expert
 minutes: 40
+env: machine
 summary: "Four exercises on the security module that run without root: scoring a service's exposure with systemd-analyze before and after sandboxing directives, seeing why salted password hashes differ for the same password, validating sudoers syntax safely, and reading SSH client defaults and key types, with captured output."
 prerequisites:
   - "SSH, PAM, sudo and auditd — Authentication, Authorization and Accountability"

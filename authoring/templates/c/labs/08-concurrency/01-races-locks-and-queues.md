@@ -6,6 +6,7 @@ moduleOrder: 8
 order: 1
 level: expert
 minutes: 30
+env: machine
 summary: "Four exercises on the concurrency module: showing a data race and fixing it with a mutex and with an atomic, detecting it with ThreadSanitizer, building a bounded producer-consumer queue with a condition variable, and reproducing and avoiding a lock-order deadlock, with verified programs and reports."
 prerequisites:
   - "Threads, Atomics and the C11 Memory Model"

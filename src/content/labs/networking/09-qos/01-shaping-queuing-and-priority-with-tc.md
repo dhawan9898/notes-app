@@ -6,6 +6,7 @@ moduleOrder: 9
 order: 1
 level: advanced
 minutes: 45
+env: machine
 summary: "A lab on one machine that rate-limits a link with a token bucket, then adds an HTB scheduler with a priority class selected by DSCP, and measures what a saturated link does to latency for best-effort and priority traffic: 173 ms against 0.1 ms, with the commands, helper scripts and captured output."
 prerequisites:
   - "QoS — DiffServ, Classification, Queuing, Policing and Shaping"
@@ -22,29 +23,72 @@ sources:
 
 QoS is often described with diagrams; here you will watch it. The experiment shows the two facts at the centre of the subject: a **saturated link adds delay to everyone** because of queuing, and a **scheduler can give selected traffic a short queue** so that it does not suffer. Everything runs between two virtual hosts in a throwaway namespace (set up as in *Practice: A Firewall and Traffic Control Lab*): client `c` (`10.7.0.1`) and server `s` (`10.7.0.2`).
 
-## Exercise 1: limit the rate with a token bucket
+## Setup
 
-A **token bucket filter** (`tbf`) lets traffic out at a configured average rate: tokens accumulate at the rate, each packet spends tokens, and a packet that finds no tokens waits (or is dropped if its queue is full). The receiver and sender are two tiny Python programs; the sender writes 2 MiB as fast as it can.
+This lab needs **root and Linux network namespaces with traffic control** (`tc`), which the in-browser Linux does not have: run it on your own Linux machine or virtual machine. Compile the two programs with `cc -O2 -o qos_rx qos_rx.c` and `cc -O2 -o qos_tx qos_tx.c` (their listings are under Exercise 1). The setup below is the standard recipe for two namespaces joined by a virtual cable; it is **not** the exact script behind the transcripts, which were captured earlier on a Linux machine with equivalent Python programs, so expect different numbers on your machine.
 
-```python
-# rx.py: accept one connection, count bytes, report the rate
-import socket, time
-s = socket.socket(); s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1); s.bind(("10.7.0.2", 9300)); s.listen(1)
-c, _ = s.accept(); n = 0; t0 = None
-while True:
-    b = c.recv(65536)
-    if not b: break
-    if t0 is None: t0 = time.time()
-    n += len(b)
-print(f"received {n} bytes in {time.time()-t0:.2f} s = {n*8/(time.time()-t0)/1e6:.1f} Mbit/s")
+```bash
+ip netns add srv; ip netns add cli
+ip link add vc type veth peer name vs
+ip link set vc netns cli; ip link set vs netns srv
+ip -n cli addr add 10.7.0.1/24 dev vc; ip -n srv addr add 10.7.0.2/24 dev vs
+for ns in cli srv; do ip -n $ns link set lo up; done
+ip -n cli link set vc up; ip -n srv link set vs up
+ip netns exec srv ./qos_rx 10.7.0.2 9300 &        # the receiver waits for one connection
+ip netns exec cli ./qos_tx 10.7.0.2 9300          # the sender; add tc rules with: ip netns exec cli tc … dev vc …
 ```
 
-```python
-# tx.py: send 2 MiB as fast as the path allows
-import socket
-c = socket.create_connection(("10.7.0.2", 9300)); data = b"x" * 65536
-for _ in range(32): c.sendall(data)
-c.close()
+## Exercise 1: limit the rate with a token bucket
+
+A **token bucket filter** (`tbf`) lets traffic out at a configured average rate: tokens accumulate at the rate, each packet spends tokens, and a packet that finds no tokens waits (or is dropped if its queue is full). The receiver and sender are two tiny C programs (`qos_rx` and `qos_tx`, listed below); the sender writes 2 MiB as fast as it can.
+
+```c
+/* qos_rx: accept one TCP connection, count the bytes and report the rate.   Usage: qos_rx ADDRESS PORT */
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <time.h>
+#include <unistd.h>
+
+static double now(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (double)t.tv_sec + (double)t.tv_nsec / 1e9; }
+
+int main(int argc, char **argv) {
+    if (argc != 3) { fprintf(stderr, "usage: %s ADDRESS PORT\n", argv[0]); return 2; }
+    int s = socket(AF_INET, SOCK_STREAM, 0), one = 1;
+    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &one, sizeof one);
+    struct sockaddr_in a = {.sin_family = AF_INET, .sin_port = htons((uint16_t)atoi(argv[2]))};
+    if (inet_pton(AF_INET, argv[1], &a.sin_addr) != 1 || bind(s, (struct sockaddr *)&a, sizeof a) < 0 || listen(s, 1) < 0) { perror("bind/listen"); return 1; }
+    int c = accept(s, NULL, NULL);
+    static char buf[65536]; size_t total = 0; double t0 = 0; ssize_t n;
+    while ((n = recv(c, buf, sizeof buf, 0)) > 0) { if (total == 0) t0 = now(); total += (size_t)n; }
+    double dt = now() - t0;
+    printf("received %zu bytes in %.2f s = %.1f Mbit/s\n", total, dt, (double)total * 8 / dt / 1e6);
+    return 0;
+}
+```
+
+```c
+/* qos_tx: send 2 MiB over TCP as fast as the path allows.   Usage: qos_tx ADDRESS PORT */
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+int main(int argc, char **argv) {
+    if (argc != 3) { fprintf(stderr, "usage: %s ADDRESS PORT\n", argv[0]); return 2; }
+    int s = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in a = {.sin_family = AF_INET, .sin_port = htons((uint16_t)atoi(argv[2]))};
+    if (inet_pton(AF_INET, argv[1], &a.sin_addr) != 1 || connect(s, (struct sockaddr *)&a, sizeof a) < 0) { perror("connect"); return 1; }
+    static char data[65536]; memset(data, 'x', sizeof data);
+    for (int i = 0; i < 32; i++) for (size_t off = 0; off < sizeof data;) { ssize_t n = send(s, data + off, sizeof data - off, 0); if (n <= 0) { perror("send"); return 1; } off += (size_t)n; }
+    close(s);
+    return 0;
+}
 ```
 
 Run the transfer once with no shaping, then add `tc qdisc add dev vc root tbf rate 8mbit burst 20kb latency 100ms` on the client's interface and run it again. What do you expect for the second run, what do `burst` and `latency` mean, and what do the qdisc counters show?

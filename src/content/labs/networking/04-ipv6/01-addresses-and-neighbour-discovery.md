@@ -6,7 +6,10 @@ moduleOrder: 4
 order: 1
 level: intermediate
 minutes: 45
-summary: "Five exercises on the IPv6 module: writing and compressing addresses, classifying address types, deriving an EUI-64 interface ID and a solicited-node multicast address, planning /64 subnets, and watching link-local addressing and neighbour discovery work in a two-host lab, with a verified Python program and captured output."
+env: browser
+terminal:
+  - ./ipv6_practice
+summary: "Five exercises on the IPv6 module: writing and compressing addresses, classifying address types, deriving an EUI-64 interface ID and a solicited-node multicast address, planning /64 subnets, and watching link-local addressing and neighbour discovery work in a two-host lab, with a verified C program and captured output."
 prerequisites:
   - "IPv6 Header, Extension Headers and Addressing"
   - "ICMPv6, Neighbor Discovery, SLAAC and DAD"
@@ -35,7 +38,7 @@ IPv6 looks intimidating until you notice it is the same ideas as IPv4 with more 
 
 **5. Subnet planning.** How many `/64` subnets does a `/48` contain, what are the first three, and how many addresses are in one `/64`? Why are `/64`s used even for a link between two routers?
 
-**6. Lab: neighbours without configuration.** Connect two hosts with a virtual cable, change nothing, and show their addresses, ping one from the other, read the neighbour table and ping the all-nodes multicast address.
+**6. Lab: neighbours without configuration.** Connect two hosts with a virtual cable, change nothing, and show their addresses, ping one from the other, read the neighbour table and ping the all-nodes multicast address. (This part needs network namespaces and virtual Ethernet pairs, which the in-browser Linux does not have: do it on your own Linux machine or virtual machine; the transcript below was captured on one.)
 
 ## Answers
 
@@ -44,47 +47,112 @@ Try before opening.
 <details>
 <summary>Show the programs and captured output</summary>
 
-**1 to 5.** One Python program computes them all:
+**1 to 5.** One C program computes them all (run it with `./ipv6_practice` in the Linux terminal):
 
-```python
-import ipaddress
+```c
+/* IPv6 practice: compression and expansion (RFC 5952), address types, EUI-64, solicited-node multicast, prefix arithmetic. */
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
-# 1. Compression and expansion
-for text in ["2001:0db8:0000:0000:0000:ff00:0042:8329", "2001:db8:0:0:1:0:0:1", "0000:0000:0000:0000:0000:0000:0000:0001"]:
-    a = ipaddress.ip_address(text)
-    print(f"1. {text}\n     compressed: {a.compressed}\n     exploded:   {a.exploded}")
+typedef struct { uint8_t b[16]; } V6;
 
-# 2. Address types
-print()
-for text in ["::1", "fe80::1", "fd12:3456:789a::1", "2001:db8::1", "ff02::1", "2606:4700:4700::1111"]:
-    a = ipaddress.ip_address(text)
-    kind = ("loopback" if a.is_loopback else "link-local (fe80::/10)" if a.is_link_local else "unique local (fc00::/7)" if a.is_private and text.startswith("fd") else
-            "multicast (ff00::/8)" if a.is_multicast else "documentation (2001:db8::/32)" if a in ipaddress.ip_network("2001:db8::/32") else "global unicast")
-    print(f"2. {text:<22} {kind}")
+/* parse "2001:db8::1" (no embedded IPv4); returns 0 on success */
+static int parse6(const char *s, V6 *out) {
+    uint16_t head[8], tail[8]; int nh = 0, nt = 0, gap = 0;
+    const char *p = s;
+    if (p[0] == ':' && p[1] == ':') { gap = 1; p += 2; }
+    while (*p) {
+        char *end; unsigned long v = strtoul(p, &end, 16);
+        if (end == p || end - p > 4 || v > 0xFFFF || nh + nt >= 8) return -1;
+        if (gap) tail[nt++] = (uint16_t)v; else head[nh++] = (uint16_t)v;
+        p = end;
+        if (*p == ':') { if (p[1] == ':') { if (gap) return -1; gap = 1; p += 2; } else p++; }
+    }
+    if (!gap && nh != 8) return -1;
+    memset(out, 0, sizeof *out);
+    for (int i = 0; i < nh; i++) { out->b[2 * i] = (uint8_t)(head[i] >> 8); out->b[2 * i + 1] = (uint8_t)head[i]; }
+    for (int i = 0; i < nt; i++) { int g = 8 - nt + i; out->b[2 * g] = (uint8_t)(tail[i] >> 8); out->b[2 * g + 1] = (uint8_t)tail[i]; }
+    return 0;
+}
+static unsigned group(const V6 *a, int i) { return (unsigned)a->b[2 * i] << 8 | a->b[2 * i + 1]; }
 
-# 3. EUI-64: interface ID from a MAC address (flip the universal/local bit, insert ff:fe)
-mac = "00:1a:2b:3c:4d:5e"
-b = bytearray(int(x, 16) for x in mac.split(":"))
-b[0] ^= 0x02
-eui = bytes(b[:3]) + b"\xff\xfe" + bytes(b[3:])
-iid = ":".join(f"{eui[i]:02x}{eui[i+1]:02x}" for i in range(0, 8, 2))
-print(f"\n3. MAC {mac} -> EUI-64 interface ID {iid} -> address {ipaddress.ip_address('2001:db8:1:2:' + iid)}")
+static const char *exploded(const V6 *a) {
+    static char buf[4][40]; static int k; char *s = buf[k++ & 3];
+    for (int i = 0; i < 8; i++) sprintf(s + 5 * i, "%04x%s", group(a, i), i < 7 ? ":" : "");
+    return s;
+}
+/* RFC 5952: lower case, no leading zeros, the longest run of two or more zero groups becomes "::" (the first one if tied) */
+static const char *compressed(const V6 *a) {
+    static char buf[4][40]; static int k; char *s = buf[k++ & 3];
+    int best = -1, best_len = 0;
+    for (int i = 0; i < 8;) {
+        if (group(a, i)) { i++; continue; }
+        int j = i; while (j < 8 && !group(a, j)) j++;
+        if (j - i > best_len) { best = i; best_len = j - i; }
+        i = j;
+    }
+    if (best_len < 2) best = -1;
+    char *w = s; *w = 0;
+    for (int i = 0; i < 8; i++) {
+        if (i == best) { w += sprintf(w, "::"); i += best_len - 1; continue; }
+        if (w != s && w[-1] != ':') *w++ = ':';
+        w += sprintf(w, "%x", group(a, i));
+    }
+    return s;
+}
+static int in_prefix(const V6 *a, const char *prefix, int bits) {
+    V6 p; parse6(prefix, &p);
+    int whole = bits / 8, rest = bits % 8;
+    if (memcmp(a->b, p.b, (size_t)whole)) return 0;
+    return !rest || ((a->b[whole] ^ p.b[whole]) & (0xFF << (8 - rest)) & 0xFF) == 0;
+}
 
-# 4. Solicited-node multicast: ff02::1:ff + last 24 bits of the address
-target = ipaddress.ip_address("2001:db8::1a:2b3c:4d5e")
-sn = ipaddress.ip_address("ff02::1:ff" + format(int(target) & 0xFFFFFF, "06x")[:2] + ":" + format(int(target) & 0xFFFFFF, "06x")[2:])
-print(f"4. neighbour solicitation for {target} goes to {sn}")
+int main(void) {
+    /* 1. Compression and expansion */
+    const char *forms[] = {"2001:0db8:0000:0000:0000:ff00:0042:8329", "2001:db8:0:0:1:0:0:1", "0000:0000:0000:0000:0000:0000:0000:0001"};
+    for (int i = 0; i < 3; i++) { V6 a; parse6(forms[i], &a); printf("1. %s\n     compressed: %s\n     exploded:   %s\n", forms[i], compressed(&a), exploded(&a)); }
 
-# 5. Prefix arithmetic
-site = ipaddress.ip_network("2001:db8:abcd::/48")
-print(f"\n5. a /48 holds {2 ** (64 - 48):,} /64 subnets; the first three are:")
-for s, _ in zip(site.subnets(new_prefix=64), range(3)): print("     ", s)
-print("   addresses in one /64: 2^64 =", f"{2**64:,}")
-print("   reverse DNS name of 2001:db8::1:", ipaddress.ip_address("2001:db8::1").reverse_pointer[:46] + "...")
+    /* 2. Address types */
+    printf("\n");
+    const char *types[] = {"::1", "fe80::1", "fd12:3456:789a::1", "2001:db8::1", "ff02::1", "2606:4700:4700::1111"};
+    for (int i = 0; i < 6; i++) {
+        V6 a; parse6(types[i], &a);
+        const char *kind = in_prefix(&a, "::1", 128) ? "loopback" : in_prefix(&a, "fe80::", 10) ? "link-local (fe80::/10)" : in_prefix(&a, "fc00::", 7) ? "unique local (fc00::/7)"
+                         : in_prefix(&a, "ff00::", 8) ? "multicast (ff00::/8)" : in_prefix(&a, "2001:db8::", 32) ? "documentation (2001:db8::/32)" : "global unicast";
+        printf("2. %-22s %s\n", types[i], kind);
+    }
+
+    /* 3. EUI-64: interface ID from a MAC address (flip the universal/local bit, insert ff:fe) */
+    uint8_t mac[6] = {0x00, 0x1a, 0x2b, 0x3c, 0x4d, 0x5e}, eui[8];
+    memcpy(eui, mac, 3); eui[0] ^= 0x02; eui[3] = 0xff; eui[4] = 0xfe; memcpy(eui + 5, mac + 3, 3);
+    V6 addr; parse6("2001:db8:1:2::", &addr); memcpy(addr.b + 8, eui, 8);
+    printf("\n3. MAC 00:1a:2b:3c:4d:5e -> EUI-64 interface ID %02x%02x:%02x%02x:%02x%02x:%02x%02x -> address %s\n", eui[0], eui[1], eui[2], eui[3], eui[4], eui[5], eui[6], eui[7], compressed(&addr));
+
+    /* 4. Solicited-node multicast: ff02::1:ff00:0/104 plus the last 24 bits of the address */
+    V6 target, sn; parse6("2001:db8::1a:2b3c:4d5e", &target); parse6("ff02::1:ff00:0", &sn); memcpy(sn.b + 13, target.b + 13, 3);
+    printf("4. neighbour solicitation for %s goes to %s\n", compressed(&target), compressed(&sn));
+
+    /* 5. Prefix arithmetic */
+    V6 site; parse6("2001:db8:abcd::", &site);
+    unsigned subnets = 1u << (64 - 48);
+    printf("\n5. a /48 holds %u,%03u /64 subnets; the first three are:\n", subnets / 1000, subnets % 1000);
+    for (int i = 0; i < 3; i++) { V6 s = site; s.b[6] = (uint8_t)(i >> 8); s.b[7] = (uint8_t)i; printf("      %s/64\n", compressed(&s)); }
+    char dec[32] = "1";                                                       /* 2^64 by repeated doubling of a decimal string */
+    for (int step = 0; step < 64; step++) { int carry = 0; for (int i = (int)strlen(dec) - 1; i >= 0; i--) { int d = (dec[i] - '0') * 2 + carry; dec[i] = (char)('0' + d % 10); carry = d / 10; } if (carry) { memmove(dec + 1, dec, strlen(dec) + 1); dec[0] = (char)('0' + carry); } }
+    printf("   addresses in one /64: 2^64 = ");
+    for (size_t i = 0, n = strlen(dec); i < n; i++) printf("%s%c", i && (n - i) % 3 == 0 ? "," : "", dec[i]);
+    V6 one; parse6("2001:db8::1", &one);
+    printf("\n   reverse DNS name of 2001:db8::1: ");
+    for (int i = 15; i >= 0; i--) printf("%x.%x.", one.b[i] & 15, one.b[i] >> 4);
+    printf("ip6.arpa\n");
+    return 0;
+}
 ```
 
 ```text
-$ python3 ipv6_practice.py
+$ ./ipv6_practice
 1. 2001:0db8:0000:0000:0000:ff00:0042:8329
      compressed: 2001:db8::ff00:42:8329
      exploded:   2001:0db8:0000:0000:0000:ff00:0042:8329
@@ -110,7 +178,7 @@ $ python3 ipv6_practice.py
       2001:db8:abcd:1::/64
       2001:db8:abcd:2::/64
    addresses in one /64: 2^64 = 18,446,744,073,709,551,616
-   reverse DNS name of 2001:db8::1: 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0....
+   reverse DNS name of 2001:db8::1: 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa
 ```
 
 **1.** Leading zeros of each 16-bit group may be dropped (`0042` becomes `42`), and **one** run of consecutive all-zero groups may be replaced by `::`. Use `::` only once (two would be ambiguous), choose the **longest** run, and (RFC 5952) do not use it for a single zero group. In `2001:db8:0:0:1:0:0:1` the two runs have equal length, and the rule says to compress the **first**: `2001:db8::1:0:0:1`.

@@ -6,6 +6,7 @@ moduleOrder: 3
 order: 1
 level: advanced
 minutes: 40
+env: machine
 summary: "Six exercises on the processes module: reading parent-child relationships in a pipeline, producing and reaping a zombie, handling SIGTERM gracefully versus the uncatchable SIGKILL, decoding exit statuses above 128, adjusting priority, and inspecting a live process through /proc, all with captured output."
 prerequisites:
   - "Process Lifecycle — fork, exec, wait"
@@ -56,26 +57,45 @@ Both `sleep` processes have the **shell** (3970719) as their parent: a pipeline 
 
 **2.**
 
-```python
-import os, subprocess, time
-pid = os.fork()
-if pid == 0:
-    os._exit(0)                       # child exits immediately; parent has not called wait()
-time.sleep(0.3)
-out = subprocess.run(["ps", "-o", "pid,ppid,stat,comm", "-p", str(pid)], capture_output=True, text=True).stdout
-print(out.strip())
-os.waitpid(pid, 0)                    # reap it
-r = subprocess.run(["ps", "-p", str(pid)], capture_output=True, text=True).stdout.strip().splitlines()
-print("after waitpid, ps lists", len(r) - 1, "such process")
+```c
+/* Make and reap a zombie: the child exits at once, the parent has not called wait() yet. */
+#include <stdio.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+static void show(pid_t pid, const char *when) {                       /* name, state and parent from /proc/PID/status */
+    char path[64], line[256], name[64] = "?", state[64] = "?", ppid[32] = "?";
+    snprintf(path, sizeof path, "/proc/%d/status", (int)pid);
+    FILE *f = fopen(path, "r");
+    if (!f) { printf("%-22s /proc/%d does not exist: no such process\n", when, (int)pid); return; }
+    while (fgets(line, sizeof line, f)) {
+        if (!strncmp(line, "Name:", 5)) sscanf(line + 5, " %63s", name);
+        else if (!strncmp(line, "State:", 6)) { sscanf(line + 6, " %63[^\n]", state); }
+        else if (!strncmp(line, "PPid:", 5)) sscanf(line + 5, " %31s", ppid);
+    }
+    fclose(f);
+    printf("%-22s pid %d, parent %s, name %s, state %s\n", when, (int)pid, ppid, name, state);
+}
+
+int main(void) {
+    pid_t pid = fork();
+    if (pid == 0) _exit(0);                                             /* child exits immediately */
+    usleep(300000);                                                     /* the parent has not called wait() */
+    show(pid, "before waitpid:");
+    waitpid(pid, NULL, 0);                                              /* reap it */
+    show(pid, "after waitpid:");
+    return 0;
+}
 ```
 
 ```text
-PID    PPID STAT COMMAND
-CHILD PARENT Z    python3
-after waitpid, ps lists 0 such process
+$ ./zombie
+before waitpid:        pid 32, parent 31, name zombie, state Z (zombie)
+after waitpid:         /proc/32 does not exist: no such process
 ```
 
-(In this output the real process IDs were replaced by the words `CHILD` and `PARENT` for readability.) The child has finished, but the kernel keeps its **exit status and a small process-table entry** until the parent collects it with `wait`/`waitpid`, because the parent has a right to know how the child ended. That leftover entry is the zombie (`Z`, shown as `<defunct>` by some tools). It uses no CPU and almost no memory, but it holds a PID, so thousands of zombies can exhaust the PID table. **`kill -9` cannot remove it**: the process is already dead. The fix is to make the parent call `wait` (or ignore `SIGCHLD`), or to terminate the parent: orphaned zombies are re-parented to PID 1 (`init` or `systemd`), which reaps them.
+(The program prints the state it reads from `/proc/PID/status`, and it runs in the Linux terminal of this app as `./zombie`; the process IDs differ on every run.) The child has finished, but the kernel keeps its **exit status and a small process-table entry** until the parent collects it with `wait`/`waitpid`, because the parent has a right to know how the child ended. That leftover entry is the zombie (`Z`, shown as `<defunct>` by some tools). It uses no CPU and almost no memory, but it holds a PID, so thousands of zombies can exhaust the PID table. **`kill -9` cannot remove it**: the process is already dead. The fix is to make the parent call `wait` (or ignore `SIGCHLD`), or to terminate the parent: orphaned zombies are re-parented to PID 1 (`init` or `systemd`), which reaps them.
 
 **3.**
 

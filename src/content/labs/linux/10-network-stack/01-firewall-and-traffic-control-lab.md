@@ -6,6 +6,7 @@ moduleOrder: 10
 order: 1
 level: expert
 minutes: 40
+env: machine
 summary: "Four exercises that run on one machine in a throwaway network namespace: dropping ICMP with an nftables rule while TCP keeps working, reading rule counters, adding delay with tc netem, and simulating packet loss, with captured output and an explanation of where each mechanism sits in the packet path."
 prerequisites:
   - "The Linux Packet Path: NIC, NAPI, Softirqs, Netfilter and Qdisc"

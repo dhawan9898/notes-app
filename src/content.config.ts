@@ -11,6 +11,6 @@ const shared = {
 };
 
 const notes = defineCollection({ loader: glob({ pattern: '**/*.md', base: './src/content/notes' }), schema: z.object(shared) });
-const labs = defineCollection({ loader: glob({ pattern: '**/*.md', base: './src/content/labs' }), schema: z.object({ ...shared, minutes: z.number() }) });
+const labs = defineCollection({ loader: glob({ pattern: '**/*.md', base: './src/content/labs' }), schema: z.object({ ...shared, minutes: z.number(), env: z.enum(['browser', 'machine']), terminal: z.array(z.string()).default([]) }) });
 
 export const collections = { notes, labs };

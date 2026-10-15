@@ -6,6 +6,7 @@ moduleOrder: 9
 order: 1
 level: advanced
 minutes: 45
+env: machine
 summary: "Four exercises in performance method: reading vmstat and pressure-stall information while three busy loops share one CPU, showing a 20x slowdown caused only by memory access order, finding a hotspot with gprof, and applying the USE method (utilisation, saturation, errors) to decide what to look at first."
 prerequisites:
   - "Performance Methodology: USE, Load, CPU and Memory Analysis"

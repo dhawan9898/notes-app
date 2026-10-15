@@ -6,6 +6,7 @@ moduleOrder: 2
 order: 1
 level: intermediate
 minutes: 40
+env: machine
 summary: "Six exercises on the foundations module that run without root: granting access to one extra user with ACLs and reading the mask, decoding capability bitmasks, seeing why root inside a user namespace has capabilities but no power over the host, and showing a private mount, plus reading the boot facts the kernel exposes."
 prerequisites:
   - "Filesystem Hierarchy, VFS, Inodes, Links and File Descriptors"

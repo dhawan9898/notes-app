@@ -5,8 +5,12 @@ module: Operations and Automation
 moduleOrder: 11
 order: 1
 level: intermediate
-minutes: 45
-summary: "Four exercises on the operations module with a Python program: turning two polls of interface counters into rates and error figures, handling 32-bit counter wrap, computing clock offset and delay from the four NTP timestamps, and decoding syslog priority values, each checked against real data from the loopback interface."
+minutes: 40
+env: browser
+terminal:
+  - ip link set lo up
+  - ./ops
+summary: "Four exercises on the operations module with a C program: turning two polls of interface counters into rates and error figures, handling 32-bit counter wrap, computing clock offset and delay from the four NTP timestamps, and decoding syslog priority values, each checked against real data from the loopback interface."
 prerequisites:
   - "Network Monitoring: SNMP, Flow Export and Streaming Telemetry"
   - "NTP, PTP and Time Synchronization"
@@ -22,55 +26,78 @@ sources:
     url: https://man7.org/linux/man-pages/man5/proc.5.html
 ---
 
-Monitoring tools are mostly arithmetic on counters, timestamps and numeric codes. Doing the arithmetic once by hand makes every dashboard readable, and shows where it can mislead you. The program below runs on one machine: it generates a known amount of traffic on the loopback interface so that the numbers can be checked.
+Monitoring tools are mostly arithmetic on counters, timestamps and numeric codes. Doing the arithmetic once by hand makes every dashboard readable, and shows where it can mislead you. The C program below runs on one machine (in the in-browser Linux, run `ip link set lo up` and then `./ops`): it generates a known amount of traffic on the loopback interface so that the numbers can be checked.
 
-```python
-import socket, time
+```c
+/* Interface counters, wrap-around arithmetic, NTP offset/delay and syslog priorities. */
+#include <arpa/inet.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <time.h>
+#include <unistd.h>
 
-def counters(dev="lo"):
-    for line in open("/proc/net/dev"):
-        if line.strip().startswith(dev + ":"):
-            f = line.split(":")[1].split()
-            return dict(rx_bytes=int(f[0]), rx_packets=int(f[1]), rx_errs=int(f[2]), rx_drop=int(f[3]),
-                        tx_bytes=int(f[8]), tx_packets=int(f[9]), tx_errs=int(f[10]), tx_drop=int(f[11]))
+typedef struct { unsigned long long rx_bytes, rx_packets, rx_errs, rx_drop, tx_bytes, tx_packets, tx_errs, tx_drop; } Counters;
+static int counters(const char *dev, Counters *c) {                               /* one line per interface in /proc/net/dev */
+    FILE *f = fopen("/proc/net/dev", "r"); char line[512]; size_t n = strlen(dev);
+    if (!f) return -1;
+    while (fgets(line, sizeof line, f)) {
+        char *p = line; while (*p == ' ') p++;
+        if (!strncmp(p, dev, n) && p[n] == ':') {
+            unsigned long long skip[4];
+            int ok = sscanf(p + n + 1, "%llu %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu", &c->rx_bytes, &c->rx_packets, &c->rx_errs, &c->rx_drop,
+                            &skip[0], &skip[1], &skip[2], &skip[3], &c->tx_bytes, &c->tx_packets, &c->tx_errs, &c->tx_drop);
+            fclose(f); return ok == 12 ? 0 : -1;
+        }
+    }
+    fclose(f); return -1;
+}
+static double now(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (double)t.tv_sec + (double)t.tv_nsec / 1e9; }
+static uint32_t delta32(uint32_t old, uint32_t cur) { return cur - old; }          /* unsigned subtraction wraps modulo 2^32 */
 
-print("1. polling interface counters twice and computing rates")
-a = counters(); t0 = time.time()
-rx = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); rx.bind(("127.0.0.1", 9400)); rx.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1 << 22)
-tx = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-for _ in range(1000): tx.sendto(b"x" * 1000, ("127.0.0.1", 9400))        # 1000 datagrams with 1000 bytes of payload
-time.sleep(0.5); b = counters(); dt = time.time() - t0
-d = {k: b[k] - a[k] for k in a}
-print(f"   packets sent: {d['tx_packets']}, packets received: {d['rx_packets']} (loopback counts each packet once in each direction)")
-print(f"   bytes counted per packet: {d['tx_bytes'] / d['tx_packets']:.0f}  (1000 payload + 8 UDP + 20 IP = {1000 + 8 + 20}; Linux counts the IP packet, not the Ethernet header)")
-print(f"   average rate over {dt:.1f} s: {d['tx_bytes'] * 8 / dt / 1e6:.1f} Mbit/s; errors {d['tx_errs'] + d['rx_errs']}, drops {d['tx_drop'] + d['rx_drop']}")
+int main(void) {
+    printf("1. polling interface counters twice and computing rates\n");
+    Counters a, b; counters("lo", &a); double t0 = now();
+    int rx = socket(AF_INET, SOCK_DGRAM, 0), tx = socket(AF_INET, SOCK_DGRAM, 0), big = 1 << 22;
+    struct sockaddr_in addr = {.sin_family = AF_INET, .sin_port = htons(9400), .sin_addr.s_addr = htonl(0x7f000001)};
+    bind(rx, (struct sockaddr *)&addr, sizeof addr); setsockopt(rx, SOL_SOCKET, SO_RCVBUF, &big, sizeof big);
+    char payload[1000]; memset(payload, 'x', sizeof payload);
+    for (int i = 0; i < 1000; i++) sendto(tx, payload, sizeof payload, 0, (struct sockaddr *)&addr, sizeof addr);       /* 1000 datagrams of 1000 payload bytes */
+    usleep(500000); counters("lo", &b); double dt = now() - t0;
+    unsigned long long txp = b.tx_packets - a.tx_packets, rxp = b.rx_packets - a.rx_packets, txb = b.tx_bytes - a.tx_bytes;
+    printf("   packets sent: %llu, packets received: %llu (loopback counts each packet once in each direction)\n", txp, rxp);
+    printf("   bytes counted per packet: %.0f  (1000 payload + 8 UDP + 20 IP = %d; Linux counts the IP packet, not the Ethernet header)\n", (double)txb / (double)txp, 1000 + 8 + 20);
+    printf("   average rate over %.1f s: %.1f Mbit/s; errors %llu, drops %llu\n", dt, (double)txb * 8 / dt / 1e6, (b.tx_errs - a.tx_errs) + (b.rx_errs - a.rx_errs), (b.tx_drop - a.tx_drop) + (b.rx_drop - a.rx_drop));
 
-print("\n2. a 32-bit counter wraps: computing the delta correctly")
-def delta32(old, new): return (new - old) % (1 << 32)
-print("   old 4294967000, new 500 ->", delta32(4294967000, 500), "bytes (not -4294966500)")
-print("   at 1 Gbit/s a 32-bit byte counter wraps every", round((1 << 32) / (1e9 / 8), 1), "seconds, so poll faster than that or use 64-bit counters (ifHCInOctets)")
+    printf("\n2. a 32-bit counter wraps: computing the delta correctly\n");
+    printf("   old 4294967000, new 500 -> %u bytes (not -4294966500)\n", delta32(4294967000u, 500u));
+    printf("   at 1 Gbit/s a 32-bit byte counter wraps every %.1f seconds, so poll faster than that or use 64-bit counters (ifHCInOctets)\n", 4294967296.0 / (1e9 / 8));
 
-print("\n3. NTP: offset and delay from four timestamps")
-T1, T2, T3, T4 = 100.000, 100.130, 100.131, 100.061                       # client send, server receive, server send, client receive
-offset = ((T2 - T1) + (T3 - T4)) / 2
-delay = (T4 - T1) - (T3 - T2)
-print(f"   offset = ((T2-T1)+(T3-T4))/2 = {offset*1000:.1f} ms (the client clock is {'behind' if offset > 0 else 'ahead of'} the server)")
-print(f"   round-trip delay = (T4-T1)-(T3-T2) = {delay*1000:.1f} ms; the offset error can be at most half of that: +/-{delay/2*1000:.1f} ms")
+    printf("\n3. NTP: offset and delay from four timestamps\n");
+    double T1 = 100.000, T2 = 100.130, T3 = 100.131, T4 = 100.061;                  /* client send, server receive, server send, client receive */
+    double offset = ((T2 - T1) + (T3 - T4)) / 2, delay = (T4 - T1) - (T3 - T2);
+    printf("   offset = ((T2-T1)+(T3-T4))/2 = %.1f ms (the client clock is %s the server)\n", offset * 1000, offset > 0 ? "behind" : "ahead of");
+    printf("   round-trip delay = (T4-T1)-(T3-T2) = %.1f ms; the offset error can be at most half of that: +/-%.1f ms\n", delay * 1000, delay / 2 * 1000);
 
-print("\n4. syslog priority = facility * 8 + severity")
-for pri in (13, 34, 165, 190):
-    fac, sev = divmod(pri, 8)
-    sevs = "emerg alert crit err warning notice info debug".split()
-    facs = {1: "user", 4: "auth", 16: "local0", 20: "local4", 23: "local7"}
-    print(f"   <{pri}> -> facility {fac} ({facs.get(fac, '?')}), severity {sev} ({sevs[sev]})")
+    printf("\n4. syslog priority = facility * 8 + severity\n");
+    const char *sevs[] = {"emerg", "alert", "crit", "err", "warning", "notice", "info", "debug"};
+    for (int pri = 0, list[] = {13, 34, 165, 190}; pri < 4; pri++) {
+        int fac = list[pri] / 8, sev = list[pri] % 8;
+        const char *name = fac == 1 ? "user" : fac == 4 ? "auth" : fac == 16 ? "local0" : fac == 20 ? "local4" : fac == 23 ? "local7" : "?";
+        printf("   <%d> -> facility %d (%s), severity %d (%s)\n", list[pri], fac, name, sev, sevs[sev]);
+    }
+    return 0;
+}
 ```
 
 ```text
-$ python3 ops.py
+$ ip link set lo up
+$ ./ops
 1. polling interface counters twice and computing rates
    packets sent: 1000, packets received: 1000 (loopback counts each packet once in each direction)
    bytes counted per packet: 1028  (1000 payload + 8 UDP + 20 IP = 1028; Linux counts the IP packet, not the Ethernet header)
-   average rate over 0.5 s: 16.3 Mbit/s; errors 0, drops 0
+   average rate over 1.7 s: 4.8 Mbit/s; errors 0, drops 0
 
 2. a 32-bit counter wraps: computing the delta correctly
    old 4294967000, new 500 -> 796 bytes (not -4294966500)
@@ -104,7 +131,7 @@ Try before opening.
 <details>
 <summary>Show the explanations</summary>
 
-**1.** Interface counters are **cumulative since boot** (or since the interface was created), so one reading says nothing about the *present*; you must **poll twice and divide the difference by the time between the polls**: rate = (counter₂ − counter₁) / (t₂ − t₁). Here the interface moved 1,000 packets in about 0.5 s, around 16 Mbit/s over the whole interval (the figure includes the 0.5 s sleep, so it understates the rate during the burst: the *averaging window* always hides peaks, which is why monitoring systems keep short intervals for bursty links). The counters showed **about 1,028 bytes per packet** (a little less when other small packets crossed the loopback during the test, which pulls the average down): 1000 bytes of payload plus the 8-byte UDP header and 20-byte IP header; Linux counts the **IP packet** (the byte counters in `/proc/net/dev` and `ip -s link` leave out the Ethernet header and trailer, while some switches and SNMP agents include them, so numbers from different devices can disagree by 2 to 4%). Packets were counted once in each direction (sent and received on the same loopback interface). The counters to alert on are **errors** (CRC, framing: a bad cable, a duplex mismatch, a failing optic), **drops** (queues overflowing or the host unable to keep up) and **utilisation relative to the link speed**: sustained 80% or more means saturation is near, and the *rate of change* of errors matters more than the absolute value (a total of 40 errors since boot is nothing; 40 errors per minute is a fault).
+**1.** Interface counters are **cumulative since boot** (or since the interface was created), so one reading says nothing about the *present*; you must **poll twice and divide the difference by the time between the polls**: rate = (counter₂ − counter₁) / (t₂ − t₁). Here the interface moved 1,000 packets in the measured interval, which gives the average rate the program prints (it differs from machine to machine and from run to run; the figure includes the 0.5 s sleep, so it understates the rate during the burst: the *averaging window* always hides peaks, which is why monitoring systems keep short intervals for bursty links). The counters showed **about 1,028 bytes per packet** (a little less when other small packets crossed the loopback during the test, which pulls the average down): 1000 bytes of payload plus the 8-byte UDP header and 20-byte IP header; Linux counts the **IP packet** (the byte counters in `/proc/net/dev` and `ip -s link` leave out the Ethernet header and trailer, while some switches and SNMP agents include them, so numbers from different devices can disagree by 2 to 4%). Packets were counted once in each direction (sent and received on the same loopback interface). The counters to alert on are **errors** (CRC, framing: a bad cable, a duplex mismatch, a failing optic), **drops** (queues overflowing or the host unable to keep up) and **utilisation relative to the link speed**: sustained 80% or more means saturation is near, and the *rate of change* of errors matters more than the absolute value (a total of 40 errors since boot is nothing; 40 errors per minute is a fault).
 
 **2.** The correct difference is **(new − old) modulo 2³²**, which gives **796 bytes**; the naive subtraction gives a huge negative number that many scripts turn into a nonsense spike or silently drop. A 32-bit counter holds 4.29 GB, so at **1 Gbit/s (125 MB/s) it wraps every 34.4 seconds**: at 10 Gbit/s about every 3.4 seconds. If you poll less often than the wrap interval you cannot even know *whether* the counter wrapped once or several times, and the result is silently wrong. The fix is to use **64-bit counters** (SNMP `ifHCInOctets` and `ifHCOutOctets` from the high-capacity IF-MIB, which any 1 Gbit/s or faster interface needs) or to poll frequently enough. Also handle **counter resets** (a device reboot sets the counters back to zero: a new value *smaller* than the old by a huge margin and unrelated to wrapping), by discarding that sample and rate-limiting the alarms.
 

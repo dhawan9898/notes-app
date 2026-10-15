@@ -1,0 +1,122 @@
+[
+ {
+  "id": "look-around",
+  "title": "Look around",
+  "blurb": "Who you are, where you are, what is here.",
+  "commands": [
+   "whoami",
+   "pwd",
+   "uname -a",
+   "ls -l /",
+   "ls /labs"
+  ]
+ },
+ {
+  "id": "files",
+  "title": "Files and directories",
+  "blurb": "Create, copy, move and delete.",
+  "commands": [
+   "mkdir -p /tmp/demo && cd /tmp/demo",
+   "echo hello > a.txt",
+   "cat a.txt",
+   "cp a.txt b.txt",
+   "ls -l",
+   "mv b.txt c.txt",
+   "rm a.txt",
+   "ls"
+  ]
+ },
+ {
+  "id": "permissions",
+  "title": "Permissions",
+  "blurb": "Read the mode bits and change them.",
+  "commands": [
+   "cd /tmp && echo hi > f",
+   "ls -l f",
+   "chmod 600 f",
+   "ls -l f",
+   "chmod u+x f",
+   "ls -l f",
+   "id"
+  ]
+ },
+ {
+  "id": "text",
+  "title": "Text tools",
+  "blurb": "sort, awk, grep, sed, wc and cut on a small file.",
+  "commands": [
+   "printf 'b 2\\na 1\\nc 3\\n' > /tmp/t.txt",
+   "sort /tmp/t.txt",
+   "awk '{s += $2} END {print s}' /tmp/t.txt",
+   "grep -c a /tmp/t.txt",
+   "wc -l /tmp/t.txt",
+   "sed 's/a/A/' /tmp/t.txt",
+   "cut -d' ' -f2 /tmp/t.txt | tr '\\n' ' '"
+  ]
+ },
+ {
+  "id": "pipes",
+  "title": "Pipes and redirection",
+  "blurb": "Send output to a file, connect programs, read the exit status.",
+  "commands": [
+   "ls / | head -3",
+   "ls /nonexistent 2> /tmp/err.txt; cat /tmp/err.txt",
+   "echo $?",
+   "echo one > /tmp/o.txt; echo two >> /tmp/o.txt; cat /tmp/o.txt"
+  ]
+ },
+ {
+  "id": "proc",
+  "title": "The /proc filesystem",
+  "blurb": "The kernel shows its state as files.",
+  "commands": [
+   "head -3 /proc/cpuinfo",
+   "cat /proc/loadavg",
+   "head -3 /proc/meminfo",
+   "head -5 /proc/self/status",
+   "ls /proc/self/fd"
+  ]
+ },
+ {
+  "id": "processes",
+  "title": "Processes",
+  "blurb": "Start something in the background, find it, stop it.",
+  "commands": [
+   "sleep 100 & echo started $!",
+   "ps | grep sleep",
+   "kill $!",
+   "sleep 1; ps | grep -c \"sleep 100\""
+  ]
+ },
+ {
+  "id": "scripting",
+  "title": "Shell scripting",
+  "blurb": "Variables, conditions and loops.",
+  "commands": [
+   "for i in 1 2 3; do echo \"line $i\"; done",
+   "x=5; if [ $x -gt 3 ]; then echo big; else echo small; fi",
+   "n=0; while [ $n -lt 3 ]; do n=$((n + 1)); done; echo $n"
+  ]
+ },
+ {
+  "id": "network",
+  "title": "Network basics",
+  "blurb": "Interfaces and addresses inside the virtual machine.",
+  "commands": [
+   "ip link set lo up",
+   "ip addr show lo",
+   "ping -c 1 127.0.0.1",
+   "ip route"
+  ]
+ },
+ {
+  "id": "labs",
+  "title": "Run a lab program",
+  "blurb": "The C programs from the labs are installed in /labs.",
+  "commands": [
+   "./hello",
+   "./net_exercises | head -4",
+   "./ipv4_practice | head -8"
+  ]
+ }
+]

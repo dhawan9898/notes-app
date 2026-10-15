@@ -6,6 +6,30 @@ moduleOrder: 0
 order: 1
 level: beginner
 minutes: 35
+env: browser
+terminal:
+  - |-
+    cd /tmp && cp /labs/access.log .
+  - |-
+    wc -l < access.log
+  - |-
+    grep -c " 404$" access.log
+  - |-
+    cut -d" " -f1 access.log | sort | uniq -c | sort -rn | head -1
+  - |-
+    awk '$4 >= 400 {print $1, $3, $4}' access.log
+  - |-
+    mkdir -p backup && cp access.log backup/access.log.bak && ls backup
+  - |-
+    find . -name "*.log" -o -name "*.bak" | sort
+  - |-
+    grep -v " 200$" access.log | wc -l
+  - |-
+    sed "s/10\.0\.0\./net-/" access.log | head -2
+  - |-
+    printf "#!/bin/sh\necho hello from a script\n" > hi.sh; chmod +x hi.sh; ./hi.sh; ls -l hi.sh
+  - |-
+    for f in access.log hi.sh; do echo "$f has $(wc -l < $f) lines"; done
 summary: "Ten command-line exercises on log analysis with grep, cut, sort, uniq, awk, sed, find, redirection and scripting, with a verified solution script, plus system-administration tasks."
 prerequisites:
   - Linux Command Line Basics

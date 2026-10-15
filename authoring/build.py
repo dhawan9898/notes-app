@@ -6,6 +6,7 @@ Directives (each on its own line in authoring/templates/<track>/<module>/<note>.
   {{include path/to/file.c 10-30}}        -> only lines 10-30
   {{run c/dir :: command}}       -> "$ command" + its stdout/stderr (run in that dir, 300 s timeout)
   {{vm :: command}}              -> "$ command" + its output, run inside the in-browser Linux (programs from examples/vm are in /labs;
+                                    {{vm mem=1024 :: command}} gives the virtual machine 1 GiB instead of 128 MiB;
                                     needs `npm run fetch-linux` first). Several commands: {{vm :: cmd1 ;; cmd2}}, run in one session.
 Output goes to src/content/notes/<track>/<module>/<note>.md, or to src/content/labs/<track>/<module>/<note>.md for
 templates under authoring/templates/<track>/labs/.
@@ -34,8 +35,10 @@ def run(arg):
     return "```text\n$ " + cmd + "\n" + out + "\n```"
 
 def vm(arg):
-    cmds = [c.strip() for c in arg.split("::", 1)[1].split(";;")]
-    r = subprocess.run(["node", str(ROOT / "scripts" / "vm-run.mjs"), *cmds], capture_output=True, text=True, timeout=600, cwd=ROOT)
+    head, rest = arg.split("::", 1)                        # "{{vm mem=1024 :: cmd}}": mem=MiB sets the virtual machine's memory
+    opts = ["--" + o for o in head.split() if o.startswith("mem=")]
+    cmds = [c.strip() for c in rest.split(";;")]
+    r = subprocess.run(["node", str(ROOT / "scripts" / "vm-run.mjs"), *opts, *cmds], capture_output=True, text=True, timeout=600, cwd=ROOT)
     if r.returncode != 0:
         raise SystemExit("vm directive failed: " + (r.stderr or r.stdout)[-800:])
     return "```text\n" + r.stdout.rstrip("\n") + "\n```"

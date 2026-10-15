@@ -6,6 +6,7 @@ moduleOrder: 3
 order: 1
 level: advanced
 minutes: 30
+env: machine
 summary: "Four exercises on the data-modeling module: predicting struct padding and reordering members to shrink a struct, reading a float's bytes through a union and using bit-fields, and telling storage duration, scope and linkage apart with static, extern and const, with verified answers."
 prerequisites:
   - "Structs, Alignment, Padding, Unions, Bit-fields and Endianness"

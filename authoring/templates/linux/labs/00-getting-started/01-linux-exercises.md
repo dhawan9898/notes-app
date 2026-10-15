@@ -6,6 +6,7 @@ moduleOrder: 0
 order: 1
 level: beginner
 minutes: 25
+env: browser
 summary: "Ten command-line exercises on log analysis with grep, cut, sort, uniq, awk, sed, find, redirection and scripting, with a verified solution script, plus system-administration tasks."
 prerequisites:
   - Linux Command Line Basics

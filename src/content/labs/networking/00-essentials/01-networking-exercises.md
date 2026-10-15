@@ -6,7 +6,10 @@ moduleOrder: 0.5
 order: 1
 level: beginner
 minutes: 35
-summary: "Eight graded exercises: binary addresses, network and broadcast addresses, same-network tests, sizing subnets for host counts, splitting a block, classifying special addresses, summarising routes, and a hands-on lab, with answers verified by a Python script."
+env: browser
+terminal:
+  - ./net_exercises
+summary: "Eight graded exercises: binary addresses, network and broadcast addresses, same-network tests, sizing subnets for host counts, splitting a block, classifying special addresses, summarising routes, and a hands-on lab, with answers checked by a C program that runs in the in-browser Linux."
 prerequisites:
   - "What Is a Network?"
   - Binary, Hexadecimal and Bits
@@ -16,8 +19,6 @@ sources:
     url: https://www.rfc-editor.org/rfc/rfc4632
   - label: "RFC 1918 — Address Allocation for Private Internets"
     url: https://www.rfc-editor.org/rfc/rfc1918
-  - label: "Python ipaddress module documentation"
-    url: https://docs.python.org/3/library/ipaddress.html
 ---
 
 Subnetting is a skill: it becomes fast only through practice. Work each exercise on paper first (use the "block size = 256 − mask octet" shortcut from *IPv4 Addressing, Subnetting, VLSM and CIDR*), then check yourself against the answers at the end.
@@ -43,12 +44,12 @@ Subnetting is a skill: it becomes fast only through practice. Work each exercise
 
 **8. Summarise.** Can `10.1.0.0/24`, `10.1.1.0/24`, `10.1.2.0/24` and `10.1.3.0/24` be advertised as one route? Which?
 
-**Lab (hands-on).** Extend the virtual LAN from *What Is a Network?*: add a third namespace `pc3` with address `192.168.1.30/24`, connected to `pc2` by a *second* veth pair (so `pc3` is on a different cable from `pc1`). Predict whether `pc1` can ping `192.168.1.30`, then try it and explain the result. Then build the fix: connect all three hosts to one Linux bridge (a virtual switch; see *Linux Network Labs*) and ping again.
+**Lab (hands-on).** Extend the virtual LAN from *What Is a Network?*: add a third namespace `pc3` with address `192.168.1.30/24`, connected to `pc2` by a *second* veth pair (so `pc3` is on a different cable from `pc1`). Predict whether `pc1` can ping `192.168.1.30`, then try it and explain the result. Then build the fix: connect all three hosts to one Linux bridge (a virtual switch; see *Linux Network Labs*) and ping again. (This last part needs namespaces and a bridge, which the in-browser Linux does not have: do it on your own Linux machine or virtual machine.)
 
 ## Answers
 
 <details>
-<summary>Show answers and the checking script</summary>
+<summary>Show answers and the checking program</summary>
 
 1. `192.168.10.77` = `11000000.10101000.00001010.01001101`.
 2. `/20` mask is `255.255.240.0`; the third octet block size is 16, and 5 rounds down to 0 → network **172.20.0.0/20**; hosts = 2^12 − 2 = **4094**.
@@ -60,50 +61,109 @@ Subnetting is a skill: it becomes fast only through practice. Work each exercise
 8. Yes: four consecutive /24s starting on a multiple of 4 (`10.1.0.0`) are exactly **10.1.0.0/22**.
 Lab: `pc1` believes `192.168.1.30` is on its own LAN (same /24), so it sends an ARP request out of its only cable. `pc2` is not a switch and does not forward frames between its two cables, so nobody answers: the ping fails (100 % packet loss, typically reported as *Destination Host Unreachable*). A bridge connecting all three interfaces forwards frames between them, so all three hosts become one LAN and the ARP request reaches `pc3`.
 
-The script that produced and checked these answers:
+The C program that produced and checked these answers. Run it with `./net_exercises` in the Linux terminal (the program is already installed there), or compile it yourself with `cc -o net_exercises net_exercises.c`:
 
-```python
-import ipaddress as ip
+```c
+/* Answers to the Networking Exercises lab: IPv4 address arithmetic with shifts and masks. */
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 
-print("Ex 1: 192.168.10.77 in binary:", ".".join(f"{int(o):08b}" for o in "192.168.10.77".split(".")))
-print("Ex 2: 172.20.5.9/20 ->", ip.ip_interface("172.20.5.9/20").network, "| mask", ip.ip_network("172.20.5.9/20", strict=False).netmask, "| usable hosts", ip.ip_network("172.20.5.9/20", strict=False).num_addresses - 2)
-n = ip.ip_network("10.20.77.130/21", strict=False)
-print("Ex 3: 10.20.77.130/21 -> network", n.network_address, "broadcast", n.broadcast_address, "range", n.network_address + 1, "-", n.broadcast_address - 1)
-for a, b in [("192.168.1.10/24", "192.168.1.200/24"), ("10.0.0.5/25", "10.0.0.130/25"), ("172.16.4.1/22", "172.16.7.250/22")]:
-    na, nb = ip.ip_interface(a).network, ip.ip_interface(b).network
-    print(f"Ex 4: {a} and {b}: same network? {na == nb} ({na} vs {nb})")
-def prefix_for(hosts):                      # smallest block with room for the hosts plus network and broadcast addresses
-    bits = (hosts + 2 - 1).bit_length()
-    return 32 - bits, 2 ** bits - 2
-for h in (25, 100, 500):
-    p, usable = prefix_for(h)
-    print(f"Ex 5: {h} hosts need a /{p} ({usable} usable addresses)")
-print("Ex 6: split 192.168.5.0/24 into four equal subnets:", [str(s) for s in ip.ip_network("192.168.5.0/24").subnets(new_prefix=26)])
-for a in ["10.1.2.3", "172.32.0.1", "192.168.255.1", "169.254.7.7", "100.64.0.9", "8.8.8.8"]:
-    x = ip.ip_address(a); kind = "private (RFC 1918)" if x in ip.ip_network("10.0.0.0/8") or x in ip.ip_network("172.16.0.0/12") or x in ip.ip_network("192.168.0.0/16") else "link-local (DHCP failed?)" if x.is_link_local else "shared/CGNAT space" if x in ip.ip_network("100.64.0.0/10") else "public"
-    print(f"Ex 7: {a:15} {kind}")
-print("Ex 8: aggregate 10.1.0.0/24 + 10.1.1.0/24 + 10.1.2.0/24 + 10.1.3.0/24 ->", list(ip.collapse_addresses([ip.ip_network(f"10.1.{i}.0/24") for i in range(4)])))
+typedef uint32_t u32;
+
+static u32 ip(const char *s) { unsigned a, b, c, d; sscanf(s, "%u.%u.%u.%u", &a, &b, &c, &d); return a << 24 | b << 16 | c << 8 | d; }
+static const char *dot(u32 x) {
+    static char buf[8][16]; static int i;
+    char *p = buf[i++ & 7];
+    snprintf(p, 16, "%u.%u.%u.%u", (unsigned)(x >> 24), (unsigned)(x >> 16 & 255), (unsigned)(x >> 8 & 255), (unsigned)(x & 255));
+    return p;
+}
+static u32 mask_of(int prefix) { return prefix ? 0xFFFFFFFFu << (32 - prefix) : 0; }          /* a shift by 32 would be undefined */
+static u32 network(u32 addr, int prefix) { return addr & mask_of(prefix); }
+static u32 broadcast(u32 addr, int prefix) { return addr | ~mask_of(prefix); }
+static const char *cidr(u32 addr, int prefix) { static char buf[4][20]; static int i; char *p = buf[i++ & 3]; snprintf(p, 20, "%s/%d", dot(addr), prefix); return p; }
+static int in_net(u32 addr, const char *net, int prefix) { return network(addr, prefix) == ip(net); }
+
+/* merge neighbouring blocks of equal size into their parent until nothing changes (route aggregation) */
+static int aggregate(u32 *net, int *plen, int n) {
+    for (int changed = 1; changed;) {
+        changed = 0;
+        for (int i = 0; i < n && !changed; i++)
+            for (int j = 0; j < n && !changed; j++)
+                if (i != j && plen[i] == plen[j] && plen[i] > 0 && (net[i] ^ net[j]) == 1u << (32 - plen[i]) && network(net[i], plen[i] - 1) == network(net[j], plen[i] - 1)) {
+                    net[i] = network(net[i], plen[i] - 1); plen[i]--;
+                    net[j] = net[n - 1]; plen[j] = plen[n - 1]; n--; changed = 1;
+                }
+    }
+    return n;
+}
+
+int main(void) {
+    printf("Ex 1: 192.168.10.77 in binary: ");
+    u32 a = ip("192.168.10.77");
+    for (int s = 24; s >= 0; s -= 8) { for (int bit = 7; bit >= 0; bit--) putchar('0' + (int)(a >> (s + bit) & 1)); if (s) putchar('.'); }
+    putchar('\n');
+
+    u32 x = ip("172.20.5.9");
+    printf("Ex 2: 172.20.5.9/20 -> %s | mask %s | usable hosts %u\n", cidr(network(x, 20), 20), dot(mask_of(20)), (unsigned)((1u << (32 - 20)) - 2));
+
+    x = ip("10.20.77.130");
+    printf("Ex 3: 10.20.77.130/21 -> network %s broadcast %s range %s - %s\n", dot(network(x, 21)), dot(broadcast(x, 21)), dot(network(x, 21) + 1), dot(broadcast(x, 21) - 1));
+
+    const char *pairs[][2] = {{"192.168.1.10", "192.168.1.200"}, {"10.0.0.5", "10.0.0.130"}, {"172.16.4.1", "172.16.7.250"}};
+    const int plen[] = {24, 25, 22};
+    for (int i = 0; i < 3; i++) {
+        u32 na = network(ip(pairs[i][0]), plen[i]), nb = network(ip(pairs[i][1]), plen[i]);
+        printf("Ex 4: %s/%d and %s/%d: same network? %s (%s vs %s)\n", pairs[i][0], plen[i], pairs[i][1], plen[i], na == nb ? "yes" : "no", cidr(na, plen[i]), cidr(nb, plen[i]));
+    }
+
+    const int hosts[] = {25, 100, 500};                    /* smallest block with room for the hosts plus the network and broadcast addresses */
+    for (int i = 0; i < 3; i++) {
+        int bits = 0; while ((1u << bits) < (unsigned)hosts[i] + 2) bits++;
+        printf("Ex 5: %d hosts need a /%d (%u usable addresses)\n", hosts[i], 32 - bits, (unsigned)((1u << bits) - 2));
+    }
+
+    printf("Ex 6: split 192.168.5.0/24 into four equal subnets:");
+    for (int i = 0; i < 4; i++) printf("%s%s", i ? ", " : " ", cidr(ip("192.168.5.0") + ((u32)i << 6), 26));
+    putchar('\n');
+
+    const char *probe[] = {"10.1.2.3", "172.32.0.1", "192.168.255.1", "169.254.7.7", "100.64.0.9", "8.8.8.8"};
+    for (int i = 0; i < 6; i++) {
+        u32 v = ip(probe[i]);
+        const char *kind = in_net(v, "10.0.0.0", 8) || in_net(v, "172.16.0.0", 12) || in_net(v, "192.168.0.0", 16) ? "private (RFC 1918)"
+                         : in_net(v, "169.254.0.0", 16) ? "link-local (DHCP failed?)" : in_net(v, "100.64.0.0", 10) ? "shared/CGNAT space" : "public";
+        printf("Ex 7: %-15s %s\n", probe[i], kind);
+    }
+
+    u32 nets[4]; int lens[4];
+    for (int i = 0; i < 4; i++) { nets[i] = ip("10.1.0.0") + ((u32)i << 8); lens[i] = 24; }
+    int n = aggregate(nets, lens, 4);
+    printf("Ex 8: aggregate 10.1.0.0/24 + 10.1.1.0/24 + 10.1.2.0/24 + 10.1.3.0/24 ->");
+    for (int i = 0; i < n; i++) printf(" %s", cidr(nets[i], lens[i]));
+    putchar('\n');
+    return 0;
+}
 ```
 
 ```text
-$ python3 answers.py
+$ ./net_exercises
 Ex 1: 192.168.10.77 in binary: 11000000.10101000.00001010.01001101
 Ex 2: 172.20.5.9/20 -> 172.20.0.0/20 | mask 255.255.240.0 | usable hosts 4094
 Ex 3: 10.20.77.130/21 -> network 10.20.72.0 broadcast 10.20.79.255 range 10.20.72.1 - 10.20.79.254
-Ex 4: 192.168.1.10/24 and 192.168.1.200/24: same network? True (192.168.1.0/24 vs 192.168.1.0/24)
-Ex 4: 10.0.0.5/25 and 10.0.0.130/25: same network? False (10.0.0.0/25 vs 10.0.0.128/25)
-Ex 4: 172.16.4.1/22 and 172.16.7.250/22: same network? True (172.16.4.0/22 vs 172.16.4.0/22)
+Ex 4: 192.168.1.10/24 and 192.168.1.200/24: same network? yes (192.168.1.0/24 vs 192.168.1.0/24)
+Ex 4: 10.0.0.5/25 and 10.0.0.130/25: same network? no (10.0.0.0/25 vs 10.0.0.128/25)
+Ex 4: 172.16.4.1/22 and 172.16.7.250/22: same network? yes (172.16.4.0/22 vs 172.16.4.0/22)
 Ex 5: 25 hosts need a /27 (30 usable addresses)
 Ex 5: 100 hosts need a /25 (126 usable addresses)
 Ex 5: 500 hosts need a /23 (510 usable addresses)
-Ex 6: split 192.168.5.0/24 into four equal subnets: ['192.168.5.0/26', '192.168.5.64/26', '192.168.5.128/26', '192.168.5.192/26']
+Ex 6: split 192.168.5.0/24 into four equal subnets: 192.168.5.0/26, 192.168.5.64/26, 192.168.5.128/26, 192.168.5.192/26
 Ex 7: 10.1.2.3        private (RFC 1918)
 Ex 7: 172.32.0.1      public
 Ex 7: 192.168.255.1   private (RFC 1918)
 Ex 7: 169.254.7.7     link-local (DHCP failed?)
 Ex 7: 100.64.0.9      shared/CGNAT space
 Ex 7: 8.8.8.8         public
-Ex 8: aggregate 10.1.0.0/24 + 10.1.1.0/24 + 10.1.2.0/24 + 10.1.3.0/24 -> [IPv4Network('10.1.0.0/22')]
+Ex 8: aggregate 10.1.0.0/24 + 10.1.1.0/24 + 10.1.2.0/24 + 10.1.3.0/24 -> 10.1.0.0/22
 ```
 
 </details>

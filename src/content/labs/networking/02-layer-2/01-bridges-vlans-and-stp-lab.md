@@ -6,6 +6,7 @@ moduleOrder: 2
 order: 1
 level: intermediate
 minutes: 40
+env: machine
 summary: "A hands-on lab that needs no hardware: three virtual hosts on a Linux bridge to watch MAC learning, a VLAN-aware bridge that isolates two hosts, and the spanning-tree timers, with the exact commands, captured output and the reasoning behind each result."
 prerequisites:
   - "Ethernet Frames and MAC Learning"

@@ -6,6 +6,7 @@ moduleOrder: 5
 order: 1
 level: advanced
 minutes: 35
+env: machine
 summary: "Five exercises on the linking module: building the same library as a static archive and a shared object, reading symbol tables, fixing 'cannot open shared object file', controlling exported symbols with visibility, and the library-order link error, with a build script whose output is shown."
 prerequisites:
   - "Static and Shared Libraries, Symbols, Dynamic Loading"

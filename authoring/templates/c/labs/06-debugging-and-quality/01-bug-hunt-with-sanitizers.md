@@ -6,6 +6,7 @@ moduleOrder: 6
 order: 1
 level: advanced
 minutes: 30
+env: machine
 summary: "Five short programs with real memory and arithmetic bugs (heap overflow, use after free, signed overflow and bad shift, double free, off-by-one read), each to be diagnosed with AddressSanitizer, UBSan and GCC's analyzer, with the reports explained and the fixes shown."
 prerequisites:
   - "Debugging with gdb and the Sanitizers"

@@ -6,6 +6,7 @@ moduleOrder: 7
 order: 1
 level: advanced
 minutes: 35
+env: machine
 summary: "Five exercises on the systemd module that run as an ordinary user with systemd --user: validating unit files, running a transient service with a memory limit, reading a failed unit's result, calculating timer schedules, and writing a hardened service unit, with captured output."
 prerequisites:
   - "systemd — Units, Dependencies, Targets, Hardening and the Journal"

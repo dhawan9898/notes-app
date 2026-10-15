@@ -17,7 +17,7 @@ for (const f of css) {
   for (const m of text.matchAll(/\.([a-zA-Z_][\w-]*)/g)) defined.add(m[1]);
 }
 // classes written by plugins/scripts at run time or build time, and by Astro/Shiki/third parties
-const EXTRA = new Set(['astro-code', 'astro-code-themes', 'github-light', 'github-dark', 'line', 'icon', 'on', 'in', 'armed', 'running', 'lit', 'ok', 'bad', 'warn', 'err', 'sub', 'off', 'has-copy', 'copy', 'anchor', 'gl', 'diagram', 'runbox']);
+const EXTRA = new Set(['xterm', 'xterm-viewport', 'astro-code', 'astro-code-themes', 'github-light', 'github-dark', 'line', 'icon', 'on', 'in', 'armed', 'running', 'lit', 'ok', 'bad', 'warn', 'err', 'sub', 'off', 'has-copy', 'copy', 'anchor', 'gl', 'diagram', 'runbox']);
 const DYNAMIC = [/^k\d$/, /^tk-/, /^lvl-/, /^d-/, /^k-/, /^kind-/];
 const dyn = (c) => EXTRA.has(c) || DYNAMIC.some((r) => r.test(c));
 

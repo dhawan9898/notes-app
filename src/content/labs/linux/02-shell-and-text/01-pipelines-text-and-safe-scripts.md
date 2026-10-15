@@ -6,6 +6,7 @@ moduleOrder: 1
 order: 1
 level: intermediate
 minutes: 40
+env: machine
 summary: "Six exercises on the shell module: a word-frequency pipeline, per-group averages with awk, filtering and rewriting a log with grep and sed, the unquoted-loop bug, the empty-variable rm trap and set -euo pipefail, with real captured output and explanations."
 prerequisites:
   - "The Shell — Parsing, Expansion, Redirection, Pipes and Job Control"

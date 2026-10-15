@@ -6,6 +6,7 @@ moduleOrder: 6
 order: 1
 level: intermediate
 minutes: 45
+env: machine
 summary: "A lab with two equal-cost paths: how a multipath route spreads flows, how a link failure marks a next hop dead so that all flows move to the survivor without losing connectivity, how traffic rebalances on recovery, plus the arithmetic of failure-detection timers for VRRP, OSPF and BFD, with the script and captured output."
 prerequisites:
   - "First-Hop Redundancy — VRRP, HSRP and Anycast Gateways"

@@ -1,0 +1,14 @@
+/* The Linux terminal page. */
+.term-card { padding: 0; gap: 0; overflow: hidden; }
+.term-bar { display: flex; align-items: center; gap: var(--s2); padding: 0.5rem var(--s4); border-bottom: 1px solid var(--line); font-size: 0.85rem; }
+.term-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--muted); } .term-dot[data-state='busy'] { background: var(--warn); } .term-dot[data-state='ready'] { background: var(--ok); } .term-dot[data-state='error'] { background: var(--bad); }
+.term-status { color: var(--text-2); }
+.term-screen { height: min(60dvh, 34rem); min-height: 16rem; background: var(--code-bg); }
+.term-host { height: 100%; padding: 0.5rem 0 0.5rem 0.6rem; } .term-host .xterm { height: 100%; } .term-host .xterm-viewport { background: transparent !important; }
+.term-start { height: 100%; display: grid; place-content: center; justify-items: center; gap: var(--s1); text-align: center; padding: var(--s5); color: var(--accent); } .term-start p { margin: 0; color: var(--text); } .term-start .muted { color: var(--muted); max-width: 26rem; } .term-start .btn { margin-top: var(--s3); }
+.term-keys { display: flex; gap: var(--s1); overflow-x: auto; padding: 0.4rem var(--s3); border-top: 1px solid var(--line); scrollbar-width: none; }
+.term-keys button { flex: none; min-width: 2.6rem; border: 0; border-radius: var(--r1); background: var(--surface-2); color: var(--text); font: 600 0.82rem var(--mono); padding: 0.45rem 0.7rem; touch-action: manipulation; } .term-keys button:active, .term-keys button.on { background: var(--accent-soft); color: var(--accent); }
+.term-queue { margin-top: var(--s4); } .term-queue-head { display: flex; align-items: center; } .term-queue ol { margin: 0; padding-left: 1.4rem; display: grid; gap: 2px; } .term-queue li.next code { background: var(--accent-soft); color: var(--accent); }
+.example-cmds { margin: 0; padding: var(--s3); border-radius: var(--r2); background: var(--code-bg); border: 1px solid var(--code-line); font-size: 0.78rem; line-height: 1.5; white-space: pre; max-height: 11rem; }
+.prose-lite ul { padding-left: 1.2rem; display: grid; gap: var(--s2); } .prose-lite li { line-height: 1.6; }
+@media (max-width: 900px) { .term-screen { height: min(52dvh, 28rem); } .term-card { margin-inline: calc(var(--s2) * -1); border-radius: var(--r3); } .term-keys button { min-height: 2.5rem; } }

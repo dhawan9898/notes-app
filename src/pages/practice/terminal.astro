@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import PracticeNav from '../../components/PracticeNav.astro';
+import examples from '../../data/terminal-examples.json';
+import '../../styles/terminal.css';
+const keys = ['Esc', 'Tab', 'Ctrl', 'Up', 'Down', 'Left', 'Right', 'Ctrl-C', 'Ctrl-D'];
+const label: Record<string, string> = { Up: '↑', Down: '↓', Left: '←', Right: '→' };
+---
+<Base title="Linux terminal · Practice · DeepNotes" description="A real Linux terminal that runs in your browser or the app, with no install and nothing to set up." nav="practice">
+  <div class="page">
+    <header class="page-head"><p class="eyebrow">Practice</p><h1>Linux terminal</h1><p class="lead">A real Linux, started on demand inside this page: a kernel with BusyBox, the lab programs, and a shell you can type into. It runs on your device (no server, offline in the app) and you are root in a throw-away machine.</p></header>
+    <PracticeNav current="terminal" />
+
+    <section class="card plain term-card" data-t-screen>
+      <div class="term-bar"><span class="term-dot" data-t-dot data-state="idle"></span><span class="term-status" data-t-status>Linux is not started</span><span class="grow"></span><button class="mini" type="button" data-t-restart hidden>Restart</button></div>
+      <div class="term-screen">
+        <div class="term-start" data-t-start>
+          <Icon name="practice" size={30} />
+          <p><strong>Start a Linux machine</strong></p>
+          <p class="muted small">It takes about ten seconds to boot. Files you create disappear when you close or restart it.</p>
+          <button class="btn primary" type="button" data-t-boot>Start Linux</button>
+        </div>
+        <div class="term-host" data-t-term hidden></div>
+      </div>
+      <div class="term-keys" aria-label="Terminal keys">{keys.map((k) => <button type="button" data-key={k}>{label[k] ?? k}</button>)}</div>
+    </section>
+
+    <section class="card plain term-queue" data-t-queue hidden aria-live="polite">
+      <div class="term-queue-head"><strong>Commands to run</strong><span class="grow"></span><button class="mini" type="button" data-t-clear>Clear</button></div>
+      <ol data-t-queue-list></ol>
+      <div class="btn-row"><button class="btn" type="button" data-t-run-next>Run next</button><button class="btn primary" type="button" data-t-run-all>Run all</button></div>
+    </section>
+
+    <section class="block" aria-labelledby="h-try">
+      <h2 class="block-title" id="h-try">Try these</h2>
+      <p class="block-sub">Each one types its commands into the terminal for you. Read what they print.</p>
+      <div class="grid grid-3">
+        {examples.map((e) => (
+          <article class="card plain">
+            <h3>{e.title}</h3><p class="muted small">{e.blurb}</p>
+            <pre class="example-cmds">{e.commands.map((c) => '$ ' + c).join('\n')}</pre>
+            <button class="btn" type="button" data-example={JSON.stringify(e.commands)}><Icon name="play" size={16} /> Run in the terminal</button>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-about">
+      <h2 class="block-title" id="h-about">What this is, and what it is not</h2>
+      <div class="card plain prose-lite">
+        <ul>
+          <li><strong>Real Linux:</strong> kernel 5.6 and BusyBox 1.31 on an emulated 32-bit PC (the open-source v86 emulator, running as WebAssembly). Commands behave like their GNU counterparts for everyday use, but options differ in places (BusyBox is deliberately small).</li>
+          <li><strong>Good for:</strong> the shell, files and permissions, text tools, processes, <code>/proc</code>, shell scripts, loopback networking, and the C programs of the networking labs (they are installed in <code>/labs</code>).</li>
+          <li><strong>Not included:</strong> network access, <code>systemd</code>, containers and user namespaces, bridges, virtual Ethernet pairs, <code>tc</code>, <code>nftables</code>, a compiler. Labs that need them say so and are meant for your own Linux machine or virtual machine.</li>
+          <li><strong>Keys on a phone:</strong> use the key row for Esc, Tab, arrows and Ctrl combinations (tap <b>Ctrl</b>, then a letter).</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</Base>
+<script>import '../../scripts/terminal';</script>

@@ -10,6 +10,9 @@
 
 #define GROUP "239.1.2.3"
 #define PORT 5007
+#ifndef IP_MULTICAST_ALL
+#define IP_MULTICAST_ALL 49          /* Linux option number; some libc headers do not name it */
+#endif
 
 static struct ip_mreq mreq(void) { struct ip_mreq m; inet_pton(AF_INET, GROUP, &m.imr_multiaddr); inet_pton(AF_INET, "127.0.0.1", &m.imr_interface); return m; }
 
@@ -48,6 +51,15 @@ int main(void) {
     printf("   both sockets have now left the group\n");
     sendto(tx, "third packet", 12, 0, (struct sockaddr *)&to, sizeof to);
     char b[100]; printf("   a third datagram sent to the group: %s\n", recv(r1, b, sizeof b, 0) < 0 ? "arrives nowhere, nobody on this interface is a member" : "a packet arrived");
+
+    /* 3b. a socket that left the group can still see the group's traffic unless IP_MULTICAST_ALL is switched off */
+    int member = make_receiver(), left_default = make_receiver(), left_all0 = make_receiver(), zero = 0;
+    setsockopt(left_all0, IPPROTO_IP, IP_MULTICAST_ALL, &zero, sizeof zero);
+    leave(left_default); leave(left_all0);
+    sendto(tx, "check", 5, 0, (struct sockaddr *)&to, sizeof to);
+    struct { const char *name; int fd; } who[] = {{"member", member}, {"left, IP_MULTICAST_ALL=1 (default)", left_default}, {"left, IP_MULTICAST_ALL=0", left_all0}};
+    printf("3b. who receives a packet for the group (one socket is still a member)\n   %-36s %s\n", "socket", "received");
+    for (int i = 0; i < 3; i++) printf("   %-36s %s\n", who[i].name, recv(who[i].fd, b, sizeof b, 0) < 0 ? "nothing" : "received");
 
     printf("4. group address facts:\n");
     const char *addrs[] = {"224.0.0.1", "224.0.0.2", "224.0.0.251", "239.1.2.3", "232.1.1.1"};

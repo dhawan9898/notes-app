@@ -6,6 +6,7 @@ moduleOrder: 5
 order: 1
 level: advanced
 minutes: 35
+env: machine
 summary: "Five exercises on the storage module: sparse files (apparent versus allocated size), hard links versus symbolic links and what deleting the original does, preallocation with fallocate, writing durably with fsync, and reading filesystem and inode information, with captured output."
 prerequisites:
   - "The Block Layer, I/O Schedulers, SSDs and NVMe"

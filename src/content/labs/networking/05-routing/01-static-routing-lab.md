@@ -6,6 +6,7 @@ moduleOrder: 5
 order: 1
 level: intermediate
 minutes: 40
+env: machine
 summary: "A four-node routing lab on one Linux machine: hosts and two routers connected by virtual cables, showing why a ping fails with no route, why one-way routing is silent, how TTL counts hops, what ip route get reveals, and how a more specific route steals traffic, with captured output."
 prerequisites:
   - "Forwarding: Routing Table, Longest-Prefix Match, Policy Routing and ECMP"

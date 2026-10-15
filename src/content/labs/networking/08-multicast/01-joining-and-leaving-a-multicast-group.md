@@ -5,8 +5,12 @@ module: Multicast
 moduleOrder: 8
 order: 1
 level: intermediate
-minutes: 45
-summary: "Four exercises with a Python program on the loopback interface: joining a multicast group and seeing it in ip maddr, sending one packet to several receivers, what leaving the group does (and the subtlety of interface-level membership), and mapping multicast IP addresses to Ethernet addresses and scopes."
+minutes: 40
+env: browser
+terminal:
+  - ip link set lo up
+  - ./multicast
+summary: "Four exercises with a C program on the loopback interface: joining a multicast group from two sockets, sending one packet to several receivers, what leaving the group does (and the subtlety of interface-level membership and IP_MULTICAST_ALL), and mapping multicast IP addresses to Ethernet addresses and scopes."
 prerequisites:
   - "IP Multicast Basics — Addressing, IGMP, MLD and Snooping"
   - "PIM Sparse Mode, SSM and Multicast Routing"
@@ -23,73 +27,99 @@ sources:
 
 Multicast sends **one packet to many receivers** without the sender knowing who they are: receivers *join* a group address and the network delivers copies only where members exist. The program below uses the loopback interface so everything happens on your machine; read the output, then answer the questions.
 
-```python
-import socket, struct, subprocess, time
+```c
+/* Join and leave an IPv4 multicast group on the loopback interface and watch the kernel's membership table. */
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <unistd.h>
 
-GROUP, PORT = "239.1.2.3", 5007
+#define GROUP "239.1.2.3"
+#define PORT 5007
+#ifndef IP_MULTICAST_ALL
+#define IP_MULTICAST_ALL 49          /* Linux option number; some libc headers do not name it */
+#endif
 
-def make_receiver(name):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind(("", PORT))
-    mreq = struct.pack("4s4s", socket.inet_aton(GROUP), socket.inet_aton("127.0.0.1"))   # join GROUP on the loopback interface
-    s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    s.settimeout(1)
-    return s
+static struct ip_mreq mreq(void) { struct ip_mreq m; inet_pton(AF_INET, GROUP, &m.imr_multiaddr); inet_pton(AF_INET, "127.0.0.1", &m.imr_interface); return m; }
 
-def maddr():
-    out = subprocess.run(["ip", "maddr", "show", "dev", "lo"], capture_output=True, text=True).stdout
-    return [l.split()[1] for l in out.splitlines() if "inet " in l]
+static int make_receiver(void) {
+    int s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP), one = 1;
+    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &one, sizeof one);
+    struct sockaddr_in a = {.sin_family = AF_INET, .sin_port = htons(PORT), .sin_addr.s_addr = htonl(INADDR_ANY)};
+    if (bind(s, (struct sockaddr *)&a, sizeof a) < 0) { perror("bind"); exit(1); }
+    struct ip_mreq m = mreq();                                                    /* join GROUP on the loopback interface */
+    if (setsockopt(s, IPPROTO_IP, IP_ADD_MEMBERSHIP, &m, sizeof m) < 0) { perror("IP_ADD_MEMBERSHIP"); exit(1); }
+    struct timeval tv = {1, 0}; setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv);
+    return s;
+}
+static void leave(int s) { struct ip_mreq m = mreq(); setsockopt(s, IPPROTO_IP, IP_DROP_MEMBERSHIP, &m, sizeof m); }
 
-print("1. multicast groups the loopback interface belongs to:", maddr())
-r1, r2 = make_receiver("r1"), make_receiver("r2")
-print("   after two sockets joined", GROUP + ":", maddr(), "(one interface membership, shared)")
-def igmp_groups():                                     # /proc/net/igmp lists groups as little-endian hex addresses
-    groups = []
-    for line in open("/proc/net/igmp").read().splitlines()[1:]:
-        if not line.startswith("\t"):
-            if groups: break                                   # stop at the second interface: only "lo" is wanted
-            continue
-        h = line.split()[0]
-        groups.append(".".join(str(int(h[i:i + 2], 16)) for i in (6, 4, 2, 0)))
-    return groups
-print("   /proc/net/igmp for lo (groups the kernel reports via IGMP):", igmp_groups())
+static void got(const char *who, int s, const char *note) {
+    char b[100]; ssize_t n = recv(s, b, sizeof b - 1, 0);
+    if (n < 0) printf("   %s got nothing\n", who); else { b[n] = 0; printf("   %s got: %s%s\n", who, b, note); }
+}
 
-tx = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-tx.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton("127.0.0.1"))
-tx.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 1)
-tx.sendto(b"one packet, many receivers", (GROUP, PORT))
-print("2. receiver 1 got:", r1.recvfrom(100)[0].decode(), "| receiver 2 got:", r2.recvfrom(100)[0].decode())
+int main(void) {
+    int r1 = make_receiver(), r2 = make_receiver();
+    printf("1. two sockets joined %s on the loopback interface (IP_ADD_MEMBERSHIP); the kernel keeps one membership per interface and group, counted by the sockets that asked for it\n", GROUP);
 
-r2.setsockopt(socket.IPPROTO_IP, socket.IP_DROP_MEMBERSHIP, struct.pack("4s4s", socket.inet_aton(GROUP), socket.inet_aton("127.0.0.1")))
-tx.sendto(b"second packet", (GROUP, PORT))
-print("3. after receiver 2 left the group: receiver 1 got:", r1.recvfrom(100)[0].decode())
-try: print("   receiver 2, which left, ALSO still got:", r2.recvfrom(100)[0].decode(), "(the interface is still a member because receiver 1 is, and IP_MULTICAST_ALL defaults to on)")
-except socket.timeout: print("   receiver 2 got nothing")
-r1.setsockopt(socket.IPPROTO_IP, socket.IP_DROP_MEMBERSHIP, struct.pack("4s4s", socket.inet_aton(GROUP), socket.inet_aton("127.0.0.1")))
-print("   after BOTH left, the interface's groups are:", maddr())
-tx.sendto(b"third packet", (GROUP, PORT))
-try: r1.recvfrom(100); print("   a packet arrived")
-except socket.timeout: print("   a third packet sent to the group arrives nowhere: nobody on this interface is a member")
+    int tx = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP), ttl = 1; struct in_addr ifa; inet_pton(AF_INET, "127.0.0.1", &ifa);
+    setsockopt(tx, IPPROTO_IP, IP_MULTICAST_IF, &ifa, sizeof ifa); setsockopt(tx, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof ttl);
+    struct sockaddr_in to = {.sin_family = AF_INET, .sin_port = htons(PORT)}; inet_pton(AF_INET, GROUP, &to.sin_addr);
+    sendto(tx, "one packet, many receivers", 26, 0, (struct sockaddr *)&to, sizeof to);
+    printf("2. one datagram to %s:%d\n", GROUP, PORT); got("receiver 1", r1, ""); got("receiver 2", r2, "");
 
-print("4. group address facts:")
-for a in ["224.0.0.1", "224.0.0.2", "224.0.0.251", "239.1.2.3", "232.1.1.1"]:
-    first = int(a.split(".")[0]); 
-    mac = "01:00:5e:%02x:%02x:%02x" % (int(a.split(".")[1]) & 0x7f, int(a.split(".")[2]), int(a.split(".")[3]))
-    scope = "all hosts" if a == "224.0.0.1" else "all routers" if a == "224.0.0.2" else "mDNS (link-local)" if a == "224.0.0.251" else "source-specific multicast range" if a.startswith("232.") else "administratively scoped (private)"
-    print(f"   {a:<12} -> Ethernet {mac}   {scope}")
+    leave(r2);
+    sendto(tx, "second packet", 13, 0, (struct sockaddr *)&to, sizeof to);
+    printf("3. after receiver 2 left the group\n"); got("receiver 1", r1, "");
+    got("receiver 2, which left,", r2, " (the interface is still a member because receiver 1 is, and IP_MULTICAST_ALL defaults to on)");
+    leave(r1);
+    printf("   both sockets have now left the group\n");
+    sendto(tx, "third packet", 12, 0, (struct sockaddr *)&to, sizeof to);
+    char b[100]; printf("   a third datagram sent to the group: %s\n", recv(r1, b, sizeof b, 0) < 0 ? "arrives nowhere, nobody on this interface is a member" : "a packet arrived");
+
+    /* 3b. a socket that left the group can still see the group's traffic unless IP_MULTICAST_ALL is switched off */
+    int member = make_receiver(), left_default = make_receiver(), left_all0 = make_receiver(), zero = 0;
+    setsockopt(left_all0, IPPROTO_IP, IP_MULTICAST_ALL, &zero, sizeof zero);
+    leave(left_default); leave(left_all0);
+    sendto(tx, "check", 5, 0, (struct sockaddr *)&to, sizeof to);
+    struct { const char *name; int fd; } who[] = {{"member", member}, {"left, IP_MULTICAST_ALL=1 (default)", left_default}, {"left, IP_MULTICAST_ALL=0", left_all0}};
+    printf("3b. who receives a packet for the group (one socket is still a member)\n   %-36s %s\n", "socket", "received");
+    for (int i = 0; i < 3; i++) printf("   %-36s %s\n", who[i].name, recv(who[i].fd, b, sizeof b, 0) < 0 ? "nothing" : "received");
+
+    printf("4. group address facts:\n");
+    const char *addrs[] = {"224.0.0.1", "224.0.0.2", "224.0.0.251", "239.1.2.3", "232.1.1.1"};
+    for (int i = 0; i < 5; i++) {
+        unsigned a, b2, c, d; sscanf(addrs[i], "%u.%u.%u.%u", &a, &b2, &c, &d);
+        const char *scope = !strcmp(addrs[i], "224.0.0.1") ? "all hosts" : !strcmp(addrs[i], "224.0.0.2") ? "all routers" : !strcmp(addrs[i], "224.0.0.251") ? "mDNS (link-local)"
+                          : a == 232 ? "source-specific multicast range" : "administratively scoped (private)";
+        printf("   %-12s -> Ethernet 01:00:5e:%02x:%02x:%02x   %s\n", addrs[i], b2 & 0x7f, c, d, scope);
+    }
+    return 0;
+}
 ```
 
 ```text
-$ python3 multicast.py
-1. multicast groups the loopback interface belongs to: ['224.0.0.251', '224.0.0.1']
-   after two sockets joined 239.1.2.3: ['239.1.2.3', '224.0.0.251', '224.0.0.1'] (one interface membership, shared)
-   /proc/net/igmp for lo (groups the kernel reports via IGMP): ['239.1.2.3', '224.0.0.251', '224.0.0.1']
-2. receiver 1 got: one packet, many receivers | receiver 2 got: one packet, many receivers
-3. after receiver 2 left the group: receiver 1 got: second packet
-   receiver 2, which left, ALSO still got: second packet (the interface is still a member because receiver 1 is, and IP_MULTICAST_ALL defaults to on)
-   after BOTH left, the interface's groups are: ['224.0.0.251', '224.0.0.1']
-   a third packet sent to the group arrives nowhere: nobody on this interface is a member
+$ ip link set lo up
+$ ./multicast
+1. two sockets joined 239.1.2.3 on the loopback interface (IP_ADD_MEMBERSHIP); the kernel keeps one membership per interface and group, counted by the sockets that asked for it
+2. one datagram to 239.1.2.3:5007
+   receiver 1 got: one packet, many receivers
+   receiver 2 got: one packet, many receivers
+3. after receiver 2 left the group
+   receiver 1 got: second packet
+   receiver 2, which left, got: second packet (the interface is still a member because receiver 1 is, and IP_MULTICAST_ALL defaults to on)
+   both sockets have now left the group
+   a third datagram sent to the group: arrives nowhere, nobody on this interface is a member
+3b. who receives a packet for the group (one socket is still a member)
+   socket                               received
+   member                               received
+   left, IP_MULTICAST_ALL=1 (default)   received
+   left, IP_MULTICAST_ALL=0             nothing
 4. group address facts:
    224.0.0.1    -> Ethernet 01:00:5e:00:00:01   all hosts
    224.0.0.2    -> Ethernet 01:00:5e:00:00:02   all routers
@@ -100,7 +130,7 @@ $ python3 multicast.py
 
 ## Exercises
 
-**1. Membership.** Which multicast groups did `lo` belong to before any program joined, and which was added when two sockets joined `239.1.2.3`? Why did two sockets add only one entry? What does `/proc/net/igmp` show?
+**1. Membership.** Two sockets joined `239.1.2.3` on `lo`. Why does the kernel keep one membership for both of them, and what would `ip maddr show dev lo` and `/proc/net/igmp` list on a real machine?
 
 **2. One send, two receivers.** The sender called `sendto` once. How many packets left the sender, and how many receivers got the message? What would unicast have needed?
 
@@ -115,19 +145,13 @@ Try before opening.
 <details>
 <summary>Show the explanations</summary>
 
-**1.** Before the program joined anything, `lo` was a member of `224.0.0.1` ("all hosts", every IP multicast host on a link is always a member) and `224.0.0.251` (mDNS, joined by a system service on this machine). After the two sockets joined `239.1.2.3` the list gained exactly **one** entry: group membership is a property of the **interface** (the host tells the network "someone here wants this group"), not of each socket, and the kernel counts the sockets that asked, so the second join only increments a reference count. `/proc/net/igmp` is the kernel's table of the groups it reports through **IGMP** (the protocol hosts use to tell routers and switches about memberships); the output shows the same three groups for `lo`, in the file's own little-endian hex which the program decodes. On a real Ethernet interface the host sends IGMP membership reports for each group when it joins and in answer to periodic queries from the router, which is how routers and snooping switches learn which ports have receivers.
+**1.** Group membership is a property of the **interface** (the host tells the network "someone here wants this group"), not of each socket: the kernel counts the sockets that asked, so the second join only increments a reference count and `lo` gets exactly **one** entry for `239.1.2.3`. On a real machine `ip maddr show dev lo` and `cat /proc/net/igmp` show that table: `224.0.0.1` ("all hosts", every IP multicast host is always a member) and usually `224.0.0.251` (mDNS, joined by a system service), plus `239.1.2.3` with two users while the program runs. (The in-browser Linux kernel is built without IGMP, so its `/proc/net/igmp` does not exist and the program does not print the table: the delivery results show the same behaviour.) `/proc/net/igmp` is the kernel's table of the groups it reports through **IGMP** (the protocol hosts use to tell routers and switches about memberships). On a real Ethernet interface the host sends IGMP membership reports for each group when it joins and in answer to periodic queries from the router, which is how routers and snooping switches learn which ports have receivers.
 
 **2.** **One packet left the sender** (one `sendto`, one datagram on the wire), and the network or the host's own stack replicates it for each member: both receivers got the message. With unicast the sender would need a separate `sendto` and a separate copy on the wire **per receiver**, so the cost grows with the audience (a video stream to 10,000 viewers would send 10,000 copies from the source), whereas multicast keeps the sender's cost constant and copies packets only where the delivery tree branches, which is why it is used for market-data feeds, IPTV, routing protocols (OSPF uses `224.0.0.5` and `224.0.0.6`) and service discovery. The price: **UDP only** (no connection, no retransmission), the sender gets no feedback, and the network must support multicast routing (PIM) and group management (IGMP), and it is generally **not routed across the public internet**. The sender set `IP_MULTICAST_TTL` to 1 so the packet cannot cross a router: for multicast, the TTL doubles as the scope limit.
 
-**3.** Receiver 2 called `IP_DROP_MEMBERSHIP`, but it **still received the second packet**. Two things combine. Membership is counted per **interface**, and receiver 1 was still a member, so the interface kept receiving the group. And on Linux a socket receives every datagram for its port that arrives on the machine, including groups joined by *other* sockets, unless the socket option **`IP_MULTICAST_ALL`** is switched off (the default is on, for historical compatibility). A small check confirms it: with three sockets on the same port, one a real member, one that joined and left with the default option, and one that joined and left with `IP_MULTICAST_ALL` set to 0, a packet to the group gave:
+**3.** Receiver 2 called `IP_DROP_MEMBERSHIP`, but it **still received the second packet**. Two things combine. Membership is counted per **interface**, and receiver 1 was still a member, so the interface kept receiving the group. And on Linux a socket receives every datagram for its port that arrives on the machine, including groups joined by *other* sockets, unless the socket option **`IP_MULTICAST_ALL`** is switched off (the default is on, for historical compatibility). Step 3b of the output confirms it: with three sockets on the same port, one a real member, one that joined and left with the default option, and one that joined and left with `IP_MULTICAST_ALL` set to 0, a packet to the group reached the member and the default socket but not the third.
 
-```text
-member                                 received
-left, IP_MULTICAST_ALL=1 (default)     received
-left, IP_MULTICAST_ALL=0               nothing
-```
-
-So a socket should set `IP_MULTICAST_ALL` to 0 (option number 49 in Python, which has no named constant for it) or bind to the group address (`s.bind((GROUP, PORT))`) if it must only see the groups it joined itself. After **both** program sockets had left, the interface's groups returned to the original two and the third packet to the group **arrived nowhere**: the host sent an IGMP *leave* (so routers and snooping switches stop forwarding the group to this interface), and the timeout shows no receiver got it. This is the essential multicast rule: **traffic flows only where there are members, membership is tracked per interface, and IGMP (IPv4) or MLD (IPv6) is the signalling.**
+So a socket should set `IP_MULTICAST_ALL` to 0 with `setsockopt` (the program defines the Linux option number 49 itself, because some libc headers do not name it) or `bind()` to the group address instead of `INADDR_ANY` if it must only see the groups it joined itself. After **both** program sockets had left, the third datagram to the group **arrived nowhere**: the host sent an IGMP *leave* (so routers and snooping switches stop forwarding the group to this interface), and the timeout shows no receiver got it. This is the essential multicast rule: **traffic flows only where there are members, membership is tracked per interface, and IGMP (IPv4) or MLD (IPv6) is the signalling.**
 
 **4.**
 

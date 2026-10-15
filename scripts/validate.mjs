@@ -63,6 +63,13 @@ for (const l of lessons) {
 }
 for (const l of labs) {
   if (typeof l.data.minutes !== 'number' || l.data.minutes < 5) err(l.file, 'minutes (estimated time) is required for labs');
+  if (!['browser', 'machine'].includes(l.data.env)) err(l.file, 'env must be "browser" (runs in the in-browser Linux terminal) or "machine" (needs the reader\'s own Linux machine)');
+  const term = l.data.terminal ?? [];
+  if (l.data.env === 'browser' && !term.length) err(l.file, 'a browser lab needs terminal: [commands to run in the in-browser Linux]');
+  if (l.data.env === 'machine' && term.length) err(l.file, 'a machine lab must not list terminal commands');
+  if (!strList(term)) err(l.file, 'terminal must be a list of strings');
+  for (const cmd of term.filter((c) => !/chmod \+x/.test(c))) for (const m of cmd.matchAll(/(?:^|[;&|]\s*)\.\/([A-Za-z0-9_.-]+)/g)) if (!fs.existsSync(path.join(P.examples, 'vm', m[1])) && !fs.existsSync(path.join(P.examples, 'vm', m[1] + '.c')) && !fs.existsSync(path.join(P.examples, 'vm', m[1] + '.sh'))) err(l.file, `terminal command "${cmd}" runs ./${m[1]}, which is not in authoring/examples/vm`);
+  if (/```python|^\$ python3? |^python3? /m.test(l.body) && l.track !== 'c') err(l.file, 'labs use C (or shell) programs, not Python');
   if (!(l.data.prerequisites ?? []).some((p) => titles.has(p) && titles.get(p).kind === 'lesson')) err(l.file, 'a lab needs at least one prerequisite that is a lesson');
 }
 

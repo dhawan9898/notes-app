@@ -22,7 +22,8 @@ export async function bootVm({ memoryMb = 128, timeoutMs = 180000 } = {}) {
   const bootMs = Date.now() - t0;
   const send = (line) => emu.serial0_send(line + '\n');
   // a quiet, predictable shell: no echo, plain prompt
-  buf = ''; send("stty -echo; export PS1='' TERM=dumb; cd /labs"); await sleep(300); buf = '';
+  buf = ''; send("stty -echo; export PS1='' TERM=dumb; cd /labs; echo __RE''ADY__");
+  await until((s) => /^__READY__$/m.test(strip(s)), 30000); await sleep(100); buf = '';
   let n = 0;
   return {
     bootMs,
@@ -31,7 +32,7 @@ export async function bootVm({ memoryMb = 128, timeoutMs = 180000 } = {}) {
       const id = `${Date.now()}${n++}`, start = `<<S${id}>>`, end = `<<E${id}:`;
       buf = ''; send(`echo '${start}'; ${cmd}\necho "${end}$?>>"`);
       await until((s) => strip(s).includes(end) && /<<E\d+:\d+>>/.test(strip(s)), timeout);
-      const text = strip(buf), a = text.indexOf(start), b = text.lastIndexOf(end);
+      const text = strip(buf), m = text.match(new RegExp('^' + start + '$', 'm')), a = m ? m.index : -1, b = text.lastIndexOf(end);   // the start marker as a line of its own (the typed command also contains it)
       const rc = Number((text.slice(b).match(/:(\d+)>>/) || [])[1]);
       return { output: text.slice(a + start.length, b).replace(/^\n/, '').replace(/\n+$/, ''), rc };
     },

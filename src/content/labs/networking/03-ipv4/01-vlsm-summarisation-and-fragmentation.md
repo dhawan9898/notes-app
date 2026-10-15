@@ -6,7 +6,10 @@ moduleOrder: 3
 order: 1
 level: intermediate
 minutes: 40
-summary: "Four exercises on the IPv4 module: a VLSM addressing plan, summarising routes (and when it fails), choosing routes by longest-prefix match, and fragmenting a datagram by hand, with a Python program that computes every answer and a check of the reasoning."
+env: browser
+terminal:
+  - ./ipv4_practice
+summary: "Four exercises on the IPv4 module: a VLSM addressing plan, summarising routes (and when it fails), choosing routes by longest-prefix match, and fragmenting a datagram by hand, with a C program that computes every answer and a check of the reasoning."
 prerequisites:
   - "IPv4 Header, Fragmentation and MTU"
   - "IPv4 Addressing, Subnetting, VLSM and CIDR"
@@ -18,8 +21,6 @@ sources:
     url: https://www.rfc-editor.org/rfc/rfc791
   - label: "RFC 1812 — Requirements for IP Version 4 Routers (longest-prefix match)"
     url: https://www.rfc-editor.org/rfc/rfc1812
-  - label: "Python ipaddress module documentation"
-    url: https://docs.python.org/3/library/ipaddress.html
 ---
 
 Subnetting skill is the foundation of every network design. Do each exercise on paper, then run the program at the end to check yourself. The simpler "same network?" and "network and broadcast address" drills are in *Practice: Networking Exercises*; these four are the ones that appear in real design work.
@@ -41,52 +42,93 @@ Try before opening.
 <details>
 <summary>Show the program and its output</summary>
 
-```python
-import ipaddress, math
+```c
+/* IPv4 practice: VLSM allocation, route summarisation, longest-prefix match and fragmentation arithmetic. */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 
-# 1. VLSM: allocate the largest requirement first, each from the next free aligned block
-base = ipaddress.ip_network("192.168.50.0/24")
-needs = [("Servers", 100), ("Office", 50), ("Guests", 25), ("Management", 10), ("Router link", 2)]
-print("1. VLSM plan for", base)
-free = int(base.network_address)
-for name, hosts in sorted(needs, key=lambda x: -x[1]):
-    bits = math.ceil(math.log2(hosts + 2))                 # host bits so that 2^bits - 2 >= hosts
-    size = 2 ** bits
-    free = (free + size - 1) // size * size                # align to the block size
-    net = ipaddress.ip_network((free, 32 - bits))
-    print(f"   {name:<12} needs {hosts:>3} hosts -> {str(net):<18} usable {net.num_addresses - 2:>3}  range {net[1]} - {net[-2]}")
-    free += size
-print("   next free address:", ipaddress.ip_address(free))
+typedef uint32_t u32;
+static u32 ip(const char *s) { unsigned a, b, c, d; sscanf(s, "%u.%u.%u.%u", &a, &b, &c, &d); return a << 24 | b << 16 | c << 8 | d; }
+static const char *dot(u32 x) {
+    static char buf[8][16]; static int i;
+    char *p = buf[i++ & 7];
+    snprintf(p, 16, "%u.%u.%u.%u", (unsigned)(x >> 24), (unsigned)(x >> 16 & 255), (unsigned)(x >> 8 & 255), (unsigned)(x & 255));
+    return p;
+}
+static const char *cidr(u32 a, int p) { static char buf[8][20]; static int i; char *s = buf[i++ & 7]; snprintf(s, 20, "%s/%d", dot(a), p); return s; }
+static u32 mask_of(int p) { return p ? 0xFFFFFFFFu << (32 - p) : 0; }
 
-# 2. Route summarisation
-routes = ["10.1.0.0/24", "10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
-nets = [ipaddress.ip_network(r) for r in routes]
-print("\n2. summary of", ", ".join(routes), "->", list(ipaddress.collapse_addresses(nets)))
-bad = [ipaddress.ip_network(r) for r in ["10.1.0.0/24", "10.1.1.0/24", "10.1.2.0/24", "10.1.4.0/24"]]
-print("   with 10.1.4.0/24 instead of 10.1.3.0/24 ->", list(ipaddress.collapse_addresses(bad)), "(no single covering route without including 10.1.3.0)")
+typedef struct { const char *name; int hosts; } Need;
+static int by_hosts_desc(const void *x, const void *y) { return ((const Need *)y)->hosts - ((const Need *)x)->hosts; }
 
-# 3. Longest-prefix match
-table = {"0.0.0.0/0": "ISP", "10.0.0.0/8": "core", "10.1.0.0/16": "site-A", "10.1.2.0/24": "lab", "10.1.2.128/25": "lab-servers"}
-print("\n3. routing table:", table)
-for dest in ["10.1.2.200", "10.1.2.7", "10.1.9.9", "10.9.9.9", "8.8.8.8"]:
-    ip = ipaddress.ip_address(dest)
-    best = max((ipaddress.ip_network(p) for p in table if ip in ipaddress.ip_network(p)), key=lambda n: n.prefixlen)
-    print(f"   {dest:<11} matches {', '.join(sorted((p for p in table if ip in ipaddress.ip_network(p)), key=lambda p: int(p.split('/')[1])))}  -> best {best} -> {table[str(best)]}")
+/* merge neighbouring blocks of equal size into their parent until nothing changes */
+static int collapse(u32 *net, int *len, int n) {
+    for (int changed = 1; changed;) {
+        changed = 0;
+        for (int i = 0; i < n && !changed; i++)
+            for (int j = 0; j < n && !changed; j++)
+                if (i != j && len[i] == len[j] && len[i] > 0 && (net[i] ^ net[j]) == 1u << (32 - len[i])) {
+                    net[i] &= mask_of(len[i] - 1); len[i]--; net[j] = net[n - 1]; len[j] = len[n - 1]; n--; changed = 1;
+                }
+    }
+    for (int i = 1; i < n; i++)                                            /* sort by address for a stable listing */
+        for (int j = i; j > 0 && net[j] < net[j - 1]; j--) { u32 t = net[j]; net[j] = net[j - 1]; net[j - 1] = t; int l = len[j]; len[j] = len[j - 1]; len[j - 1] = l; }
+    return n;
+}
+static void print_collapsed(const char *const *routes, int count) {
+    u32 net[8]; int len[8];
+    for (int i = 0; i < count; i++) { char buf[32]; int p; sscanf(routes[i], "%31[^/]/%d", buf, &p); net[i] = ip(buf); len[i] = p; }
+    int n = collapse(net, len, count);
+    for (int i = 0; i < n; i++) printf("%s%s", i ? ", " : "", cidr(net[i], len[i]));
+}
 
-# 4. Fragmentation: a 4000-byte IP payload over MTU 1500 (20-byte header)
-mtu, hdr, payload = 1500, 20, 4000
-per = (mtu - hdr) // 8 * 8                                  # data per fragment must be a multiple of 8 bytes
-print(f"\n4. fragmenting {payload} bytes of payload, MTU {mtu}, header {hdr}: data per fragment {per}")
-off = 0; n = 1
-while off < payload:
-    size = min(per, payload - off)
-    more = off + size < payload
-    print(f"   fragment {n}: total length {size + hdr}, offset field {off // 8:>3} (byte {off}), MF={int(more)}")
-    off += size; n += 1
+int main(void) {
+    /* 1. VLSM: allocate the largest requirement first, each from the next free aligned block */
+    u32 base = ip("192.168.50.0"), next_free = base;
+    Need needs[] = {{"Servers", 100}, {"Office", 50}, {"Guests", 25}, {"Management", 10}, {"Router link", 2}};
+    qsort(needs, 5, sizeof needs[0], by_hosts_desc);
+    printf("1. VLSM plan for %s\n", cidr(base, 24));
+    for (int i = 0; i < 5; i++) {
+        int bits = 0; while ((1u << bits) < (unsigned)needs[i].hosts + 2) bits++;     /* host bits so that 2^bits - 2 >= hosts */
+        u32 size = 1u << bits;
+        next_free = (next_free + size - 1) / size * size;                              /* align to the block size */
+        printf("   %-12s needs %3d hosts -> %-18s usable %3u  range %s - %s\n", needs[i].name, needs[i].hosts, cidr(next_free, 32 - bits), (unsigned)(size - 2), dot(next_free + 1), dot(next_free + size - 2));
+        next_free += size;
+    }
+    printf("   next free address: %s\n", dot(next_free));
+
+    /* 2. Route summarisation */
+    const char *good[] = {"10.1.0.0/24", "10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"};
+    const char *bad[] = {"10.1.0.0/24", "10.1.1.0/24", "10.1.2.0/24", "10.1.4.0/24"};
+    printf("\n2. summary of 10.1.0.0/24, 10.1.1.0/24, 10.1.2.0/24, 10.1.3.0/24 -> "); print_collapsed(good, 4); putchar('\n');
+    printf("   with 10.1.4.0/24 instead of 10.1.3.0/24 -> "); print_collapsed(bad, 4); printf(" (no single covering route without including 10.1.3.0)\n");
+
+    /* 3. Longest-prefix match */
+    struct { const char *prefix; int len; const char *via; } table[] = {{"0.0.0.0", 0, "ISP"}, {"10.0.0.0", 8, "core"}, {"10.1.0.0", 16, "site-A"}, {"10.1.2.0", 24, "lab"}, {"10.1.2.128", 25, "lab-servers"}};
+    printf("\n3. routing table:");
+    for (int i = 0; i < 5; i++) printf(" %s -> %s%s", cidr(ip(table[i].prefix), table[i].len), table[i].via, i < 4 ? "," : "\n");
+    const char *dests[] = {"10.1.2.200", "10.1.2.7", "10.1.9.9", "10.9.9.9", "8.8.8.8"};
+    for (int d = 0; d < 5; d++) {
+        u32 a = ip(dests[d]); int best = -1;
+        printf("   %-11s matches ", dests[d]);
+        for (int i = 0; i < 5; i++) if ((a & mask_of(table[i].len)) == ip(table[i].prefix)) { printf("%s%s", best >= 0 ? ", " : "", cidr(ip(table[i].prefix), table[i].len)); if (best < 0 || table[i].len > table[best].len) best = i; }
+        printf("  -> best %s -> %s\n", cidr(ip(table[best].prefix), table[best].len), table[best].via);
+    }
+
+    /* 4. Fragmentation: a 4000-byte IP payload over MTU 1500 (20-byte header) */
+    int mtu = 1500, hdr = 20, payload = 4000, per = (mtu - hdr) / 8 * 8;                /* data per fragment must be a multiple of 8 bytes */
+    printf("\n4. fragmenting %d bytes of payload, MTU %d, header %d: data per fragment %d\n", payload, mtu, hdr, per);
+    for (int off = 0, n = 1; off < payload; off += per, n++) {
+        int size = payload - off < per ? payload - off : per;
+        printf("   fragment %d: total length %d, offset field %3d (byte %d), MF=%d\n", n, size + hdr, off / 8, off, off + size < payload);
+    }
+    return 0;
+}
 ```
 
 ```text
-$ python3 ipv4_practice.py
+$ ./ipv4_practice
 1. VLSM plan for 192.168.50.0/24
    Servers      needs 100 hosts -> 192.168.50.0/25    usable 126  range 192.168.50.1 - 192.168.50.126
    Office       needs  50 hosts -> 192.168.50.128/26  usable  62  range 192.168.50.129 - 192.168.50.190
@@ -95,10 +137,10 @@ $ python3 ipv4_practice.py
    Router link  needs   2 hosts -> 192.168.50.240/30  usable   2  range 192.168.50.241 - 192.168.50.242
    next free address: 192.168.50.244
 
-2. summary of 10.1.0.0/24, 10.1.1.0/24, 10.1.2.0/24, 10.1.3.0/24 -> [IPv4Network('10.1.0.0/22')]
-   with 10.1.4.0/24 instead of 10.1.3.0/24 -> [IPv4Network('10.1.0.0/23'), IPv4Network('10.1.2.0/24'), IPv4Network('10.1.4.0/24')] (no single covering route without including 10.1.3.0)
+2. summary of 10.1.0.0/24, 10.1.1.0/24, 10.1.2.0/24, 10.1.3.0/24 -> 10.1.0.0/22
+   with 10.1.4.0/24 instead of 10.1.3.0/24 -> 10.1.0.0/23, 10.1.2.0/24, 10.1.4.0/24 (no single covering route without including 10.1.3.0)
 
-3. routing table: {'0.0.0.0/0': 'ISP', '10.0.0.0/8': 'core', '10.1.0.0/16': 'site-A', '10.1.2.0/24': 'lab', '10.1.2.128/25': 'lab-servers'}
+3. routing table: 0.0.0.0/0 -> ISP, 10.0.0.0/8 -> core, 10.1.0.0/16 -> site-A, 10.1.2.0/24 -> lab, 10.1.2.128/25 -> lab-servers
    10.1.2.200  matches 0.0.0.0/0, 10.0.0.0/8, 10.1.0.0/16, 10.1.2.0/24, 10.1.2.128/25  -> best 10.1.2.128/25 -> lab-servers
    10.1.2.7    matches 0.0.0.0/0, 10.0.0.0/8, 10.1.0.0/16, 10.1.2.0/24  -> best 10.1.2.0/24 -> lab
    10.1.9.9    matches 0.0.0.0/0, 10.0.0.0/8, 10.1.0.0/16  -> best 10.1.0.0/16 -> site-A
