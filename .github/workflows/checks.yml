@@ -14,7 +14,7 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run fetch-runner
-      - name: Toolchain for the in-browser Linux (static 32-bit programs: clang, lld, llvm-ar)
+      - name: Toolchain for the in-browser Linux (static 32-bit programs, needs clang, lld and llvm-ar)
         run: sudo apt-get update -qq && sudo apt-get install -y -qq clang lld llvm
       - uses: actions/cache@v4
         with: { path: .cache/vm, key: vm-toolchain-v1 }
